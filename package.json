@@ -1,0 +1,28 @@
+{
+  "name": "keml",
+  "version": "0.0.0",
+  "description": "An HTMX alternative with a focus on performance, flexibility and, most of all, simplicity.",
+  "main": "keml.min.js",
+  "scripts": {
+    "build": "java -jar closure-compiler-v20240317.jar --js=keml.js --js_output_file keml.min.js -O ADVANCED -W VERBOSE --assume_function_wrapper --output_wrapper \"(()=>{%output%})()\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thealjey/keml.git"
+  },
+  "keywords": [
+    "htmx",
+    "alternative"
+  ],
+  "files": [
+    "LICENSE",
+    "README.md",
+    "keml.min.js"
+  ],
+  "author": "Eugene Kuzmenko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thealjey/keml/issues"
+  },
+  "homepage": "https://github.com/thealjey/keml#readme"
+}
