@@ -109,7 +109,7 @@ function onloadend() {
         else if (pos === replaceChildrenStr) replaceChildren(owner, children);
       }
       for (let key in ifElements) for (let el of ifElements[key] || emptyArr) el[applyStateMeth]();
-      owner.dispatchEvent(renderEvent);
+      pub(owner, renderEvent);
     }
   });
 }
@@ -365,18 +365,25 @@ let getAttrs = el => el.attributes;
  */
 let getChildNodes = node => /** @type {!Array<!ChildNode>} */(/** @type {*} */(node.childNodes));
 
+/**
+ * @param {EventTarget} target
+ * @param {!Event} event
+ * @noinline
+ */
+let pub = (target, event) => target.dispatchEvent(event);
+
 /** @param {function(IntersectionObserverEntry): void} handle */
 let createObserver = handle => new IntersectionObserver(entries => entries.forEach(handle));
 
 /**
  * @param {boolean} intersect
- * @param {Event} event
+ * @param {!Event} event
  * @returns {function(IntersectionObserverEntry) : void}
  */
-let createHandle = (intersect, event) => entry => entry.isIntersecting === intersect && entry.target.dispatchEvent(event);
+let createHandle = (intersect, event) => entry => entry.isIntersecting === intersect && pub(entry.target, event);
 
 /** @param {Element} el */
-let dispatchNavigate = el => el.dispatchEvent(navigateEvent);
+let dispatchNavigate = el => pub(el, navigateEvent);
 
 /**
  * @param {IntersectionObserver} observer
