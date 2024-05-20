@@ -87,7 +87,6 @@ function onloadend() {
     owner[markLoadingMeth]?.(false);
     if (status > 399) owner[markErrorMeth]?.(true);
     else if (responseXML) {
-      owner[markErrorMeth]?.(false);
       if (owner[onceAttr]) {
         deInitOn(owner);
         owner.removeAttribute("on");
