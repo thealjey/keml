@@ -81,7 +81,6 @@ function onloadend() {
   let me = this;
   /** @type {Element} */
   let owner = me[ownerElementAttr];
-  let onEls = onElements[owner[onAttr]];
   let pos = owner[posAttr] || replaceChildrenStr;
   let { status, responseXML } = me;
   me[resolveMeth](() => {
@@ -89,8 +88,13 @@ function onloadend() {
     if (status > 399) owner[markErrorMeth]?.(true);
     else if (responseXML) {
       owner[markErrorMeth]?.(false);
+      if (owner[onceAttr]) {
+        deInitOn(owner);
+        owner.removeAttribute("on");
+      }
       let children = getChildNodes(responseXML.body);
-      if (pos === replaceWithStr) {
+      if (pos === replaceChildrenStr) replaceChildren(owner, children);
+      else if (pos === replaceWithStr) {
         children = Array.from(children);
         let rightNode = children.shift();
         if (rightNode) {
@@ -100,14 +104,7 @@ function onloadend() {
           cleanNode(owner);
           owner.remove();
         }
-      } else {
-        if (owner[onceAttr]) {
-          onEls.splice(onEls.indexOf(owner), 1);
-          owner.removeAttribute("on");
-        }
-        if (nativeRender.includes(pos)) owner[pos](...Array.from(children).map(initTree));
-        else if (pos === replaceChildrenStr) replaceChildren(owner, children);
-      }
+      } else if (nativeRender.includes(pos)) owner[pos](...Array.from(children).map(initTree));
       for (let key in ifElements) for (let el of ifElements[key] || emptyArr) el[applyStateMeth]();
       pub(owner, renderEvent);
     }
