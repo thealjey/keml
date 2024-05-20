@@ -79,6 +79,7 @@ function markLoading(value) {
 function onloadend() {
   /** @noinline */
   let me = this;
+  /** @type {Element} */
   let owner = me[ownerElementAttr];
   let onEls = onElements[owner[onAttr]];
   let pos = owner[posAttr] || replaceChildrenStr;
@@ -108,6 +109,7 @@ function onloadend() {
         else if (pos === replaceChildrenStr) replaceChildren(owner, children);
       }
       for (let key in ifElements) for (let el of ifElements[key] || emptyArr) el[applyStateMeth]();
+      owner.dispatchEvent(renderEvent);
     }
   });
 }
@@ -282,6 +284,8 @@ let revealStr = "reveal";
 /** @noinline */
 let concealStr = "conceal";
 /** @noinline */
+let renderStr = "render";
+/** @noinline */
 let checkValidityStr = "checkValidity";
 /** @noinline */
 let pushStateStr = "pushState";
@@ -312,6 +316,7 @@ let raf = requestAnimationFrame;
 let navigateEvent = createEvent(navigateStr);
 let revealEvent = createEvent(revealStr);
 let concealEvent = createEvent(concealStr);
+let renderEvent = createEvent(renderStr);
 
 /** @type {!Object<string, Array<!Element>>} */
 let onElements = {};
@@ -675,7 +680,7 @@ let onNavigate = () => navigateElements.forEach(dispatchNavigate);
  */
 let sub = (target, name, handler) => target.addEventListener(name, handler, true);
 
-[navigateStr, revealStr, concealStr].forEach(name => sub(doc, name, onEvent));
+[navigateStr, revealStr, concealStr, renderStr].forEach(name => sub(doc, name, onEvent));
 for (let key in doc) key.startsWith("on") && sub(doc, key.substring(2), onEvent);
 sub(doc, "DOMContentLoaded", onLoad);
 ["input", "change"].forEach(name => sub(doc, name, onChange));

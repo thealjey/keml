@@ -38,6 +38,7 @@ All event types supported by the `document` object can be used, plus the followi
 - `reveal` - triggered when an element becomes visible in the viewport, on initial page load or after a scroll
 - `conceal` - triggered when an element leaves the viewport after a scroll
 - `navigate` - triggered by the history api
+- `render` - triggered after a successful request and render of the response
 
 ```html
 <button
@@ -76,6 +77,33 @@ Relative endpoints are supported, so given a current URI of `https://www.example
 
   if:loading="loadingData" # \s separated list
   if:error="failedLoad"    # \s separated list
+></div>
+```
+
+## Cascading requests
+
+Sometimes it may be necessary to trigger a request only when and if another request completes successfully.
+
+The `render` event exists for this exact purpose.
+
+In the following example:
+
+- clicking the button initiates the `loadA` action
+- the first div populates its contents with the response of `/a.html` and initiates the `loadB` action
+- the second div populates its contents with the response of `/b.html`
+
+```html
+<button
+  on:click="loadA"
+>click me</button>
+<div
+  on="loadA"
+  get="/a.html"
+  on:render="loadB" # \s separated list
+></div>
+<div
+  on="loadB"
+  get="/b.html"
 ></div>
 ```
 
