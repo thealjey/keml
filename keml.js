@@ -97,13 +97,10 @@ function onloadend() {
         children = Array.from(children);
         let rightNode = children.shift();
         if (rightNode) {
-          children.length && owner.after(...children.map(initTree));
+          children.length && owner.after(...initTrees(children));
           processNode(owner, rightNode);
-        } else {
-          cleanNode(owner);
-          owner.remove();
-        }
-      } else if (nativeRender.includes(pos)) owner[pos](...Array.from(children).map(initTree));
+        } else initTree(owner, 1).remove();
+      } else if (nativeRender.includes(pos)) owner[pos](...initTrees(children));
       for (let key in ifElements) for (let el of ifElements[key] || emptyArr) el[applyStateMeth]();
       pub(owner, renderEvent);
     }
@@ -152,18 +149,6 @@ function request() {
   return promise;
 }
 
-/** @param {Node} node */
-let cleanNode = node => {
-  if (node instanceof Element) {
-    deInitOn(node);
-    deInitIf(node);
-    deInitNavigate(node);
-    deInitOnReveal(node);
-    deInitOnConceal(node);
-    getChildNodes(node).forEach(cleanNode);
-  }
-};
-
 /**
  * @param {ChildNode} left
  * @param {Array<ChildNode>} rightList
@@ -181,8 +166,7 @@ let replaceChildren = (left, rightList) => {
         ++i;
         j += processNode(leftNode, rightNode);
       } else {
-        cleanNode(leftNode);
-        leftNode.remove();
+        initTree(leftNode, 1).remove();
         --len;
       }
     } else {
@@ -198,8 +182,7 @@ let replaceChildren = (left, rightList) => {
  */
 let processNode = (leftNode, rightNode) => {
   if (leftNode.nodeName !== rightNode.nodeName) {
-    cleanNode(leftNode);
-    leftNode[replaceWithStr](initTree(rightNode));
+    initTree(leftNode, 1)[replaceWithStr](initTree(rightNode));
     return 0;
   }
   if (!leftNode.isEqualNode(rightNode)) {
@@ -384,19 +367,13 @@ let dispatchNavigate = el => pub(el, navigateEvent);
 /** @param {Element} el */
 let initOnReveal = el => revealObserver.observe(el);
 
-/**
- * @param {Element} el
- * @noinline
- */
+/** @param {Element} el */
 let deInitOnReveal = el => revealObserver.unobserve(el);
 
 /** @param {Element} el */
 let initOnConceal = el => concealObserver.observe(el);
 
-/**
- * @param {Element} el
- * @noinline
- */
+/** @param {Element} el */
 let deInitOnConceal = el => concealObserver.unobserve(el);
 
 let revealObserver = createObserver(createHandle(true, revealEvent));
@@ -440,10 +417,7 @@ let initIf = (el, value) => {
   ifElements[value] ? ifElements[value].push(el) : ifElements[value] = [el];
 };
 
-/**
- * @param {!Element} el
- * @noinline
- */
+/** @param {!Element} el */
 let deInitIf = el => {
   remove(el, ifElements[el[ifAttr]]);
   delete el[ifAttr];
@@ -454,10 +428,7 @@ let deInitIf = el => {
 /** @param {!Element} el */
 let initNavigate = el => navigateElements.push(el);
 
-/**
- * @param {!Element} el
- * @noinline
- */
+/** @param {!Element} el */
 let deInitNavigate = el => remove(el, navigateElements);
 
 /**
@@ -606,11 +577,21 @@ let attrMap = {
   "pos": [initPos, createDeInitKey(posAttr)],
 };
 
-/** @param {Node} root */
-let initTree = root => {
-  if (root instanceof Element) for (let attr of getAttrs(root)) attrMap[attr.name]?.[0](root, attr.value);
-  getChildNodes(root).forEach(initTree);
+/**
+ * @param {ChildNode} root
+ * @param {number} index
+ */
+let initTree = (root, index = 0) => {
+  if (root instanceof Element) for (let attr of getAttrs(root)) attrMap[attr.name]?.[index](root, attr.value);
+  for (let node of getChildNodes(root)) initTree(node, index);
   return root;
+};
+
+/** @param {!Array<ChildNode>} roots */
+let initTrees = roots => {
+  let initialized = [];
+  for (let root of roots) initialized.push(initTree(root));
+  return initialized;
 };
 
 /**
@@ -672,7 +653,7 @@ let onEvent = event => {
 
 /** @param {Event} event */
 let onLoad = event => raf(() => {
-  initTree(/** @type {Node} */(event.target));
+  initTree(/** @type {ChildNode} */(event.target));
   for (let key in ifElements) for (let el of ifElements[key] || emptyArr) el[applyStateMeth]();
 });
 
