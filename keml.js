@@ -158,7 +158,8 @@ let cleanNode = node => {
     deInitOn(node);
     deInitIf(node);
     deInitNavigate(node);
-    deInitObserver(node);
+    deInitOnReveal(node);
+    deInitOnConceal(node);
     getChildNodes(node).forEach(cleanNode);
   }
 };
@@ -268,9 +269,8 @@ let ownerElementAttr = "r";
 let onceAttr = "s";
 let posAttr = "t";
 let onAttr = "u";
-let observerAttr = "v";
-let activeAttr = "w";
-let resolveMeth = "x";
+let activeAttr = "v";
+let resolveMeth = "w";
 /** @noinline */
 let dropStr = "__DROP__";
 /** @noinline */
@@ -381,23 +381,23 @@ let createHandle = (intersect, event) => entry => entry.isIntersecting === inter
 /** @param {Element} el */
 let dispatchNavigate = el => pub(el, navigateEvent);
 
-/**
- * @param {IntersectionObserver} observer
- * @returns {function(Element): void}
- */
-let createInitIntersect = observer => el => {
-  el[observerAttr] = observer;
-  observer.observe(el);
-};
+/** @param {Element} el */
+let initOnReveal = el => revealObserver.observe(el);
 
 /**
- * @param {!Element} el
+ * @param {Element} el
  * @noinline
  */
-let deInitObserver = el => {
-  el[observerAttr] && el[observerAttr].unobserve(el);
-  delete el[observerAttr];
-};
+let deInitOnReveal = el => revealObserver.unobserve(el);
+
+/** @param {Element} el */
+let initOnConceal = el => concealObserver.observe(el);
+
+/**
+ * @param {Element} el
+ * @noinline
+ */
+let deInitOnConceal = el => concealObserver.unobserve(el);
 
 let revealObserver = createObserver(createHandle(true, revealEvent));
 let concealObserver = createObserver(createHandle(false, concealEvent));
@@ -587,8 +587,8 @@ let attrMap = {
   "on": [initOn, deInitOn],
   "if": [initIf, deInitIf],
   ["on:" + navigateStr]: [initNavigate, deInitNavigate],
-  ["on:" + revealStr]: [createInitIntersect(revealObserver), deInitObserver],
-  ["on:" + concealStr]: [createInitIntersect(concealObserver), deInitObserver],
+  ["on:" + revealStr]: [initOnReveal, deInitOnReveal],
+  ["on:" + concealStr]: [initOnConceal, deInitOnConceal],
   "if:invalid": [initInvalid, deInitInvalid],
   "if:error": [initError, deInitError],
   "if:loading": [initLoading, deInitLoading],
