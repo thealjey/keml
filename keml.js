@@ -589,9 +589,8 @@ let initTree = (root, index = 0) => {
 
 /** @param {!Array<ChildNode>} roots */
 let initTrees = roots => {
-  let initialized = [];
-  for (let root of roots) initialized.push(initTree(root));
-  return initialized;
+  for (let root of roots) initTree(root);
+  return roots;
 };
 
 /**
