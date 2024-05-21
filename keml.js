@@ -155,10 +155,10 @@ function request() {
 /** @param {Node} node */
 let cleanNode = node => {
   if (node instanceof Element) {
-    node[onAttr] && deInitOn(node);
-    node[ifAttr] && deInitIf(node);
-    navigateElements.indexOf(node) === -1 || deInitNavigate(node);
-    node[observerAttr] && deInitObserver(node);
+    deInitOn(node);
+    deInitIf(node);
+    deInitNavigate(node);
+    deInitObserver(node);
     getChildNodes(node).forEach(cleanNode);
   }
 };
@@ -395,7 +395,7 @@ let createInitIntersect = observer => el => {
  * @noinline
  */
 let deInitObserver = el => {
-  el[observerAttr].unobserve(el);
+  el[observerAttr] && el[observerAttr].unobserve(el);
   delete el[observerAttr];
 };
 
@@ -412,11 +412,21 @@ let initOn = (el, value) => {
 };
 
 /**
+ * @template T
+ * @param {T} item
+ * @param {Array<T>} arr
+ */
+let remove = (item, arr = emptyArr) => {
+  let i = arr.indexOf(item);
+  i === -1 || arr.splice(i, 1);
+};
+
+/**
  * @param {!Element} el
  * @noinline
  */
 let deInitOn = el => {
-  onElements[el[onAttr]].splice(onElements[el[onAttr]].indexOf(el), 1);
+  remove(el, onElements[el[onAttr]]);
   delete el[onAttr];
 };
 
@@ -435,7 +445,7 @@ let initIf = (el, value) => {
  * @noinline
  */
 let deInitIf = el => {
-  ifElements[el[ifAttr]].splice(ifElements[el[ifAttr]].indexOf(el), 1);
+  remove(el, ifElements[el[ifAttr]]);
   delete el[ifAttr];
   delete el[activeAttr];
   delete el[applyStateMeth];
@@ -448,7 +458,7 @@ let initNavigate = el => navigateElements.push(el);
  * @param {!Element} el
  * @noinline
  */
-let deInitNavigate = el => navigateElements.splice(navigateElements.indexOf(el), 1);
+let deInitNavigate = el => remove(el, navigateElements);
 
 /**
  * @param {!Element} el
