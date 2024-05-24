@@ -75,7 +75,7 @@ let evtName,
   /** @noinline */
   add = (a, b = []) => (b.includes(a) || b.push(a), b),
   /** @noinline */
-  remove = (a, b = []) => ((a = b.indexOf(a)), a == -1 || b.splice(a, 1), b),
+  remove = (a, b = []) => ((a = b.indexOf(a)), a < 0 || b.splice(a, 1), b),
   /** @noinline */
   enqueue = a => a[lengthStr] && raf(() => {
     for (let b of a) b();
