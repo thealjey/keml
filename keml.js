@@ -81,16 +81,6 @@ let evtName,
     for (let b of a) b();
   }),
   /** @noinline */
-  createFormData = (
-    /**
-     * @param {HTMLFormElement=} a
-     * @noinline
-     */
-    a => new FormData(a)
-  ),
-  /** @noinline */
-  updateSearch = (a, b) => a.search = new URLSearchParams(b),
-  /** @noinline */
   initTrees = a => {
     for (let b of a) b[initMeth]?.();
   },
@@ -170,7 +160,7 @@ let evtName,
   getUrl = a => a[hrefAttr] && new URL(a[hrefAttr], /\.[^\/]+$/.test(loc.pathname) ? loc.href : loc.href.replace(/\/*$/, "/")),
   /** @noinline */
   execute = (el, match) => raf(() => {
-    let action, queue = [], url1 = getUrl(el), url2, onEl, attr, xhr, pwr, body;
+    let action, queue = [], url1 = getUrl(el), url2, onEl, attr, xhr, pwr, formData;
     el[timerAttr] = clearTimer(el[timerAttr]);
     for (action of match) {
       if (url1 && (action == "pushState" || action == "replaceState")) {
@@ -178,7 +168,8 @@ let evtName,
         onNavigate();
       }
       for (onEl of onElements[action] || []) if (url2 = getUrl(onEl)) {
-        body = onEl[serializeMeth](url2);
+        formData = onEl[serializeMeth]();
+        onEl[isPostAttr] || (url2.search = new URLSearchParams(formData));
         xhr = new XMLHttpRequest();
         pwr = Promise["withResolvers"]();
         xhr.responseType = "document";
@@ -191,7 +182,7 @@ let evtName,
         toggleState(false, onEl[errorMatchAttr]);
         toggleState(yes, onEl[loadingMatchAttr]);
         xhr.open(onEl[methodAttr], url2);
-        xhr.send(body);
+        xhr.send(onEl[isPostAttr] ? formData : null);
         add(pwr.promise, queue);
       }
     }
@@ -362,34 +353,17 @@ ElProto[setAttributeMeth] = ElProto.setAttribute;
 ElProto[removeAttributeMeth] = ElProto.removeAttribute;
 
 /** @this {Element} */
-ElProto[serializeMeth] = function (url) {
+ElProto[serializeMeth] = function () {
   /** @noinline */
   let me = this;
-  let body = null, formData, files, file, name, value;
-  if (name = me[nameStr]) {
-    if (files = me["files"]) {
-      if (files[lengthStr]) {
-        formData = createFormData();
-        for (file of files) formData.append(name, file);
-        if (me[isPostAttr]) body = formData;
-        else updateSearch(url, formData);
-      }
-    } else if (value = me[valueStr]) {
-      formData = createFormData();
-      formData.set(name, value);
-      if (me[isPostAttr]) body = formData;
-      else updateSearch(url, formData);
-    }
-  }
-  return body;
+  let formData = new FormData(), name, value, item;
+  if (name = me[nameStr]) for (item of (value = me["files"]) ? value : (value = me[valueStr]) ? [value] : []) formData.append(name, item);
+  return formData;
 };
 
 /** @this {HTMLFormElement} */
-HTMLFormElement[protoStr][serializeMeth] = function (url) {
-  let body = null, formData = createFormData(this);
-  if (this[isPostAttr]) body = formData;
-  else updateSearch(url, formData);
-  return body;
+HTMLFormElement[protoStr][serializeMeth] = function () {
+  return new FormData(this);
 };
 
 /** @this {Element} */
