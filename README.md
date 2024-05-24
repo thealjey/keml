@@ -2,7 +2,7 @@
 
 An [HTMX](https://htmx.org/) (thank you for the inspiration) alternative with a different API that is meant to be simpler and more flexible at the same time.
 
-Optimized using [Google Closure Compiler](https://developers.google.com/closure/compiler/) (thank you for an awesome and, sadly, underappreciated tool) to have a hilariously tiny file size (~5k without gz, which is ~9.5x smaller than HTMX), although performance is always prioritized over file size.
+Optimized using [Google Closure Compiler](https://developers.google.com/closure/compiler/) (thank you for an awesome and, sadly, underappreciated tool) to have a hilariously tiny file size (~4k without gz, which is ~11.6x smaller than HTMX), although performance is always prioritized over file size.
 
 Great care is taken to guarantee the absolute maximum performance and minimal memory usage, minimizing the amount of work that not only the library is doing, but also that the browser has to do.
 

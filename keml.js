@@ -1,681 +1,421 @@
-// @ts-check
-
-/** @this {Element} */
-function applyState() {
+let evtName,
+  initMeth = "a",
+  addEventListenerMeth = "b",
+  dispatchEventMeth = "c",
+  getAttributeNodeMeth = "d",
+  removeAttributeNodeMeth = "e",
+  setAttributeMeth = "f",
+  removeAttributeMeth = "g",
+  invalidMatchAttr = "h",
+  onAttr = "i",
+  ifAttr = "j",
+  errorMatchAttr = "k",
+  loadingMatchAttr = "l",
+  isDialogAttr = "m",
+  throttleAttr = "n",
+  debounceAttr = "o",
+  credentialsAttr = "p",
+  posAttr = "q",
+  methodAttr = "r",
+  hrefAttr = "s",
+  handleEventMeth = "t",
+  timerAttr = "u",
+  serializeMeth = "v",
+  isPostAttr = "w",
+  ownerElementAttr = "x",
+  resolveMeth = "y",
+  onceAttr = "z",
   /** @noinline */
-  let me = this;
-  let active = state[me[ifAttr]];
-  if (me[activeAttr] != active) {
-    me[activeAttr] = active;
-    for (let { name, value } of getAttrs(me)) {
-      if (name.startsWith("$")) {
-        let base = name.substring(1);
-        let nameOff = "_" + base;
-        let attrOff = getAttributeNode(me, nameOff);
-        if (active) {
-          if (!attrOff) {
-            let attrBase = getAttributeNode(me, base);
-            me.setAttribute(nameOff, attrBase ? attrBase.value : dropStr);
-            me.setAttribute(base, value);
+  undef,
+  /** @noinline */
+  yes = true,
+  /** @noinline */
+  createObserver = a => new IntersectionObserver(b => b.forEach(a)),
+  /** @noinline */
+  createHandle = (a, b) => c => c.isIntersecting == a && c[targetStr][dispatchEventMeth](b),
+  /** @noinline */
+  createEvent = a => new Event(a),
+  /** @noinline */
+  split = a => {
+    let b = a.match(/\S+/g);
+    return b && b[lengthStr] ? b : undef;
+  },
+  /** @noinline */
+  applyState = action => {
+    let el, name, nameOff, attr, attrOn, attrOff, isOn;
+    for (el of ifElements[action] || []) {
+      isOn = state[el[ifAttr]];
+      if (el.isOn != isOn) {
+        el.isOn = isOn;
+        for (attrOn of el[attributesStr]) {
+          name = attrOn[nameStr];
+          if (name.startsWith("$")) {
+            name = name.substring(1);
+            nameOff = "_" + name;
+            attrOff = el[getAttributeNodeMeth](nameOff);
+            if (isOn) {
+              if (!attrOff) {
+                attr = el[getAttributeNodeMeth](name);
+                el[setAttributeMeth](nameOff, attr ? attr[valueStr] : dropStr);
+                el[setAttributeMeth](name, attrOn[valueStr]);
+              }
+            } else if (attrOff) {
+              attrOff[valueStr] == dropStr ? el[removeAttributeMeth](name) : el[setAttributeMeth](name, attrOff[valueStr]);
+              el[removeAttributeNodeMeth](attrOff);
+            }
           }
-        } else if (attrOff) {
-          attrOff.value === dropStr ? me.removeAttribute(base) : me.setAttribute(base, attrOff.value);
-          me.removeAttributeNode(attrOff);
         }
       }
     }
-  }
-}
-
-/**
- * @this {Element}
- * @param {boolean=} skip
- * @param {boolean=} value
- */
-function validate(skip, value) {
-  /** @type {boolean} */
-  let invalid = value == null ? !this[checkValidityStr]() : value;
-  for (let action of this[invalidMatchAttr]) {
-    state[action] = invalid;
-    if (!skip) for (let el of ifElements[action] || emptyArr) el[applyStateMeth]();
-  }
-}
-
-/** @this {Element} */
-function pushState() {
-  history[pushStateStr](emptyObj, "", resolveUrl(this[hrefAttr]));
-  onNavigate();
-}
-
-/** @this {Element} */
-function replaceState() {
-  history[replaceStateStr](emptyObj, "", resolveUrl(this[hrefAttr]));
-  onNavigate();
-}
-
-/**
- * @this {Element}
- * @param {boolean} value
- */
-function markError(value) {
-  for (let action of this[errorMatchAttr]) {
-    state[action] = value;
-    for (let el of ifElements[action] || emptyArr) el[applyStateMeth]();
-  }
-}
-
-/**
- * @this {Element}
- * @param {boolean} value
- */
-function markLoading(value) {
-  for (let action of this[loadingMatchAttr]) {
-    state[action] = value;
-    for (let el of ifElements[action] || emptyArr) el[applyStateMeth]();
-  }
-}
+  },
+  /** @noinline */
+  applyStates = () => {
+    for (let action in ifElements) applyState(action);
+  },
+  /** @noinline */
+  add = (a, b = []) => (b.includes(a) || b.push(a), b),
+  /** @noinline */
+  remove = (a, b = []) => ((a = b.indexOf(a)), a == -1 || b.splice(a, 1), b),
+  /** @noinline */
+  enqueue = a => a[lengthStr] && raf(() => {
+    for (let b of a) b();
+  }),
+  /** @noinline */
+  createFormData = (
+    /**
+     * @param {HTMLFormElement=} a
+     * @noinline
+     */
+    a => new FormData(a)
+  ),
+  /** @noinline */
+  updateSearch = (a, b) => a.search = new URLSearchParams(b),
+  /** @noinline */
+  initTrees = a => {
+    for (let b of a) b[initMeth]?.();
+  },
+  /** @noinline */
+  processNode = (leftNode, rightNode) => {
+    let leftAttr, rightAttr;
+    if (leftNode.nodeName != rightNode.nodeName) {
+      leftNode[initMeth]?.(1);
+      rightNode[initMeth]?.();
+      leftNode[replaceWithStr](rightNode);
+      return 0;
+    }
+    if (!leftNode.isEqualNode(rightNode)) {
+      leftNode[nodeValueStr] == rightNode[nodeValueStr] || (leftNode[nodeValueStr] = rightNode[nodeValueStr]);
+      if (leftNode.nodeType == 1) {
+        for (leftAttr of leftNode[attributesStr]) {
+          if (!rightNode.hasAttribute(leftAttr[nameStr])) {
+            attrMap[leftAttr[nameStr]]?.[1](leftNode);
+            leftNode[removeAttributeNodeMeth](leftAttr);
+          }
+        }
+        for (rightAttr of rightNode[attributesStr]) {
+          leftAttr = leftNode[getAttributeNodeMeth](rightAttr[nameStr]);
+          attrMap[rightAttr[nameStr]]?.[1](leftNode);
+          if (leftAttr) leftAttr[valueStr] == rightAttr[valueStr] || (leftAttr[valueStr] = rightAttr[valueStr]);
+          else leftNode.setAttributeNode(rightAttr);
+          attrMap[rightAttr[nameStr]]?.[0](leftNode, rightAttr[valueStr]);
+        }
+      }
+    }
+    replaceChildren(leftNode, rightNode[childNodesStr]);
+    return 1;
+  },
+  /** @noinline */
+  replaceChildren = (left, rightList) => {
+    let leftList = left[childNodesStr];
+    let len = Math.max(leftList[lengthStr], rightList[lengthStr]);
+    let i = 0;
+    let j = 0;
+    let leftNode, rightNode;
+    while (i < len) {
+      leftNode = leftList[i];
+      rightNode = rightList[j];
+      if (leftNode) {
+        if (rightNode) {
+          ++i;
+          j += processNode(leftNode, rightNode);
+        } else {
+          leftNode[initMeth]?.(1);
+          leftNode.remove();
+          --len;
+        }
+      } else {
+        rightNode[initMeth]?.();
+        left.appendChild(rightNode);
+        ++i;
+      }
+    }
+  },
+  /** @noinline */
+  toggleState = (value, actions = []) => {
+    for (let action of actions) {
+      state[action] = value;
+      applyState(action);
+    }
+  },
+  /** @noinline */
+  validate = (
+    /**
+     * @param {Element} a
+     * @param {boolean=} b
+     * @noinline
+     */
+    (a, b) => toggleState(!(b ?? a.checkValidity?.() ?? yes), a[invalidMatchAttr])
+  ),
+  /** @noinline */
+  getUrl = a => a[hrefAttr] && new URL(a[hrefAttr], /\.[^\/]+$/.test(loc.pathname) ? loc.href : loc.href.replace(/\/*$/, "/")),
+  /** @noinline */
+  execute = (el, match) => raf(() => {
+    let action, queue = [], url1 = getUrl(el), url2, onEl, attr, xhr, pwr, body;
+    el[timerAttr] = clearTimer(el[timerAttr]);
+    for (action of match) {
+      if (url1 && (action == "pushState" || action == "replaceState")) {
+        history[action]({}, "", url1);
+        onNavigate();
+      }
+      for (onEl of onElements[action] || []) if (url2 = getUrl(onEl)) {
+        body = onEl[serializeMeth](url2);
+        xhr = new XMLHttpRequest();
+        pwr = Promise["withResolvers"]();
+        xhr.responseType = "document";
+        xhr.withCredentials = onEl[credentialsAttr];
+        xhr[ownerElementAttr] = onEl;
+        xhr[resolveMeth] = pwr.resolve;
+        xhr.onloadend = onloadend;
+        for (attr of onEl[attributesStr]) attr[nameStr].startsWith("h-") &&
+          xhr.setRequestHeader(attr[nameStr].substring(2), attr[valueStr]);
+        toggleState(false, onEl[errorMatchAttr]);
+        toggleState(yes, onEl[loadingMatchAttr]);
+        xhr.open(onEl[methodAttr], url2);
+        xhr.send(body);
+        add(pwr.promise, queue);
+      }
+    }
+    Promise.all(queue).then(enqueue);
+  }),
+  /** @noinline */
+  protoStr = "prototype",
+  /** @noinline */
+  targetStr = "target",
+  /** @noinline */
+  attributesStr = "attributes",
+  /** @noinline */
+  nameStr = "name",
+  /** @noinline */
+  valueStr = "value",
+  /** @noinline */
+  lengthStr = "length",
+  /** @noinline */
+  childNodesStr = "childNodes",
+  /** @noinline */
+  onStr = "on:",
+  /** @noinline */
+  dropStr = "__DROP__",
+  /** @noinline */
+  revealStr = "reveal",
+  /** @noinline */
+  concealStr = "conceal",
+  /** @noinline */
+  navigateStr = "navigate",
+  /** @noinline */
+  renderStr = "render",
+  /** @noinline */
+  nodeValueStr = "nodeValue",
+  /** @noinline */
+  replaceChildrenStr = "replaceChildren",
+  /** @noinline */
+  replaceWithStr = "replaceWith",
+  /** @noinline */
+  loc = location,
+  /** @noinline */
+  doc = document,
+  /** @noinline */
+  startTimer = setTimeout,
+  /** @noinline */
+  clearTimer = clearTimeout,
+  /** @noinline */
+  raf = requestAnimationFrame,
+  /** @noinline */
+  EtProto = EventTarget[protoStr],
+  /** @noinline */
+  ElProto = Element[protoStr],
+  /** @noinline */
+  state = {},
+  /** @noinline */
+  onElements = {},
+  /** @noinline */
+  ifElements = {},
+  /** @noinline */
+  nvElements = [],
+  /** @noinline */
+  nvEvent = createEvent(navigateStr),
+  /** @noinline */
+  revealEvent = createEvent(revealStr),
+  /** @noinline */
+  concealEvent = createEvent(concealStr),
+  /** @noinline */
+  renderEvent = createEvent(renderStr),
+  /** @noinline */
+  createInitUnset = a => b => b[a] = undef,
+  /** @noinline */
+  createInitDict = (a, b) => [(c, d) => (b[c[a] = d] = add(c, b[d])), c => ((b[c[a]] = remove(c, b[c[a]])), (c[a] = undef))],
+  /** @noinline */
+  createInitObserver = a => [b => a.observe(b), b => a.unobserve(b)],
+  /** @noinline */
+  createInitMatch = a => [(b, c) => (c = split(c)) && (b[a] = c), createInitUnset(a)],
+  /** @noinline */
+  createInitDelay = a => [(b, c) => b[a] = Number(c), createInitUnset(a)],
+  /** @noinline */
+  applyMethod = (a, b) => ((b = b.toUpperCase()), (a[methodAttr] = b), (a[isPostAttr] = b == "POST")),
+  /** @noinline */
+  initHref = [(a, b) => a[hrefAttr] = b, () => { }],
+  /** @noinline */
+  initVerb = [(a, b, c) => ((a[hrefAttr] = b), applyMethod(a, c)), () => { }],
+  /** @noinline */
+  createInitBool = a => [b => b[a] = yes, createInitUnset(a)],
+  /** @noinline */
+  attrMap = {
+    "on": createInitDict(onAttr, onElements),
+    "if": createInitDict(ifAttr, ifElements),
+    [onStr + navigateStr]: [a => add(a, nvElements), a => remove(a, nvElements)],
+    [onStr + revealStr]: createInitObserver(createObserver(createHandle(yes, revealEvent))),
+    [onStr + concealStr]: createInitObserver(createObserver(createHandle(false, concealEvent))),
+    "if:invalid": [(a, b) => (b = split(b)) && ((a[invalidMatchAttr] = b), validate(a)), createInitUnset(invalidMatchAttr)],
+    "if:error": createInitMatch(errorMatchAttr),
+    "if:loading": createInitMatch(loadingMatchAttr),
+    "method": [(a, b) => b == "dialog" ? (a[isDialogAttr] = yes) : applyMethod(a, b), createInitUnset(isDialogAttr)],
+    "throttle": createInitDelay(throttleAttr),
+    "debounce": createInitDelay(debounceAttr),
+    "href": initHref,
+    "action": initHref,
+    "src": initHref,
+    "get": initVerb,
+    "post": initVerb,
+    "put": initVerb,
+    "delete": initVerb,
+    "credentials": createInitBool(credentialsAttr),
+    "once": createInitBool(onceAttr),
+    "pos": [(a, b) => a[posAttr] = b, createInitUnset(posAttr)],
+  },
+  onEvent = event => event[targetStr][handleEventMeth]?.(event),
+  onLoad = event => raf(() => (event[targetStr][initMeth]?.(), applyStates())),
+  onChange = event => raf(() => validate(event[targetStr])),
+  onInvalid = event => raf(() => validate(event[targetStr], false)),
+  onNavigate = () => { for (let item of nvElements) item[dispatchEventMeth](nvEvent); };
 
 /** @this {XMLHttpRequest} */
 function onloadend() {
   /** @noinline */
   let me = this;
-  /** @type {Element} */
   let owner = me[ownerElementAttr];
   let pos = owner[posAttr] || replaceChildrenStr;
-  let { status, responseXML } = me;
+  let children = me.responseXML?.body[childNodesStr];
+  let rightNode;
   me[resolveMeth](() => {
-    owner[markLoadingMeth]?.(false);
-    if (status > 399) owner[markErrorMeth]?.(true);
-    else if (responseXML) {
+    toggleState(false, owner[loadingMatchAttr]);
+    if (me.status > 399) toggleState(yes, owner[errorMatchAttr]);
+    else if (children) {
       if (owner[onceAttr]) {
-        deInitOn(owner);
-        owner.removeAttribute("on");
+        attrMap.on[1](owner);
+        owner[removeAttributeMeth]("on");
       }
-      let children = getChildNodes(responseXML.body);
-      if (pos === replaceChildrenStr) replaceChildren(owner, children);
-      else if (pos === replaceWithStr) {
-        children = Array.from(children);
-        let rightNode = children.shift();
+      if (pos == replaceChildrenStr) replaceChildren(owner, children);
+      else if (pos == replaceWithStr) {
+        children = /** @type {*} */(Array.from(children));
+        rightNode = children.shift();
         if (rightNode) {
-          children.length && owner.after(...initTrees(children));
+          initTrees(children);
+          children[lengthStr] && owner.after(...(/** @type {!Array<*>} */(children)));
           processNode(owner, rightNode);
-        } else initTree(owner, 1).remove();
-      } else if (nativeRender.includes(pos)) owner[pos](...initTrees(children));
-      for (let key in ifElements) for (let el of ifElements[key] || emptyArr) el[applyStateMeth]();
-      pub(owner, renderEvent);
+        } else {
+          owner[initMeth]?.(1);
+          owner.remove();
+        }
+      } else if (["after", "append", "before", "prepend"].includes(pos)) {
+        initTrees(children);
+        owner[pos](...children);
+      }
+      applyStates();
+      owner[dispatchEventMeth](renderEvent);
     }
   });
 }
 
 /** @this {Element} */
-function request() {
+doc[initMeth] = ElProto[initMeth] = function (index = 0) {
   /** @noinline */
   let me = this;
-  let body = null;
-  let url = resolveUrl(me[hrefAttr]);
-  let name, files, value;
-  if (me instanceof HTMLFormElement) {
-    let formData = createFormData(me);
-    if (me[isPostAttr]) body = formData;
-    else updateSearch(url, formData);
-  } else if (name = me["name"]) {
+  let item;
+  for (item of me[attributesStr] || []) attrMap[item[nameStr]]?.[index](me, item[valueStr], item[nameStr]);
+  for (item of me[childNodesStr]) item[initMeth]?.(index);
+};
+
+EtProto[addEventListenerMeth] = EtProto.addEventListener;
+EtProto[dispatchEventMeth] = EtProto.dispatchEvent;
+ElProto[getAttributeNodeMeth] = ElProto.getAttributeNode;
+ElProto[removeAttributeNodeMeth] = ElProto.removeAttributeNode;
+ElProto[setAttributeMeth] = ElProto.setAttribute;
+ElProto[removeAttributeMeth] = ElProto.removeAttribute;
+
+/** @this {Element} */
+ElProto[serializeMeth] = function (url) {
+  /** @noinline */
+  let me = this;
+  let body = null, formData, files, file, name, value;
+  if (name = me[nameStr]) {
     if (files = me["files"]) {
-      if (files.length) {
-        let formData = createFormData();
-        for (let file of files) formData.append(name, file);
+      if (files[lengthStr]) {
+        formData = createFormData();
+        for (file of files) formData.append(name, file);
         if (me[isPostAttr]) body = formData;
         else updateSearch(url, formData);
       }
-    } else if (value = me["value"]) {
-      let formData = createFormData();
+    } else if (value = me[valueStr]) {
+      formData = createFormData();
       formData.set(name, value);
       if (me[isPostAttr]) body = formData;
       else updateSearch(url, formData);
     }
   }
-  let xhr = new XMLHttpRequest();
-  let { promise, resolve } = Promise["withResolvers"]();
-  xhr.responseType = "document";
-  xhr.withCredentials = me[withCredentialsAttr];
-  xhr[ownerElementAttr] = me;
-  xhr[resolveMeth] = resolve;
-  xhr.onloadend = onloadend;
-  for ({ name, value } of getAttrs(me)) name.startsWith("h-") &&
-    xhr.setRequestHeader(name.substring(2), value);
-  me[markErrorMeth]?.(false);
-  me[markLoadingMeth]?.(true);
-  xhr.open(me[verbAttr], url);
-  xhr.send(body);
-  return promise;
-}
+  return body;
+};
 
-/**
- * @param {ChildNode} left
- * @param {Array<ChildNode>} rightList
- */
-let replaceChildren = (left, rightList) => {
-  let leftList = getChildNodes(left);
-  let len = Math.max(leftList.length, rightList.length);
-  let i = 0;
-  let j = 0;
-  while (i < len) {
-    let leftNode = /** @type {ChildNode} */(leftList[i]);
-    let rightNode = /** @type {ChildNode} */(rightList[j]);
-    if (leftNode) {
-      if (rightNode) {
-        ++i;
-        j += processNode(leftNode, rightNode);
+/** @this {HTMLFormElement} */
+HTMLFormElement[protoStr][serializeMeth] = function (url) {
+  let body = null, formData = createFormData(this);
+  if (this[isPostAttr]) body = formData;
+  else updateSearch(url, formData);
+  return body;
+};
+
+/** @this {Element} */
+ElProto[handleEventMeth] = function (event) {
+  /** @noinline */
+  let me = this;
+  let match = me[getAttributeNodeMeth](onStr + event.type);
+  if (match && (match = split(match[valueStr]))) {
+    me[isDialogAttr] || event.preventDefault();
+    if (!me[timerAttr]) {
+      if (me[throttleAttr]) {
+        me[timerAttr] = startTimer(() => execute(me, match), me[throttleAttr]);
+      } else if (me[debounceAttr]) {
+        clearTimer(me[timerAttr]);
+        me[timerAttr] = startTimer(() => execute(me, match), me[debounceAttr]);
       } else {
-        initTree(leftNode, 1).remove();
-        --len;
-      }
-    } else {
-      left.appendChild(initTree(rightNode));
-      ++i;
-    }
-  }
-};
-
-/**
- * @param {ChildNode} leftNode
- * @param {ChildNode} rightNode
- */
-let processNode = (leftNode, rightNode) => {
-  if (leftNode.nodeName !== rightNode.nodeName) {
-    initTree(leftNode, 1)[replaceWithStr](initTree(rightNode));
-    return 0;
-  }
-  if (!leftNode.isEqualNode(rightNode)) {
-    leftNode.nodeValue == rightNode.nodeValue || (leftNode.nodeValue = rightNode.nodeValue);
-    if (leftNode.nodeType === 1) {
-      let leftEl = /** @type {Element} */(leftNode);
-      let rightEl = /** @type {Element} */(rightNode);
-      for (let leftAttr of getAttrs(leftEl)) {
-        if (!rightEl.hasAttribute(leftAttr.name)) {
-          attrMap[leftAttr.name]?.[1](leftEl, "");
-          leftEl.removeAttributeNode(leftAttr);
-        }
-      }
-      for (let rightAttr of getAttrs(rightEl)) {
-        let leftAttr = getAttributeNode(leftEl, rightAttr.name);
-        attrMap[rightAttr.name]?.[1](leftEl, "");
-        if (leftAttr) leftAttr.value == rightAttr.value || (leftAttr.value = rightAttr.value);
-        else leftEl.setAttributeNode(rightAttr);
-        attrMap[rightAttr.name]?.[0](leftEl, rightAttr.value);
-      }
-    }
-  }
-  replaceChildren(leftNode, getChildNodes(rightNode));
-  return 1;
-};
-
-/**
- * @param {string} name
- * @noinline
- */
-let createEvent = name => new Event(name);
-
-/**
- * @param {HTMLFormElement=} el
- * @noinline
- */
-let createFormData = el => new FormData(el);
-
-/**
- * @param {URL} url
- * @param {!FormData} formData
- * @noinline
- */
-let updateSearch = (url, formData) => {
-  // @ts-ignore
-  url.search = new URLSearchParams(formData).toString();
-};
-
-let ifAttr = "a";
-let applyStateMeth = "b";
-let invalidMatchAttr = "c";
-let validateMeth = "d";
-let isDialogAttr = "e";
-let throttleAttr = "f";
-let debounceAttr = "g";
-let timerAttr = "h";
-let hrefAttr = "i";
-let verbAttr = "j";
-let requestMeth = "k";
-let errorMatchAttr = "l";
-let loadingMatchAttr = "m";
-let markErrorMeth = "n";
-let markLoadingMeth = "o";
-let isPostAttr = "p";
-let withCredentialsAttr = "q";
-let ownerElementAttr = "r";
-let onceAttr = "s";
-let posAttr = "t";
-let onAttr = "u";
-let activeAttr = "v";
-let resolveMeth = "w";
-/** @noinline */
-let dropStr = "__DROP__";
-/** @noinline */
-let navigateStr = "navigate";
-/** @noinline */
-let revealStr = "reveal";
-/** @noinline */
-let concealStr = "conceal";
-/** @noinline */
-let renderStr = "render";
-/** @noinline */
-let checkValidityStr = "checkValidity";
-/** @noinline */
-let pushStateStr = "pushState";
-/** @noinline */
-let replaceStateStr = "replaceState";
-/** @noinline */
-let replaceChildrenStr = "replaceChildren";
-/** @noinline */
-let replaceWithStr = "replaceWith";
-/** @noinline */
-let emptyArr = [];
-/** @noinline */
-let emptyObj = {};
-/** @noinline */
-let historyMethod = [pushStateStr, replaceStateStr];
-/** @noinline */
-let nativeRender = ["after", "append", "before", "prepend"];
-/** @noinline */
-let nonSpacePattern = /\S+/g;
-/** @noinline */
-let trailingSlashPattern = /\/*$/;
-/** @noinline */
-let extensionPattern = /\.[^\/]+$/;
-/** @noinline */
-let doc = document;
-/** @noinline */
-let raf = requestAnimationFrame;
-let navigateEvent = createEvent(navigateStr);
-let revealEvent = createEvent(revealStr);
-let concealEvent = createEvent(concealStr);
-let renderEvent = createEvent(renderStr);
-
-/** @type {!Object<string, Array<!Element>>} */
-let onElements = {};
-
-/** @type {!Object<string, Array<!Element>>} */
-let ifElements = {};
-
-/** @type {Array<!Element>} */
-let navigateElements = [];
-
-/** @type {Object<string, boolean>} */
-let state = {};
-
-/**
- * @param {Element} el
- * @param {string} name
- * @noinline
- */
-let getAttributeNode = (el, name) => el.getAttributeNode(name);
-
-/**
- * @param {string} base
- * @noinline
- */
-let resolveUrl = base => {
-  let { pathname, href } = location;
-  return new URL(base, extensionPattern.test(pathname) ? href : href.replace(trailingSlashPattern, "/"));
-};
-
-/** @param {string} value */
-let split = value => {
-  let match = value.match(nonSpacePattern);
-  return match && match.length ? match : undefined;
-};
-
-/**
- * @param {Element} el
- * @noinline
- */
-let getAttrs = el => el.attributes;
-
-/**
- * @param {Node} node
- * @returns {!Array<!ChildNode>}
- * @noinline
- */
-let getChildNodes = node => /** @type {!Array<!ChildNode>} */(/** @type {*} */(node.childNodes));
-
-/**
- * @param {EventTarget} target
- * @param {!Event} event
- * @noinline
- */
-let pub = (target, event) => target.dispatchEvent(event);
-
-/** @param {function(IntersectionObserverEntry): void} handle */
-let createObserver = handle => new IntersectionObserver(entries => entries.forEach(handle));
-
-/**
- * @param {boolean} intersect
- * @param {!Event} event
- * @returns {function(IntersectionObserverEntry) : void}
- */
-let createHandle = (intersect, event) => entry => entry.isIntersecting === intersect && pub(entry.target, event);
-
-/** @param {Element} el */
-let dispatchNavigate = el => pub(el, navigateEvent);
-
-/** @param {Element} el */
-let initOnReveal = el => revealObserver.observe(el);
-
-/** @param {Element} el */
-let deInitOnReveal = el => revealObserver.unobserve(el);
-
-/** @param {Element} el */
-let initOnConceal = el => concealObserver.observe(el);
-
-/** @param {Element} el */
-let deInitOnConceal = el => concealObserver.unobserve(el);
-
-let revealObserver = createObserver(createHandle(true, revealEvent));
-let concealObserver = createObserver(createHandle(false, concealEvent));
-
-/**
- * @param {!Element} el
- * @param {string} value
- */
-let initOn = (el, value) => {
-  el[onAttr] = value;
-  onElements[value] ? onElements[value].push(el) : onElements[value] = [el];
-};
-
-/**
- * @template T
- * @param {T} item
- * @param {Array<T>} arr
- */
-let remove = (item, arr = emptyArr) => {
-  let i = arr.indexOf(item);
-  i === -1 || arr.splice(i, 1);
-};
-
-/**
- * @param {!Element} el
- * @noinline
- */
-let deInitOn = el => {
-  remove(el, onElements[el[onAttr]]);
-  delete el[onAttr];
-};
-
-/**
- * @param {!Element} el
- * @param {string} value
- */
-let initIf = (el, value) => {
-  el[ifAttr] = value;
-  el[applyStateMeth] = applyState;
-  ifElements[value] ? ifElements[value].push(el) : ifElements[value] = [el];
-};
-
-/** @param {!Element} el */
-let deInitIf = el => {
-  remove(el, ifElements[el[ifAttr]]);
-  delete el[ifAttr];
-  delete el[activeAttr];
-  delete el[applyStateMeth];
-};
-
-/** @param {!Element} el */
-let initNavigate = el => navigateElements.push(el);
-
-/** @param {!Element} el */
-let deInitNavigate = el => remove(el, navigateElements);
-
-/**
- * @param {!Element} el
- * @param {string} value
- */
-let initInvalid = (el, value) => {
-  if (typeof el[checkValidityStr] === "function") {
-    let match = split(value);
-    if (match) {
-      el[invalidMatchAttr] = match;
-      el[validateMeth] = validate;
-      el[validateMeth](true);
-    }
-  }
-};
-
-/** @param {!Element} el */
-let deInitInvalid = el => {
-  delete el[invalidMatchAttr];
-  delete el[validateMeth];
-};
-
-/**
- * @param {!Element} el
- * @param {string} value
- */
-let initError = (el, value) => {
-  let match = split(value);
-  if (match) {
-    el[errorMatchAttr] = match;
-    el[markErrorMeth] = markError;
-  }
-};
-
-/** @param {!Element} el */
-let deInitError = el => {
-  delete el[errorMatchAttr];
-  delete el[markErrorMeth];
-};
-
-/**
- * @param {!Element} el
- * @param {string} value
- */
-let initLoading = (el, value) => {
-  let match = split(value);
-  if (match) {
-    el[loadingMatchAttr] = match;
-    el[markLoadingMeth] = markLoading;
-  }
-};
-
-/** @param {!Element} el */
-let deInitLoading = el => {
-  delete el[loadingMatchAttr];
-  delete el[markLoadingMeth];
-};
-
-/**
- * @param {!Element} el
- * @param {string} value
- */
-let initMethod = (el, value) => value === "dialog" && (el[isDialogAttr] = true);
-
-/**
- * @param {string} key
- * @returns {function(Element): void}
- */
-let createDeInitKey = key => el => {
-  delete el[key];
-};
-
-/**
- * @param {string} key
- * @returns {function(Element, string): number}
- */
-let createInitDelay = key => (el, value) => el[key] = Number(value);
-
-/**
- * @param {string} verb
- * @returns {function(Element, string): void}
- */
-let createInitVerb = verb => (el, value) => {
-  el[hrefAttr] = value;
-  el[verbAttr] = verb;
-  verb === "POST" && (el[isPostAttr] = true);
-  el[requestMeth] = request;
-};
-
-/** @param {!Element} el */
-let deInitVerb = el => {
-  delete el[verbAttr];
-  delete el[isPostAttr];
-  delete el[requestMeth];
-};
-
-/**
- * @param {!Element} el
- * @param {string} value
- */
-let initHref = (el, value) => {
-  el[hrefAttr] = value;
-  el[pushStateStr] = pushState;
-  el[replaceStateStr] = replaceState;
-};
-
-/** @param {!Element} el */
-let deInitHref = el => {
-  delete el[pushStateStr];
-  delete el[replaceStateStr];
-};
-
-/**
- * @param {!Element} el
- * @param {string} value
- */
-let initPos = (el, value) => el[posAttr] = value;
-
-/**
- * @param {string} key
- * @returns {function(Element): boolean}
- */
-let createInitHasAttr = key => el => el[key] = true;
-
-let attrMap = {
-  "on": [initOn, deInitOn],
-  "if": [initIf, deInitIf],
-  ["on:" + navigateStr]: [initNavigate, deInitNavigate],
-  ["on:" + revealStr]: [initOnReveal, deInitOnReveal],
-  ["on:" + concealStr]: [initOnConceal, deInitOnConceal],
-  "if:invalid": [initInvalid, deInitInvalid],
-  "if:error": [initError, deInitError],
-  "if:loading": [initLoading, deInitLoading],
-  "method": [initMethod, createDeInitKey(isDialogAttr)],
-  "throttle": [createInitDelay(throttleAttr), createDeInitKey(throttleAttr)],
-  "debounce": [createInitDelay(debounceAttr), createDeInitKey(debounceAttr)],
-  "href": [initHref, deInitHref],
-  "action": [initHref, deInitHref],
-  "get": [createInitVerb("GET"), deInitVerb],
-  "post": [createInitVerb("POST"), deInitVerb],
-  "put": [createInitVerb("PUT"), deInitVerb],
-  "delete": [createInitVerb("DELETE"), deInitVerb],
-  "credentials": [createInitHasAttr(withCredentialsAttr), createDeInitKey(withCredentialsAttr)],
-  "once": [createInitHasAttr(onceAttr), createDeInitKey(onceAttr)],
-  "pos": [initPos, createDeInitKey(posAttr)],
-};
-
-/**
- * @param {ChildNode} root
- * @param {number} index
- */
-let initTree = (root, index = 0) => {
-  if (root instanceof Element) for (let attr of getAttrs(root)) attrMap[attr.name]?.[index](root, attr.value);
-  for (let node of getChildNodes(root)) initTree(node, index);
-  return root;
-};
-
-/** @param {!Array<ChildNode>} roots */
-let initTrees = roots => {
-  for (let root of roots) initTree(root);
-  return roots;
-};
-
-/**
- * @param {Element} el
- * @noinline
- */
-let clearTimer = el => el[timerAttr] = clearTimeout(el[timerAttr]);
-
-/**
- * @param {Element} el
- * @param {!Array<string>} match
- * @param {number} delay
- * @noinline
- */
-let startTimer = (el, match, delay) => el[timerAttr] = setTimeout(execute.bind(null, el, match), delay);
-
-/** @param {!Array<function(): void>} queue */
-let enqueue = queue => queue.length && raf(() => {
-  for (let fn of queue) fn();
-});
-
-/**
- * @param {Element} el
- * @param {!Array<string>} match
- */
-let execute = (el, match) => raf(() => {
-  clearTimer(el);
-  let queue = [];
-  for (let action of match) {
-    if (historyMethod.includes(action)) el[action]?.();
-    for (let onEl of onElements[action] || emptyArr) onEl[requestMeth] && queue.push(onEl[requestMeth]());
-  }
-  Promise.all(queue).then(enqueue);
-});
-
-/** @param {Event} event */
-let onEvent = event => {
-  let el = event.target;
-  if (el instanceof Element) {
-    let attr = getAttributeNode(el, "on:" + event.type);
-    if (attr) {
-      let match = split(attr.value);
-      if (match) {
-        el[isDialogAttr] || event.preventDefault();
-        if (!el[timerAttr]) {
-          if (el[throttleAttr]) {
-            startTimer(el, match, el[throttleAttr]);
-          } else if (el[debounceAttr]) {
-            clearTimer(el);
-            startTimer(el, match, el[debounceAttr]);
-          } else {
-            execute(el, match);
-          }
-        }
+        execute(me, match);
       }
     }
   }
 };
 
-/** @param {Event} event */
-let onLoad = event => raf(() => {
-  initTree(/** @type {ChildNode} */(event.target));
-  for (let key in ifElements) for (let el of ifElements[key] || emptyArr) el[applyStateMeth]();
-});
-
-/** @param {Event} event */
-let onChange = event => raf(() => (/** @type {Element} */(event.target))[validateMeth]?.());
-
-/** @param {Event} event */
-let onInvalid = event => raf(() => (/** @type {Element} */(event.target))[validateMeth]?.(false, true));
-
-/** @noinline */
-let onNavigate = () => navigateElements.forEach(dispatchNavigate);
-
-/**
- * @param {EventTarget} target
- * @param {string} name
- * @param {function(Event): void} handler
- * @noinline
- */
-let sub = (target, name, handler) => target.addEventListener(name, handler, true);
-
-[navigateStr, revealStr, concealStr, renderStr].forEach(name => sub(doc, name, onEvent));
-for (let key in doc) key.startsWith("on") && sub(doc, key.substring(2), onEvent);
-sub(doc, "DOMContentLoaded", onLoad);
-["input", "change"].forEach(name => sub(doc, name, onChange));
-sub(doc, "invalid", onInvalid);
-sub(window, "popstate", onNavigate);
+for (evtName in doc) evtName.startsWith("on") && doc[addEventListenerMeth](evtName.substring(2), onEvent, yes);
+for (evtName of [revealStr, concealStr, navigateStr, renderStr]) doc[addEventListenerMeth](evtName, onEvent, yes);
+doc[addEventListenerMeth]("DOMContentLoaded", onLoad, yes);
+doc[addEventListenerMeth]("input", onChange, yes);
+doc[addEventListenerMeth]("change", onChange, yes);
+doc[addEventListenerMeth]("invalid", onInvalid, yes);
+window[addEventListenerMeth]("popstate", onNavigate, yes);
