@@ -63,11 +63,11 @@ HTML elements can trigger server requests in response to an action.
 
 More than one element can handle the same action and can trigger different requests.
 
-Relative endpoints are supported, so given a current URI of "https[]()://www.example.com/some/path":
+Relative endpoints are supported, so given a current URI of "https:/[]()/www[]().example.[]()com/some/path":
 
-- "list-todo" or "./list-todo" will both resolve to "https[]()://www.example.com/some/path/list-todo"
-- "../list-todo" will resolve to "https[]()://www.example.com/some/list-todo"
-- "/list-todo" will resolve to "https[]()://www.example.com/list-todo"
+- "list-todo" or "./list-todo" will both resolve to "https:/[]()/www[]().example.[]()com/some/path/list-todo"
+- "../list-todo" will resolve to "https:/[]()/www[]().example.[]()com/some/list-todo"
+- "/list-todo" will resolve to "https:/[]()/www[]().example.[]()com/list-todo"
 
 #### Relevant attributes:
 
