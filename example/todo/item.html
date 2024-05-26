@@ -1,0 +1,33 @@
+<li
+  on="{action}-{id}"
+  get="/{route}/{id}"
+  result="todo-{id}"
+  render="todo-{id}"
+  position="replaceWith"
+  class="{completed} {editing}"
+>
+  <div class="view">
+    <input
+      on:change="toggleCompleted-{id}"
+      on="toggleCompleted-{id}"
+      put="/toggle-completed/{id}"
+      on:result="updateTodos"
+      class="toggle"
+      name="completed"
+      type="checkbox"
+      {checked}
+    >
+    <label
+      render="rename-{id}"
+      on:dblclick="startEdit startEdit-{id}"
+    >{title}</label>
+    <button
+      on:click="remove-{id}"
+      on="remove-{id}"
+      delete="/remove/{id}"
+      on:result="updateTodos"
+      class="destroy"
+    ></button>
+  </div>
+  {editor}
+</li>

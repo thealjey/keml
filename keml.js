@@ -25,6 +25,9 @@ let evtName,
   ownerElementAttr = "x",
   resolveMeth = "y",
   onceAttr = "z",
+  resultMatchAttr = "A",
+  renderAttr = "B",
+  isInvalidAttr = "C",
   /** @noinline */
   undef,
   /** @noinline */
@@ -89,8 +92,8 @@ let evtName,
     let leftAttr, rightAttr;
     if (leftNode.nodeName != rightNode.nodeName) {
       leftNode[initMeth]?.(1);
-      rightNode[initMeth]?.();
       leftNode[replaceWithStr](rightNode);
+      rightNode[initMeth]?.();
       return 0;
     }
     if (!leftNode.isEqualNode(rightNode)) {
@@ -98,16 +101,16 @@ let evtName,
       if (leftNode.nodeType == 1) {
         for (leftAttr of leftNode[attributesStr]) {
           if (!rightNode.hasAttribute(leftAttr[nameStr])) {
-            attrMap[leftAttr[nameStr]]?.[1](leftNode);
+            attrMap[leftAttr[nameStr]]?.[1](leftNode, "", leftAttr[nameStr]);
             leftNode[removeAttributeNodeMeth](leftAttr);
           }
         }
         for (rightAttr of rightNode[attributesStr]) {
           leftAttr = leftNode[getAttributeNodeMeth](rightAttr[nameStr]);
-          attrMap[rightAttr[nameStr]]?.[1](leftNode);
+          attrMap[rightAttr[nameStr]]?.[1](leftNode, "", rightAttr[nameStr]);
           if (leftAttr) leftAttr[valueStr] == rightAttr[valueStr] || (leftAttr[valueStr] = rightAttr[valueStr]);
-          else leftNode.setAttributeNode(rightAttr);
-          attrMap[rightAttr[nameStr]]?.[0](leftNode, rightAttr[valueStr]);
+          else leftNode[setAttributeMeth](rightAttr[nameStr], rightAttr[valueStr]);
+          attrMap[rightAttr[nameStr]]?.[0](leftNode, rightAttr[valueStr], rightAttr[nameStr]);
         }
       }
     }
@@ -134,8 +137,8 @@ let evtName,
           --len;
         }
       } else {
-        rightNode[initMeth]?.();
         left.appendChild(rightNode);
+        rightNode[initMeth]?.();
         ++i;
       }
     }
@@ -154,7 +157,7 @@ let evtName,
      * @param {boolean=} b
      * @noinline
      */
-    (a, b) => toggleState(!(b ?? a.checkValidity?.() ?? yes), a[invalidMatchAttr])
+    (a, b) => toggleState((a[isInvalidAttr] = !(b ?? a.checkValidity?.() ?? yes)), a[invalidMatchAttr])
   ),
   /** @noinline */
   getUrl = a => a[hrefAttr] && new URL(a[hrefAttr], /\.[^\/]+$/.test(loc.pathname) ? loc.href : loc.href.replace(/\/*$/, "/")),
@@ -167,9 +170,12 @@ let evtName,
         history[action]({}, "", url1);
         onNavigate();
       }
-      for (onEl of onElements[action] || []) if (url2 = getUrl(onEl)) {
-        formData = onEl[serializeMeth]();
-        onEl[isPostAttr] || (url2.search = new URLSearchParams(formData));
+      action == "reset" && el[action]?.();
+      for (onEl of onElements[action] || []) if (onEl[methodAttr] && (url2 = getUrl(onEl)) && !(validate(onEl), onEl[isInvalidAttr])) {
+        (formData = onEl[serializeMeth]()) &&
+          !onEl[isPostAttr] &&
+          (/** @type {*} */([...formData.keys()]))[lengthStr] &&
+          (url2.search = new URLSearchParams(formData));
         xhr = new XMLHttpRequest();
         pwr = Promise["withResolvers"]();
         xhr.responseType = "document";
@@ -213,7 +219,7 @@ let evtName,
   /** @noinline */
   navigateStr = "navigate",
   /** @noinline */
-  renderStr = "render",
+  resultStr = "result",
   /** @noinline */
   nodeValueStr = "nodeValue",
   /** @noinline */
@@ -224,6 +230,8 @@ let evtName,
   loc = location,
   /** @noinline */
   doc = document,
+  /** @noinline */
+  internalForm = doc.createElement("form"),
   /** @noinline */
   startTimer = setTimeout,
   /** @noinline */
@@ -241,6 +249,8 @@ let evtName,
   /** @noinline */
   ifElements = {},
   /** @noinline */
+  renderElements = {},
+  /** @noinline */
   nvElements = [],
   /** @noinline */
   nvEvent = createEvent(navigateStr),
@@ -249,7 +259,7 @@ let evtName,
   /** @noinline */
   concealEvent = createEvent(concealStr),
   /** @noinline */
-  renderEvent = createEvent(renderStr),
+  resultEvent = createEvent(resultStr),
   /** @noinline */
   createInitUnset = a => b => b[a] = undef,
   /** @noinline */
@@ -272,6 +282,7 @@ let evtName,
   attrMap = {
     "on": createInitDict(onAttr, onElements),
     "if": createInitDict(ifAttr, ifElements),
+    "render": createInitDict(renderAttr, renderElements),
     [onStr + navigateStr]: [a => add(a, nvElements), a => remove(a, nvElements)],
     [onStr + revealStr]: createInitObserver(createObserver(createHandle(yes, revealEvent))),
     [onStr + concealStr]: createInitObserver(createObserver(createHandle(false, concealEvent))),
@@ -290,7 +301,19 @@ let evtName,
     "delete": initVerb,
     "credentials": createInitBool(credentialsAttr),
     "once": createInitBool(onceAttr),
-    "pos": [(a, b) => a[posAttr] = b, createInitUnset(posAttr)],
+    "result": createInitMatch(resultMatchAttr),
+    "position": [(a, b) => a[posAttr] = b, createInitUnset(posAttr)],
+    "autofocus": [
+      (a, b) => {
+        try {
+          a.focus();
+          b = a[valueStr][lengthStr];
+          a.setSelectionRange(b, b);
+        } catch { }
+      },
+      () => { },
+    ],
+    "checked": [(a, _, b) => (a[b] = yes), (a, _, b) => (a[b] = false)],
   },
   onEvent = event => event[targetStr][handleEventMeth]?.(event),
   onLoad = event => raf(() => (event[targetStr][initMeth]?.(), applyStates())),
@@ -303,35 +326,38 @@ function onloadend() {
   /** @noinline */
   let me = this;
   let owner = me[ownerElementAttr];
-  let pos = owner[posAttr] || replaceChildrenStr;
-  let children = me.responseXML?.body[childNodesStr];
-  let rightNode;
+  let response = me.responseXML?.body;
+  let pos, el, rightNode, children, batch = [];
   me[resolveMeth](() => {
     toggleState(false, owner[loadingMatchAttr]);
     if (me.status > 399) toggleState(yes, owner[errorMatchAttr]);
-    else if (children) {
+    else if (response) {
       if (owner[onceAttr]) {
         attrMap.on[1](owner);
         owner[removeAttributeMeth]("on");
       }
-      if (pos == replaceChildrenStr) replaceChildren(owner, children);
-      else if (pos == replaceWithStr) {
-        children = /** @type {*} */(Array.from(children));
-        rightNode = children.shift();
-        if (rightNode) {
+      for (pos of owner[resultMatchAttr] || []) for (el of renderElements[pos] || [])
+        add([el, (children = (children ? response.cloneNode(yes) : response)[childNodesStr]), el[posAttr] || replaceChildrenStr], batch);
+      for ([el, children, pos] of batch) {
+        if (pos == replaceChildrenStr) replaceChildren(el, children);
+        else if (pos == replaceWithStr) {
+          children = /** @type {*} */([...children]);
+          rightNode = children.shift();
+          if (rightNode) {
+            initTrees(children);
+            children[lengthStr] && el.after(...(/** @type {!Array<*>} */(children)));
+            processNode(el, rightNode);
+          } else {
+            el[initMeth]?.(1);
+            el.remove();
+          }
+        } else if (["after", "append", "before", "prepend"].includes(pos)) {
           initTrees(children);
-          children[lengthStr] && owner.after(...(/** @type {!Array<*>} */(children)));
-          processNode(owner, rightNode);
-        } else {
-          owner[initMeth]?.(1);
-          owner.remove();
+          el[pos](...children);
         }
-      } else if (["after", "append", "before", "prepend"].includes(pos)) {
-        initTrees(children);
-        owner[pos](...children);
       }
       applyStates();
-      owner[dispatchEventMeth](renderEvent);
+      owner[dispatchEventMeth](resultEvent);
     }
   });
 }
@@ -352,13 +378,14 @@ ElProto[removeAttributeNodeMeth] = ElProto.removeAttributeNode;
 ElProto[setAttributeMeth] = ElProto.setAttribute;
 ElProto[removeAttributeMeth] = ElProto.removeAttribute;
 
-/** @this {Element} */
 ElProto[serializeMeth] = function () {
-  /** @noinline */
-  let me = this;
-  let formData = new FormData(), name, value, item;
-  if (name = me[nameStr]) for (item of (value = me["files"]) ? value : (value = me[valueStr]) ? [value] : []) formData.append(name, item);
-  return formData;
+  return null;
+};
+
+/** @this {HTMLInputElement} */
+HTMLInputElement[protoStr][serializeMeth] = HTMLSelectElement[protoStr][serializeMeth] = HTMLTextAreaElement[protoStr][serializeMeth] = function () {
+  internalForm[replaceChildrenStr](this.cloneNode(yes));
+  return new FormData(internalForm);
 };
 
 /** @this {HTMLFormElement} */
@@ -387,8 +414,9 @@ ElProto[handleEventMeth] = function (event) {
 };
 
 for (evtName in doc) evtName.startsWith("on") && doc[addEventListenerMeth](evtName.substring(2), onEvent, yes);
-for (evtName of [revealStr, concealStr, navigateStr, renderStr]) doc[addEventListenerMeth](evtName, onEvent, yes);
+for (evtName of [revealStr, concealStr, navigateStr, resultStr]) doc[addEventListenerMeth](evtName, onEvent, yes);
 doc[addEventListenerMeth]("DOMContentLoaded", onLoad, yes);
+doc[addEventListenerMeth]("reset", onChange, yes);
 doc[addEventListenerMeth]("input", onChange, yes);
 doc[addEventListenerMeth]("change", onChange, yes);
 doc[addEventListenerMeth]("invalid", onInvalid, yes);
