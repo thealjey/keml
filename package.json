@@ -1,6 +1,6 @@
 {
   "name": "keml",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "An HTMX alternative with a focus on performance, flexibility and, most of all, simplicity.",
   "main": "keml.min.js",
   "scripts": {

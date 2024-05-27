@@ -6,28 +6,33 @@
   position="replaceWith"
   class="{completed} {editing}"
 >
-  <div class="view">
+  <div
+    class="view"
+  >
     <input
       on:change="toggleCompleted-{id}"
+      on:result="updateTodos"
       on="toggleCompleted-{id}"
       put="/toggle-completed/{id}"
-      on:result="updateTodos"
+      type="checkbox"
       class="toggle"
       name="completed"
-      type="checkbox"
       {checked}
     >
     <label
+      on:dblclick="startEdit-{id} startEdit"
       render="rename-{id}"
-      on:dblclick="startEdit startEdit-{id}"
-    >{title}</label>
+    >
+      {title}
+    </label>
     <button
       on:click="remove-{id}"
+      on:result="updateTodos"
       on="remove-{id}"
       delete="/remove/{id}"
-      on:result="updateTodos"
       class="destroy"
-    ></button>
+    >
+    </button>
   </div>
   {editor}
 </li>

@@ -1,22 +1,24 @@
 <form
-  action="/rename/{id}"
-  method="post"
-  class="input-container"
   on:submit="rename-{id} endEdit"
   on="rename-{id}"
+  action="/rename/{id}"
+  method="post"
   result="rename-{id}"
+  class="input-container"
 >
   <input
-    required
-    value="{title}"
+    on:blur="endEdit-{id} endEdit"
     id="edit-todo-input"
     class="edit"
     name="todo"
-    on:blur="endEdit endEdit-{id}"
+    value="{title}"
+    required
     autofocus
->
+  >
   <label
     class="visually-hidden"
     for="edit-todo-input"
-  >Edit Todo Input</label>
+  >
+    Edit Todo Input
+  </label>
 </form>

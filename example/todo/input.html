@@ -1,12 +1,15 @@
-<input
+<label
   on="{action}"
   get="/{route}"
   result="input"
   render="input"
   position="replaceWith"
-  required
-  name="todo"
-  class="new-todo"
-  placeholder="What needs to be done?"
-  {autofocus}
 >
+  <input
+    class="new-todo"
+    name="todo"
+    placeholder="What needs to be done?"
+    required
+    {autofocus}
+  >
+</label>

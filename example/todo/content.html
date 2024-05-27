@@ -1,59 +1,79 @@
-<main class="main">
-  <div class="toggle-all-container">
+<main
+  class="main"
+>
+  <div
+    class="toggle-all-container"
+  >
     <input
       on:change="toggleAll"
+      on:result="updateTodos"
       on="toggleAll"
       put="/toggle-all"
-      on:result="updateTodos"
+      type="checkbox"
       id="toggle-all"
       class="toggle-all"
       name="completed"
-      type="checkbox"
       {checked}
     >
     <label
       class="toggle-all-label {hidden}"
       for="toggle-all"
-    >Mark all as complete</label>
+    >
+      Mark all as complete
+    </label>
   </div>
   <ul
-    render="newItem"
-    position="append"
     class="todo-list"
-  >{visibleTodos}</ul>
+  >
+    {visibleTodos}
+  </ul>
 </main>
-<footer class="footer">
+<footer
+  class="footer"
+>
   <span
     class="todo-count"
-  >{activeCount} {items} left</span>
-  <ul class="filters">
+  >
+    {activeCount} {items} left
+  </span>
+  <ul
+    class="filters"
+  >
     <li>
       <a
         on:click="pushState"
         href="/"
         class="{all}"
-      >All</a>
+      >
+        All
+      </a>
     </li>
     <li>
       <a
         on:click="pushState"
         href="/active"
         class="{active}"
-      >Active</a>
+      >
+        Active
+      </a>
     </li>
     <li>
       <a
         on:click="pushState"
         href="/completed"
         class="{completed}"
-      >Completed</a>
+      >
+        Completed
+      </a>
     </li>
   </ul>
   <button
     on:click="clearCompleted"
+    on:result="updateTodos"
     on="clearCompleted"
     delete="/remove-completed"
-    on:result="updateTodos"
     class="clear-completed"
-  >Clear completed</button>
+  >
+    Clear completed
+  </button>
 </footer>

@@ -6,34 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TodoMVC: KEML</title>
     <link rel="icon" href="data:">
-    <script src="keml.js"></script>
+    <script src="/keml.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/todomvc-app-css@2.4.3/index.css">
-    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="/app.css">
   </head>
   <body>
-    <section class="todoapp">
-      <header class="header">
-        <h1>todos</h1>
+    <section
+      class="todoapp"
+    >
+      <header
+        class="header"
+      >
+        <h1>
+          todos
+        </h1>
         <form
+          on:submit="addTodo reset"
+          on:result="updateTodos"
+          on="addTodo"
           action="/create"
           method="post"
-          on:submit="addTodo reset"
-          on="addTodo"
-          result="newItem"
-          on:result="updateTodos"
-        >{input}</form>
+        >
+          {input}
+        </form>
       </header>
       <div
+        on:navigate="updateTodos"
         on="updateTodos"
         get="content"
         result="content"
         render="content"
-        on:navigate="updateTodos"
-      >{content}</div>
+      >
+        {content}
+      </div>
     </section>
-    <footer class="info">
-      <p>Double-click to edit a todo</p>
-      <p>Inspired by and uses the stylesheets from <a href="http://todomvc.com">TodoMVC</a></p>
+    <footer
+      class="info"
+    >
+      <p>
+        Double-click to edit a todo
+      </p>
+      <p>
+        Inspired by and uses the stylesheets from&nbsp;
+        <a
+          href="http://todomvc.com"
+        >
+          TodoMVC
+        </a>
+      </p>
     </footer>
   </body>
 </html>

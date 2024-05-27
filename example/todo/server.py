@@ -3,32 +3,55 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from os.path import dirname, join
 from urllib.parse import urlparse, parse_qs
+from re import sub, MULTILINE
 
-hostName = "0.0.0.0"
+hostName = "127.0.0.1"
 serverPort = 8080
 
 dir = dirname(__file__)
 
 todos = []
 
+partials = {}
+
 
 def toBytes(value):
   return bytes(value, "utf-8")
 
 
-def getEditor(id, title):
-  with open(join(dir, "editor.html"), "r") as f:
-    return f.read().format(id=id, title=title)
+def loadHTML(name, **kwargs):
+  if name not in partials:
+    with open(join(dir, name + ".html"), "r") as f:
+      partials[name] = f.read()
+    partials[name] = sub(r"<!--.*?-->", " ", partials[name], 0, MULTILINE)
+    partials[name] = sub(r"\s+", " ", partials[name], 0, MULTILINE)
+    partials[name] = sub(r" ?> ?", ">", partials[name], 0)
+    partials[name] = sub(r" ?< ?", "<", partials[name], 0)
+    partials[name] = partials[name].strip()
+  return partials[name].format(**kwargs)
 
 
-def getItem():
-  with open(join(dir, "item.html"), "r") as f:
-    return f.read()
+def getInput(action="startEdit", route="input-edit", autofocus="autofocus"):
+  return loadHTML(
+      "input",
+      action=action,
+      route=route,
+      autofocus=autofocus
+  )
 
 
-def getInput(action, route, autofocus):
-  with open(join(dir, "input.html"), "r") as f:
-    return f.read().format(action=action, route=route, autofocus=autofocus)
+def getItem(todo, editing="", editor="", action="startEdit", route="edit"):
+  return loadHTML(
+      "item",
+      id=todo[0],
+      title=todo[1],
+      checked="checked" if todo[2] else "",
+      completed="completed" if todo[2] else "",
+      editing=editing,
+      editor=editor,
+      action=action,
+      route=route
+  )
 
 
 def getContent(value):
@@ -39,7 +62,6 @@ def getContent(value):
   activeCount = len(activeTodos)
   completedCount = len(completedTodos)
   allCount = len(todos)
-  item = getItem()
   all = ""
   active = ""
   completed = ""
@@ -55,34 +77,25 @@ def getContent(value):
     visibleTodos = todos
     visibleCount = allCount
     all = "selected"
-  with open(join(dir, "content.html"), "r") as f:
-    return f.read().format(
-        visibleTodos="".join([item.format(
-            id=todo[0],
-            title=todo[1],
-            checked="checked" if todo[2] else "",
-            completed="completed" if todo[2] else "",
-            editing="",
-            editor="",
-            action="startEdit",
-            route="edit"
-        ) for todo in visibleTodos]),
-        all=all,
-        active=active,
-        completed=completed,
-        activeCount=activeCount,
-        checked="" if completedCount < allCount else "checked",
-        hidden="" if visibleCount > 0 else "visually-hidden",
-        items="item" if activeCount == 1 else "items"
-    )
+  return loadHTML(
+      "content",
+      visibleTodos="".join([getItem(todo) for todo in visibleTodos]),
+      all=all,
+      active=active,
+      completed=completed,
+      activeCount=activeCount,
+      checked="" if completedCount < allCount else "checked",
+      hidden="" if visibleCount > 0 else "visually-hidden",
+      items="item" if activeCount == 1 else "items"
+  )
 
 
 def getIndex(value):
-  with open(join(dir, "index.html"), "r") as f:
-    return toBytes(f.read().format(
-        input=getInput("startEdit", "input-edit", "autofocus"),
-        content=getContent(value)
-    ))
+  return toBytes(loadHTML(
+      "index",
+      input=getInput(),
+      content=getContent(value)
+  ))
 
 
 def getJS(path):
@@ -99,34 +112,14 @@ def getEdit(path):
   parsed = urlparse(path)
   id = int(parsed.path[6:])
   todo = next(x for x in todos if x[0] == id)
-  title = todo[1]
-  return toBytes(getItem().format(
-      id=id,
-      title=title,
-      checked="checked" if todo[2] else "",
-      completed="completed" if todo[2] else "",
-      editing="editing",
-      editor=getEditor(id, title),
-      action="endEdit",
-      route="todo"
-  ))
+  return toBytes(getItem(todo, "editing", loadHTML("editor", id=id, title=todo[1]), "endEdit", "todo"))
 
 
 def getTodo(path):
   parsed = urlparse(path)
   id = int(parsed.path[6:])
   todo = next(x for x in todos if x[0] == id)
-  title = todo[1]
-  return toBytes(getItem().format(
-      id=id,
-      title=title,
-      checked="checked" if todo[2] else "",
-      completed="completed" if todo[2] else "",
-      editing="",
-      editor="",
-      action="startEdit",
-      route="edit"
-  ))
+  return toBytes(getItem(todo))
 
 
 class TodoServer(BaseHTTPRequestHandler):
@@ -158,7 +151,7 @@ class TodoServer(BaseHTTPRequestHandler):
       elif path.startswith("/active"):
         wfile.write(getIndex("active"))
       elif path.startswith("/input"):
-        wfile.write(toBytes(getInput("startEdit", "input-edit", "autofocus")))
+        wfile.write(toBytes(getInput()))
       elif path.startswith("/edit"):
         wfile.write(getEdit(path))
       elif path.startswith("/todo"):
@@ -179,16 +172,6 @@ class TodoServer(BaseHTTPRequestHandler):
     if path.startswith("/create"):
       id = todos[-1][0] + 1 if len(todos) > 0 else 0
       todos.append([id, title, False])
-      wfile.write(toBytes(getItem().format(
-          id=id,
-          title=title,
-          checked="",
-          completed="",
-          editing="",
-          editor="",
-          action="startEdit",
-          route="edit"
-      )))
     elif path.startswith("/rename"):
       parsed = urlparse(path)
       id = int(parsed.path[8:])
