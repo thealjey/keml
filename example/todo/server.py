@@ -55,13 +55,13 @@ def getItem(todo, editing="", editor="", action="startEdit", route="edit"):
 
 
 def getContent(value):
-  if len(todos) < 1:
+  allCount = len(todos)
+  if allCount < 1:
     return ""
   activeTodos = [x for x in todos if x[2] == False]
   completedTodos = [x for x in todos if x[2] == True]
   activeCount = len(activeTodos)
   completedCount = len(completedTodos)
-  allCount = len(todos)
   all = ""
   active = ""
   completed = ""
