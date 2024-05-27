@@ -415,9 +415,7 @@ ElProto[handleEventMeth] = function (event) {
 
 for (evtName in doc) evtName.startsWith("on") && doc[addEventListenerMeth](evtName.substring(2), onEvent, yes);
 for (evtName of [revealStr, concealStr, navigateStr, resultStr]) doc[addEventListenerMeth](evtName, onEvent, yes);
+for (evtName of ["reset", "input", "change"]) doc[addEventListenerMeth](evtName, onChange, yes);
 doc[addEventListenerMeth]("DOMContentLoaded", onLoad, yes);
-doc[addEventListenerMeth]("reset", onChange, yes);
-doc[addEventListenerMeth]("input", onChange, yes);
-doc[addEventListenerMeth]("change", onChange, yes);
 doc[addEventListenerMeth]("invalid", onInvalid, yes);
 window[addEventListenerMeth]("popstate", onNavigate, yes);
