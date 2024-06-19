@@ -8,7 +8,7 @@ around the concept of actions.
 The ideas that HTMX has recently made popular are, frankly, the best that the
 web community collectively has ever had.
 
-However, like most great ideas, it is far more important than any actual
+However, like most great ideas, they are far more important than any actual
 specific implementation.
 
 ## Motivation
