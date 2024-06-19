@@ -5,6 +5,12 @@
 KEML is a lightweight flexible alternative to [HTMX](https://htmx.org/), built
 around the concept of actions.
 
+The ideas that HTMX has recently made popular are, frankly, the best that the
+web community collectively has ever had.
+
+However, like most great ideas, it is far more important than any actual
+specific implementation.
+
 ## Motivation
 
 Being small and fast and configuration/plugin free is not enough, when you are
