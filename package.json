@@ -1,6 +1,6 @@
 {
   "name": "keml",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "An HTMX alternative with a focus on performance, flexibility and, most of all, simplicity.",
   "main": "keml.min.js",
   "scripts": {
@@ -28,5 +28,5 @@
   "bugs": {
     "url": "https://github.com/thealjey/keml/issues"
   },
-  "homepage": "https://github.com/thealjey/keml#readme"
+  "homepage": "https://thealjey.github.io/keml/"
 }
