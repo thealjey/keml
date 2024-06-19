@@ -34,7 +34,8 @@ class Handler(BaseHandler):
   def ctx_completedTodos(self):
     return [x for x in todos if x.completed == True]
 
-  def find_todo(self, id: int | str | None):
+  def find_todo(self):
+    id = self.parsed_params.get("id")
     if id:
       return next((x for x in todos if x.id == int(id)), None)
 
@@ -60,7 +61,7 @@ class Handler(BaseHandler):
     self.get_home_xhr()
 
   def get_todo(self):
-    todo = self.find_todo(self.parsed_params.get("id"))
+    todo = self.find_todo()
     action = self.single_parsed_query("action")
     if todo and action:
       self.send_tpl("item", action=action, **asdict(todo))
@@ -71,7 +72,7 @@ class Handler(BaseHandler):
       todos.append(Todo(title))
 
   def post_todo(self):
-    todo = self.find_todo(self.parsed_params.get("id"))
+    todo = self.find_todo()
     title = self.single_parsed_data("todo")
     if todo and title:
       todo.title = title
@@ -83,7 +84,7 @@ class Handler(BaseHandler):
       todo.completed = completed
 
   def put_todo(self):
-    todo = self.find_todo(self.parsed_params.get("id"))
+    todo = self.find_todo()
     completed = self.single_parsed_query("completed") == "on"
     if todo:
       todo.completed = completed
