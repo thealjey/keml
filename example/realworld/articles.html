@@ -1,0 +1,49 @@
+<for value="articles">
+  <div class="article-preview">
+    <div class="article-meta">
+      <include value="info">
+      <yes value="{user and author.user_id != user.user_id}">
+        <include value="likeRequest" label="a">
+        <span render="likeButton-{article_id}" class="pull-xs-right">
+          <include value="likeButton" label="a">
+        </span>
+      </yes>
+    </div>
+    <a
+      on:click="pushState"
+      href="{url('article', slug=article_slug)}"
+      class="preview-link"
+    >
+      <h1 inert>{article_title}</h1>
+      <p inert>{short}</p>
+      <span inert>Read more...</span>
+      <ul inert class="tag-list">
+        <for value="tags">
+          <li inert class="tag-default tag-pill tag-outline">{item}</li>
+        </for>
+      </ul>
+    </a>
+  </div>
+</for>
+<yes value="{total / 10 > 1}">
+  <ul class="pagination">
+    <for value="{list(range(1, ceil(total / 10) + 1))}">
+      <yes value="{page == item}">
+        <li class="page-item active">
+          <a inert class="page-link">{item}</a>
+        </li>
+      </yes>
+      <no value="{page == item}">
+        <li class="page-item">
+          <a
+            on:click="pushState"
+            href="{url(route, **params) if item == 1 else url(f'{route}_pages', page=item, **params)}"
+            class="page-link"
+          >
+            {item}
+          </a>
+        </li>
+      </no>
+    </for>
+  </ul>
+</yes>

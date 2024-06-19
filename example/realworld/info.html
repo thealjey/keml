@@ -1,0 +1,16 @@
+<a
+  on:click="pushState"
+  href="{url('profile', slug=author.user_slug)}"
+>
+  <img inert src="{author.avatar}">
+</a>
+<div class="info">
+  <a
+    on:click="pushState"
+    href="{url('profile', slug=author.user_slug)}"
+    class="author"
+  >
+    {author.username}
+  </a>
+  <span class="date">{ftime(article_mtime)}</span>
+</div>

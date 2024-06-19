@@ -1,79 +1,101 @@
-<main
-  class="main"
->
-  <div
-    class="toggle-all-container"
-  >
-    <input
-      on:change="toggleAll"
+<yes value="{len(todos)}">
+  <main class="main">
+    <div class="toggle-all-container">
+      <input
+        on:change="toggleAll"
+        on:result="updateTodos"
+        on="toggleAll"
+        put="{url('home')}"
+        type="checkbox"
+        id="toggle-all"
+        class="toggle-all"
+        name="completed"
+        checked="{len(todos) == len(completedTodos)}"
+      >
+      <yes value="{active_route == 'home'}">
+        <label
+          class="toggle-all-label{'' if len(todos) else ' o-0'}"
+          for="toggle-all"
+        >
+          Mark all as complete
+        </label>
+      </yes>
+      <yes value="{active_route == 'active'}">
+        <label
+          class="toggle-all-label{'' if len(activeTodos) else ' o-0'}"
+          for="toggle-all"
+        >
+          Mark all as complete
+        </label>
+      </yes>
+      <yes value="{active_route == 'completed'}">
+        <label
+          class="toggle-all-label{'' if len(completedTodos) else ' o-0'}"
+          for="toggle-all"
+        >
+          Mark all as complete
+        </label>
+      </yes>
+    </div>
+    <ul class="todo-list">
+      <yes value="{active_route == 'home'}">
+        <for value="todos">
+          <include value="item" action="edit">
+        </for>
+      </yes>
+      <yes value="{active_route == 'active'}">
+        <for value="activeTodos">
+          <include value="item" action="edit">
+        </for>
+      </yes>
+      <yes value="{active_route == 'completed'}">
+        <for value="completedTodos">
+          <include value="item" action="edit">
+        </for>
+      </yes>
+    </ul>
+  </main>
+  <footer class="footer h2">
+    <span class="todo-count">
+      {len(activeTodos)} {"item" if len(activeTodos) == 1 else "items"} left
+    </span>
+    <ul class="filters">
+      <li>
+        <a
+          on:click="pushState"
+          href="{url('home')}"
+          class="{'selected' if active_route == 'home' else None}"
+        >
+          All
+        </a>
+      </li>
+      <li>
+        <a
+          on:click="pushState"
+          href="{url('active')}"
+          class="{'selected' if active_route == 'active' else None}"
+        >
+          Active
+        </a>
+      </li>
+      <li>
+        <a
+          on:click="pushState"
+          href="{url('completed')}"
+          class="{'selected' if active_route == 'completed' else None}"
+        >
+          Completed
+        </a>
+      </li>
+    </ul>
+    <button
+      on:click="clearCompleted"
       on:result="updateTodos"
-      on="toggleAll"
-      put="/toggle-all"
-      type="checkbox"
-      id="toggle-all"
-      class="toggle-all"
-      name="completed"
-      {checked}
+      on="clearCompleted"
+      delete="{url('home')}"
+      class="clear-completed"
     >
-    <label
-      class="toggle-all-label {hidden}"
-      for="toggle-all"
-    >
-      Mark all as complete
-    </label>
-  </div>
-  <ul
-    class="todo-list"
-  >
-    {visibleTodos}
-  </ul>
-</main>
-<footer
-  class="footer"
->
-  <span
-    class="todo-count"
-  >
-    {activeCount} {items} left
-  </span>
-  <ul
-    class="filters"
-  >
-    <li>
-      <a
-        on:click="pushState"
-        href="/"
-        class="{all}"
-      >
-        All
-      </a>
-    </li>
-    <li>
-      <a
-        on:click="pushState"
-        href="/active"
-        class="{active}"
-      >
-        Active
-      </a>
-    </li>
-    <li>
-      <a
-        on:click="pushState"
-        href="/completed"
-        class="{completed}"
-      >
-        Completed
-      </a>
-    </li>
-  </ul>
-  <button
-    on:click="clearCompleted"
-    on:result="updateTodos"
-    on="clearCompleted"
-    delete="/remove-completed"
-    class="clear-completed"
-  >
-    Clear completed
-  </button>
-</footer>
+      Clear completed
+    </button>
+  </footer>
+</yes>

@@ -1,0 +1,14 @@
+<input
+  on:result="{'refreshContent' if active_route in ['favorites', 'favorites_pages'] else None}"
+  on="unlikeArticle-{article_id}"
+  delete="{url('like', id=article_id, label=label)}"
+  result="likeButton-{article_id}"
+  type="hidden"
+>
+<input
+  on:result="{'refreshContent' if active_route in ['favorites', 'favorites_pages'] else None}"
+  on="likeArticle-{article_id}"
+  post="{url('like', id=article_id, label=label)}"
+  result="likeButton-{article_id}"
+  type="hidden"
+>

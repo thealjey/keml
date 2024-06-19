@@ -1,340 +1,147 @@
-# KEML <sub>embrace the html ❤️</sub>
+<img src="docs/img/logo192.png" style="float: left; margin-right: 25px">
 
-An [HTMX](https://htmx.org/) (thank you for the inspiration) alternative with a different API that is meant to be simpler and more flexible at the same time.
+## What is KEML?
 
-Optimized using [Google Closure Compiler](https://developers.google.com/closure/compiler/) (thank you for an awesome and, sadly, underappreciated tool) to have a hilariously tiny file size (~4.4k without gz, which is ~11x smaller than HTMX), although performance is always prioritized over file size.
+KEML is a lightweight flexible alternative to [HTMX](https://htmx.org/), built
+around the concept of actions.
 
-Great care is taken to guarantee the absolute maximum performance and minimal memory usage, minimizing the amount of work that not only the library is doing, but also that the browser has to do.
+## Motivation
 
-The existing DOM is patched in the most efficient way possible by default instead of being overwritten, without a need for any plugins or configuration.
+Being small and fast and configuration/plugin free is not enough, when you are
+trying to compete with a well established and popular library.
 
-Does not require for you to learn and use any selector syntax, because there's no need for selectors at all as they are replaced by "actions" instead.
+#### So, why does KEML need to exist?
 
-The server responses are considered black-box, there is no magic title or meta tag behavior, no response splitting or selecting parts of it.
+KEML was born out of the classic 1-to-1 problem of the traditional jQuery-esque
+web application, that the HTMX api does nothing to address.
 
-There is no inheritance.
-
-The API is so stupid simple that it may not even require a documentation website.
-
-## Installation
-
-There is no programmatic API, nothing is exported in JS, nothing to install or configure.
-
-You load the library from a CDN and forget that JS even existed at all.
-```html
-<script src="https://unpkg.com/keml"></script>
-```
-
-## Initiating actions
-
-HTML elements can trigger any number of application actions in response to any number of events.
-
-Furthermore, more than one element is allowed to initiate the same action.
-
-An action notifies the application of "something" happening, but in itself does nothing at all.
-
-All event types supported by the document object can be used, plus the following:
-
-- `reveal` - triggered when an element becomes visible in the viewport, on initial page load or after a scroll
-- `conceal` - triggered when an element leaves the viewport after a scroll
-- `navigate` - triggered by the history api
-- `result` - triggered after a successful request
-
-#### Relevant attributes:
-
-- any attribute that starts with `on:` and contains a space separated list of actions to initiate
-
-#### In the following example:
-
-- moving the mouse cursor into the button initiates the `doSomething` action
-- clicking the button initiates two actions: `loadData` and `updateCounter`
-- nothing happens as a result, since none of the elements subscribe to either of these actions
+Consider the following "idiomatic" HTMX code:
 
 ```html
-<button
-  on:mouseenter="doSomething"
-  on:click="loadData updateCounter"
->click me</button>
-```
-
-## Sending requests
-
-HTML elements can trigger server requests in response to an action.
-
-More than one element can handle the same action and can trigger different requests.
-
-Relative endpoints are supported, so given a current URI of "https:/[]()/www[]().example.[]()com/some/path":
-
-- "list-todo" or "./list-todo" will both resolve to "https:/[]()/www[]().example.[]()com/some/path/list-todo"
-- "../list-todo" will resolve to "https:/[]()/www[]().example.[]()com/some/list-todo"
-- "/list-todo" will resolve to "https:/[]()/www[]().example.[]()com/list-todo"
-
-#### Relevant attributes:
-
-- `on` subscribes the element to a single action, initiated by any element, including the current one
-- `href`, `action`, `src`, `get`, `post`, `put` or `delete` are used to specify an endpoint to call
-- `method`, `get`, `post`, `put` or `delete` are used to specify the HTTP method to use in the request
-- `debounce` specifies a number of milliseconds by which to debounce a request
-- `throttle` specifies a number of milliseconds by which to throttle a request
-- any attribute that starts with `h-` and contains a custom request header value
-- `credentials` with any value or none at all, sets the [XMLHttpRequest.withCredentials](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials) value to `true`
-- `once` with any value or none at all, automatically removes the `on` attribute after a successful request
-
-#### In the following example:
-
-- clicking the button initiates the `doSomething` action
-- the div subscribes to that action and sends a "GET" request to "/data"
-- the checkbox subscribes to that action and sends a "POST" request to "/toggle" with a multipart encoded body containing its value
-- nothing else happens since neither of the elements specifies what to do with their respective server responses
-
-```html
-<button
-  on:click="doSomething"
->click me</button>
-<div
-  on="doSomething"
-  get="/data"
-></div>
-<input
-  on="doSomething"
-  post="/toggle"
-  type="checkbox"
-  name="agree"
+<button hx-post="/clicked"
+        hx-trigger="click"
+        hx-target="#result"
+        hx-swap="innerHTML"
 >
+    Click Me!
+</button>
+
+<div id="result"></div>
 ```
 
-## Rendering responses
+Here the button element:
 
-HTML elements that trigger requests can initiate multiple result actions after a successful server response.
+1. can only react to exactly 1 event ("click")
+1. can only do 1 thing when that event happens (send a request to "/clicked")
+1. cannot delegate the request-sending to some other element/-s
+1. can only render the result into 1 (usually) target element
+1. has to know where that element is in the page, what its "id" and/or "class"
+   attributes are
+1. has to decide for the target element the exact "hx-swap", of which there can
+   only be 1
 
-Multiple elements can initiate the same result action, thus triggering the render of a different response under the same action name.
+Out of these limitations arise:
 
-Multiple elements can subscribe to the same result action and render the same server response.
+1. the need for a custom selector syntax built on top of the normal
+   css-selector syntax
+1. the need for selectors in the first place, which you need to learn and
+   understand to use the library effectively
+1. the implicit special handling of certain elements, like title and meta,
+   present in the server response
+1. out of band swaps
+1. response selectors
+1. "hx-preserve"
+1. etc, etc, etc...
 
-Computes the minimum set of DOM mutations necessary to synchronize the document with the server response.
+All which, are meant to solve real tangible application needs, but in the
+process of doing that over-complicate things that do not need to be
+complicated.
 
-If the server response can be determined to be the same as what is currently rendered in the document, no changes are applied at all.
+## How is KEML different?
 
-#### Relevant attributes:
-
-- `result` specified on an element that performs a request and contains a space separated list of result actions to initiate
-- `render` specified on any element, including the same one that triggered the request and contains the render action name to subscribe to
-- `position` controls the render strategy to apply to itself:
-  - `replaceChildren` (default) replaces all of the elements' children with the server response
-  - `replaceWith` replaces the element itself with the server response
-  - `before` renders the server response directly before the current element
-  - `after` renders the server response directly after the current element
-  - `prepend` prepends the server response before the first child of the current element
-  - `append` appends the server response after the last child of the current element
-
-#### In the following example:
-
-- clicking the button initiates the `getUserCount` action
-- the button itself subscribes to that action using the `on` attribute
-- the button sends a "GET" request to "/user-count"
-- upon successfully receiving the response the button initiates the `userCount` result action
-- the div subscribes to the `userCount` action and renders the server response into itself
-- the span subscribes to the `userCount` action and replaces itself with the server response
+Consider the following KEML code, that works with the same backend:
 
 ```html
-<button
-  on:click="getUserCount"
-  on="getUserCount"
-  get="/user-count"
-  result="userCount"
->click me</button>
-<div
-  render="userCount"
-></div>
-<span
-  render="userCount"
-  position="replaceWith"
-></span>
+<html>
+  <head>
+
+    <title  render="result"></title>
+
+  </head>
+  <body>
+
+    <button on:click="handleClick doSomethingElse"
+            on:dblclick="handleDoubleClick"
+    >
+      Click Me!
+    </button>
+
+    <button on:click="handleClick">
+      Click Me, maybe?!
+    </button>
+
+    <input  on="handleClick"
+            post="/clicked"
+            type="text"
+            name="input1"
+            result="result"
+    >
+
+    <input  on="handleClick"
+            put="/notification"
+            type="text"
+            name="input2"
+    >
+
+    <div    render="result"
+            position="replaceWith"
+    ></div>
+
+    <p      render="result"
+            position="append"
+    ></p>
+
+  </body>
+</html>
 ```
 
-## Cascading requests
+1. both buttons initiate the same "handleClick" action on "click"
+1. the first button actually initiates two independent actions on "click", that
+   could both do completely different things
+1. the first button also reacts to the double click event
+1. neither of the buttons needs to know how those actions are being handled, if
+   at all
+1. the two text inputs both handle the "handleClick" action, but send
+   completely different requests
+1. the first input gives the server response a render-able name "result"
+1. neither of the inputs knows anything about the rendering, whether or not
+   anything is even going to be rendered at all, where and how
+1. the div, p and title elements render the same server response differently
+1. the div will be completely replaced with the response
+1. the p will append the response after its last child
+1. the title will replace all of its children with the response
+1. there is nothing special about the title element at all
+1. there's no need for ids, classes or selectors and the location of each
+   element in the document is completely unimportant
 
-Sometimes it may be necessary to send a request only when and if another request completes successfully.
+None of the problems that HTMX tries to solve with the complications listed
+above even exist in this paradigm!
 
-The `result` event exists for this exact purpose.
+## Is KEML feature-complete?
 
-Keep in mind that if the request results in this element no longer existing or no longer having the `on:result` attribute the event will not be triggered.
+While nothing is ever truly complete, the current feature-set should be able to
+cover 99% of actually useful HTMX features.
 
-#### Relevant attributes:
+I'm not going to claim that it is completely bug free and supports every
+browser under the sun, because it still has a long way to go until that
+becomes a reality.
 
-- `on:result` is just an event, same as any other; triggered after a successful completion of a server request, on the same element that launched it
-
-#### In the following example:
-
-- clicking the button initiates the `loadA` action, sends a "GET" request to "/a.html" and initiates the `loadB` action after a successful response
-- the div subscribes to `loadB` and sends a "GET" request to "/b.html"
-- since neither element specifies a `result` attribute, the server responses are discarded
-
-```html
-<button
-  on:click="loadA"
-  on="loadA"
-  get="/a.html"
-  on:result="loadB"
->click me</button>
-<div
-  on="loadB"
-  get="/b.html"
-></div>
-```
-
-## State actions
-
-HTML elements can configure any number of attributes in response to state `actions` by prepending their names with a `$`.
-
-Multiple elements can handle the same action and configure their attributes differently.
-
-#### Relevant attributes:
-
-- `if:loading` specified on an element that launches a request, contains a space separated list of state actions to turn ON immediately before starting a request and to turn OFF immediately after a request completes
-- `if:error` specified on an element that launches a request, contains a space separated list of state actions to turn OFF immediately before starting a request and to turn ON immediately after a request fails
-- `if:invalid` specified on a form or a form field, contains a space separated list of state actions to turn ON when the element becomes invalid and to turn OFF when the element becomes valid (invalid forms and fields do not trigger server requests)
-- `if` specified on any element, including the same one that launched the request, and subscribes to a single state action
-
-#### In the following example:
-
-- the first div is initially visible and the second div is initially hidden
-- clicking the button
-  - initiates the `loadData` action
-  - turns ON the `isLoadingData` state action, thus the first div becomes invisible and the second visible
-  - sends a "GET" request to "/data"
-  - after completion of the request turns OFF the `isLoadingData` state action, thus the first div becomes visible and the second invisible again
-
-```html
-<button
-  on:click="loadData"
-  on="loadData"
-  get="/data"
-  if:loading="isLoadingData"
->click me</button>
-<div
-  if="isLoadingData"
-  $style="display: none"
->not loading</div>
-<div
-  if="isLoadingData"
-  style="display: none"
-  $style
->loading</div>
-```
-
-#### In the following example:
-
-- the first div is initially visible and the second div is initially hidden
-- clicking the button
-  - initiates the `loadWrong` action
-  - turns OFF the `isError` state action, which does not change the visibility of the divs
-  - sends a "GET" request to "/non-existent"
-  - after completion of the request turns ON the `isError` state action, because the request has failed, thus the first div becomes invisible and the second visible
-
-```html
-<button
-  on:click="loadWrong"
-  on="loadWrong"
-  get="/non-existent"
-  if:error="isError"
->click me</button>
-<div
-  if="isError"
-  $style="display: none"
->no error</div>
-<div
-  if="isError"
-  style="display: none"
-  $style
->error</div>
-```
-
-#### In the following example:
-
-- the first div will be visible initially as well as when the inputs' value becomes a valid email
-- the second div will be visible only when the inputs' value becomes an invalid email
-
-```html
-<input
-  if:invalid="invalidEmail"
-  type="email"
->
-<div
-  if="invalidEmail"
-  $style="display: none"
->valid</div>
-<div
-  if="invalidEmail"
-  style="display: none"
-  $style
->invalid</div>
-```
-
-## Resetting a form
-
-The `reset` special action will automatically reset a form.
-
-#### In the following example:
-
-- the form will be automatically reset after a submit (please do note that actions are initiated sequentially from left to right; so if the action list was in the reverse order i.e "reset handleSubmit", the form would be reset before submit, making it invalid because the input is required, triggering no actual server request)
-
-```html
-<form
-  on:submit="handLeSubmit reset"
-  on="handLeSubmit"
-  method="post"
-  action="/server-path"
->
-  <input name="name" required>
-  <button>Submit</button>
-</form>
-```
-
-## Using the history api
-
-HTML elements can use the [History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API) by initiating the special `pushState` and `replaceState` actions.
-
-#### Relevant attributes:
-
-- `on:navigate` is just an event, same as any other, triggered on any element that specifies this attribute when the browser navigates using the history API, but not on the initial page load to facilitate full page server rendering (SSR)
-
-#### In the following example:
-
-- clicking on the first link performs a `pushState` to "/" and replaces the contents of the div with the response of "/content"
-- clicking on the second link performs a `pushState` to "/news" and replaces the contents of the div with the response of "/news/content"
-- clicking on the third link performs a `replaceState` to "/contacts", replaces the contents of the div with the response of "/contacts/content"
-
-```html
-<a
-  on:click="pushState"
-  href="/"
->Home</a>
-<a
-  on:click="pushState"
-  href="/news"
->News</a>
-<a
-  on:click="replaceState"
-  href="/contacts"
->Contacts</a>
-<div
-  on:navigate="loadContent"
-  on="loadContent"
-  get="content"
-  result="pageContent"
-  render="pageContent"
-></div>
-```
-
-## That's all
-
-No, truly, there's nothing else 😅
-
-Though, it should be enough to handle 99% of actually useful HTMX use-cases.
+Thus, all constructive feedback and criticism are very welcome!
 
 If a feature of HTMX is missing, that means one of the following:
 
 - it is made unnecessary by a more flexible API
-- it is downright evil and/or going against the spirit of [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) (e.g JSON endpoints, local templates and most forms of local state)
+- it is downright evil and/or going against the spirit of
+  [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) (e.g JSON endpoints, local
+  templates and most forms of local state)
 - it wasn't implemented yet

@@ -6,11 +6,11 @@ let evtName,
   removeAttributeNodeMeth = "e",
   setAttributeMeth = "f",
   removeAttributeMeth = "g",
-  invalidMatchAttr = "h",
+  nameAttr = "h",
   onAttr = "i",
   ifAttr = "j",
-  errorMatchAttr = "k",
-  loadingMatchAttr = "l",
+  redirectAttr = "k",
+  errorMatchAttr = "l",
   isDialogAttr = "m",
   throttleAttr = "n",
   debounceAttr = "o",
@@ -39,6 +39,20 @@ let evtName,
   /** @noinline */
   createEvent = a => new Event(a),
   /** @noinline */
+  trimStart = a => a.substring(2),
+  /** @noinline */
+  startsWith = (a, b) => a.startsWith(b),
+  /** @noinline */
+  noop = () => { },
+  /** @noinline */
+  formData = (
+    /**
+     * @param {Element=} a
+     * @noinline
+     */
+    a => new FormData(a)
+  ),
+  /** @noinline */
   split = a => {
     let b = a.match(/\S+/g);
     return b && b[lengthStr] ? b : undef;
@@ -48,12 +62,12 @@ let evtName,
     let el, name, nameOff, attr, attrOn, attrOff, isOn;
     for (el of ifElements[action] || []) {
       isOn = state[el[ifAttr]];
-      if (el.isOn != isOn) {
+      if (!el.isOn != !isOn) {
         el.isOn = isOn;
-        for (attrOn of el[attributesStr]) {
+        for (attrOn of toArray(el[attributesStr])) {
           name = attrOn[nameStr];
-          if (name.startsWith("$")) {
-            name = name.substring(1);
+          if (startsWith(name, "x-")) {
+            name = trimStart(name);
             nameOff = "_" + name;
             attrOff = el[getAttributeNodeMeth](nameOff);
             if (isOn) {
@@ -96,21 +110,28 @@ let evtName,
       rightNode[initMeth]?.();
       return 0;
     }
-    if (!leftNode.isEqualNode(rightNode)) {
-      leftNode[nodeValueStr] == rightNode[nodeValueStr] || (leftNode[nodeValueStr] = rightNode[nodeValueStr]);
-      if (leftNode.nodeType == 1) {
-        for (leftAttr of leftNode[attributesStr]) {
-          if (!rightNode.hasAttribute(leftAttr[nameStr])) {
-            attrMap[leftAttr[nameStr]]?.[1](leftNode, "", leftAttr[nameStr]);
-            leftNode[removeAttributeNodeMeth](leftAttr);
-          }
+    leftNode[nodeValueStr] == rightNode[nodeValueStr] || (leftNode[nodeValueStr] = rightNode[nodeValueStr]);
+    if (leftNode.nodeType == 1) {
+      for (leftAttr of toArray(leftNode[attributesStr])) {
+        if (!rightNode.hasAttribute(leftAttr[nameStr])) {
+          initAttr(leftNode, leftAttr, 1);
+          leftNode[removeAttributeNodeMeth](leftAttr);
+          leftNode.isOn = undef;
         }
-        for (rightAttr of rightNode[attributesStr]) {
-          leftAttr = leftNode[getAttributeNodeMeth](rightAttr[nameStr]);
-          attrMap[rightAttr[nameStr]]?.[1](leftNode, "", rightAttr[nameStr]);
-          if (leftAttr) leftAttr[valueStr] == rightAttr[valueStr] || (leftAttr[valueStr] = rightAttr[valueStr]);
-          else leftNode[setAttributeMeth](rightAttr[nameStr], rightAttr[valueStr]);
-          attrMap[rightAttr[nameStr]]?.[0](leftNode, rightAttr[valueStr], rightAttr[nameStr]);
+      }
+      for (rightAttr of rightNode[attributesStr]) {
+        leftAttr = leftNode[getAttributeNodeMeth](rightAttr[nameStr]);
+        if (leftAttr) {
+          if (leftAttr[valueStr] != rightAttr[valueStr] || rightAttr[nameStr] in leftNode) {
+            initAttr(leftNode, rightAttr, 1);
+            leftAttr[valueStr] = rightAttr[valueStr];
+            initAttr(leftNode, rightAttr, 0);
+            leftNode.isOn = undef;
+          }
+        } else {
+          leftNode[setAttributeMeth](rightAttr[nameStr], rightAttr[valueStr]);
+          initAttr(leftNode, rightAttr, 0);
+          leftNode.isOn = undef;
         }
       }
     }
@@ -157,37 +178,56 @@ let evtName,
      * @param {boolean=} b
      * @noinline
      */
-    (a, b) => toggleState((a[isInvalidAttr] = !(b ?? a.checkValidity?.() ?? yes)), a[invalidMatchAttr])
+    (a, b) => {
+      toggleState((a[isInvalidAttr] = !(b ?? a.checkValidity?.() ?? yes)), a[ifInvalidMatch]);
+      a.form && toggleState((a.form[isInvalidAttr] = !(b ?? a.form.checkValidity?.() ?? yes)), a.form[ifInvalidMatch]);
+    }
   ),
   /** @noinline */
-  getUrl = a => a[hrefAttr] && new URL(a[hrefAttr], /\.[^\/]+$/.test(loc.pathname) ? loc.href : loc.href.replace(/\/*$/, "/")),
+  getUrl = (
+    /**
+     * @param {Element} a
+     * @param {string=} b
+     * @noinline
+     */
+    (a, b) => {
+      let c = new URL(location.href);
+      /\.[^\/]+$/.test(c[pathnameStr]) || (c[pathnameStr] = c[pathnameStr].replace(/\/*$/, "/"));
+      return new URL(b ?? a[hrefAttr] ?? "", c);
+    }
+  ),
   /** @noinline */
   execute = (el, match) => raf(() => {
-    let action, queue = [], url1 = getUrl(el), url2, onEl, attr, xhr, pwr, formData;
+    let action, queue = [], url1 = getUrl(el, el[redirectAttr]), url2, onEl, attr, xhr, pwr, formData;
     el[timerAttr] = clearTimer(el[timerAttr]);
     for (action of match) {
-      if (url1 && (action == "pushState" || action == "replaceState")) {
+      if (action == "pushState" || action == "replaceState") {
         history[action]({}, "", url1);
         onNavigate();
+      } else if (action == "follow") {
+        location.href = url1;
+      } else if (action == "reset") {
+        el[action]?.();
       }
-      action == "reset" && el[action]?.();
-      for (onEl of onElements[action] || []) if (onEl[methodAttr] && (url2 = getUrl(onEl)) && !(validate(onEl), onEl[isInvalidAttr])) {
+      for (onEl of onElements[action] || []) if (!(validate(onEl), onEl[isInvalidAttr])) {
+        url2 = getUrl(onEl);
         (formData = onEl[serializeMeth]()) &&
           !onEl[isPostAttr] &&
           (/** @type {*} */([...formData.keys()]))[lengthStr] &&
           (url2.search = new URLSearchParams(formData));
-        xhr = new XMLHttpRequest();
+        xhr = new XHRequest();
         pwr = Promise["withResolvers"]();
         xhr.responseType = "document";
         xhr.withCredentials = onEl[credentialsAttr];
         xhr[ownerElementAttr] = onEl;
         xhr[resolveMeth] = pwr.resolve;
         xhr.onloadend = onloadend;
-        for (attr of onEl[attributesStr]) attr[nameStr].startsWith("h-") &&
-          xhr.setRequestHeader(attr[nameStr].substring(2), attr[valueStr]);
-        toggleState(false, onEl[errorMatchAttr]);
-        toggleState(yes, onEl[loadingMatchAttr]);
-        xhr.open(onEl[methodAttr], url2);
+        xhr.open(onEl[methodAttr] ?? "GET", url2);
+        xhr.setRequestHeader("X-Requested-With", XHRequest[nameStr]);
+        for (attr of onEl[attributesStr]) startsWith(attr[nameStr], "h-") &&
+          xhr.setRequestHeader(trimStart(attr[nameStr]), attr[valueStr]);
+        toggleState(false, onEl[ifErrorMatch]);
+        toggleState(yes, onEl[ifLoadingMatch]);
         xhr.send(onEl[isPostAttr] ? formData : null);
         add(pwr.promise, queue);
       }
@@ -196,6 +236,8 @@ let evtName,
   }),
   /** @noinline */
   protoStr = "prototype",
+  /** @noinline */
+  pathnameStr = "pathname",
   /** @noinline */
   targetStr = "target",
   /** @noinline */
@@ -227,7 +269,11 @@ let evtName,
   /** @noinline */
   replaceWithStr = "replaceWith",
   /** @noinline */
-  loc = location,
+  ifLoadingMatch = "if:loading",
+  /** @noinline */
+  ifErrorMatch = "if:error",
+  /** @noinline */
+  ifInvalidMatch = "if:invalid",
   /** @noinline */
   doc = document,
   /** @noinline */
@@ -243,6 +289,10 @@ let evtName,
   /** @noinline */
   ElProto = Element[protoStr],
   /** @noinline */
+  XHRequest = XMLHttpRequest,
+  /** @noinline */
+  toArray = Array.from,
+  /** @noinline */
   state = {},
   /** @noinline */
   onElements = {},
@@ -252,6 +302,8 @@ let evtName,
   renderElements = {},
   /** @noinline */
   nvElements = [],
+  /** @noinline */
+  fiElements = [],
   /** @noinline */
   nvEvent = createEvent(navigateStr),
   /** @noinline */
@@ -273,11 +325,13 @@ let evtName,
   /** @noinline */
   applyMethod = (a, b) => ((b = b.toUpperCase()), (a[methodAttr] = b), (a[isPostAttr] = b == "POST")),
   /** @noinline */
-  initHref = [(a, b) => a[hrefAttr] = b, () => { }],
+  initHref = [(a, b) => a[hrefAttr] = b, noop],
   /** @noinline */
-  initVerb = [(a, b, c) => ((a[hrefAttr] = b), applyMethod(a, c)), () => { }],
+  initVerb = [(a, b, c) => ((a[hrefAttr] = b), applyMethod(a, c)), noop],
   /** @noinline */
   createInitBool = a => [b => b[a] = yes, createInitUnset(a)],
+  /** @noinline */
+  createInitSetAttr = a => [(b, c) => b[a] = c, createInitUnset(a)],
   /** @noinline */
   attrMap = {
     "on": createInitDict(onAttr, onElements),
@@ -286,9 +340,6 @@ let evtName,
     [onStr + navigateStr]: [a => add(a, nvElements), a => remove(a, nvElements)],
     [onStr + revealStr]: createInitObserver(createObserver(createHandle(yes, revealEvent))),
     [onStr + concealStr]: createInitObserver(createObserver(createHandle(false, concealEvent))),
-    "if:invalid": [(a, b) => (b = split(b)) && ((a[invalidMatchAttr] = b), validate(a)), createInitUnset(invalidMatchAttr)],
-    "if:error": createInitMatch(errorMatchAttr),
-    "if:loading": createInitMatch(loadingMatchAttr),
     "method": [(a, b) => b == "dialog" ? (a[isDialogAttr] = yes) : applyMethod(a, b), createInitUnset(isDialogAttr)],
     "throttle": createInitDelay(throttleAttr),
     "debounce": createInitDelay(debounceAttr),
@@ -302,7 +353,11 @@ let evtName,
     "credentials": createInitBool(credentialsAttr),
     "once": createInitBool(onceAttr),
     "result": createInitMatch(resultMatchAttr),
-    "position": [(a, b) => a[posAttr] = b, createInitUnset(posAttr)],
+    "error": createInitMatch(errorMatchAttr),
+    "position": createInitSetAttr(posAttr),
+    "redirect": createInitSetAttr(redirectAttr),
+    "value": [(a, b, c) => ((a[c] = b), validate(a)), noop],
+    "name": createInitSetAttr(nameAttr),
     "autofocus": [
       (a, b) => {
         try {
@@ -311,9 +366,30 @@ let evtName,
           a.setSelectionRange(b, b);
         } catch { }
       },
-      () => { },
+      noop,
     ],
     "checked": [(a, _, b) => (a[b] = yes), (a, _, b) => (a[b] = false)],
+  },
+  getIfActions = a => Object.entries(a).flatMap(([b, c]) => startsWith(b, "if:") && c).filter(d => d),
+  ifState = [
+    (a, b, c) => (a[c] = split(b)) && add(a, fiElements),
+    (a, _, c) => {
+      let action, el, actions = a[c] || [], found;
+      a[c] = undef;
+      getIfActions(a).length || remove(a, fiElements);
+      for (action of actions) {
+        found = false;
+        for (el of fiElements) if (getIfActions(el).includes(action)) {
+          found = yes;
+          break;
+        }
+        found || (state[action] = undef);
+      }
+    }
+  ],
+  initAttr = (a, b, c = 0) => {
+    let name = b[nameStr], mp = startsWith(name, "if:") ? ifState : attrMap[name];
+    mp?.[c](a, b[valueStr], name);
   },
   onEvent = event => event[targetStr][handleEventMeth]?.(event),
   onLoad = event => raf(() => (event[targetStr][initMeth]?.(), applyStates())),
@@ -323,21 +399,21 @@ let evtName,
 
 /** @this {XMLHttpRequest} */
 function onloadend() {
-  /** @noinline */
-  let me = this;
-  let owner = me[ownerElementAttr];
-  let response = me.responseXML?.body;
-  let pos, el, rightNode, children, batch = [];
-  me[resolveMeth](() => {
-    toggleState(false, owner[loadingMatchAttr]);
-    if (me.status > 399) toggleState(yes, owner[errorMatchAttr]);
-    else if (response) {
+  let { [ownerElementAttr]: owner, [resolveMeth]: resolve, status, responseXML } = this;
+  let pos, el, rightNode, children, batch = [], renderMatch = resultMatchAttr;
+  resolve(() => {
+    toggleState(false, owner[ifLoadingMatch]);
+    if (status > 399) {
+      renderMatch = errorMatchAttr;
+      toggleState(yes, owner[ifErrorMatch]);
+    }
+    if (responseXML = responseXML?.body) {
       if (owner[onceAttr]) {
         attrMap.on[1](owner);
         owner[removeAttributeMeth]("on");
       }
-      for (pos of owner[resultMatchAttr] || []) for (el of renderElements[pos] || [])
-        add([el, (children = (children ? response.cloneNode(yes) : response)[childNodesStr]), el[posAttr] || replaceChildrenStr], batch);
+      for (pos of owner[renderMatch] || []) for (el of renderElements[pos] || [])
+        add([el, (children = (children ? responseXML.cloneNode(yes) : responseXML)[childNodesStr]), el[posAttr] || replaceChildrenStr], batch);
       for ([el, children, pos] of batch) {
         if (pos == replaceChildrenStr) replaceChildren(el, children);
         else if (pos == replaceWithStr) {
@@ -357,17 +433,17 @@ function onloadend() {
         }
       }
       applyStates();
-      owner[dispatchEventMeth](resultEvent);
+      renderMatch == resultMatchAttr && owner[dispatchEventMeth](resultEvent);
     }
   });
 }
 
 /** @this {Element} */
-doc[initMeth] = ElProto[initMeth] = function (index = 0) {
+doc[initMeth] = ElProto[initMeth] = function (index) {
   /** @noinline */
   let me = this;
   let item;
-  for (item of me[attributesStr] || []) attrMap[item[nameStr]]?.[index](me, item[valueStr], item[nameStr]);
+  for (item of me[attributesStr] || []) initAttr(me, item, index);
   for (item of me[childNodesStr]) item[initMeth]?.(index);
 };
 
@@ -378,19 +454,25 @@ ElProto[removeAttributeNodeMeth] = ElProto.removeAttributeNode;
 ElProto[setAttributeMeth] = ElProto.setAttribute;
 ElProto[removeAttributeMeth] = ElProto.removeAttribute;
 
+/** @this {Element} */
 ElProto[serializeMeth] = function () {
-  return null;
+  let name = this[nameAttr], value = this[valueStr], fd = null;
+  if (name && value) {
+    fd = formData();
+    fd.set(name, value);
+  }
+  return fd;
 };
 
 /** @this {HTMLInputElement} */
 HTMLInputElement[protoStr][serializeMeth] = HTMLSelectElement[protoStr][serializeMeth] = HTMLTextAreaElement[protoStr][serializeMeth] = function () {
   internalForm[replaceChildrenStr](this.cloneNode(yes));
-  return new FormData(internalForm);
+  return formData(internalForm);
 };
 
 /** @this {HTMLFormElement} */
 HTMLFormElement[protoStr][serializeMeth] = function () {
-  return new FormData(this);
+  return formData(this);
 };
 
 /** @this {Element} */
@@ -400,20 +482,19 @@ ElProto[handleEventMeth] = function (event) {
   let match = me[getAttributeNodeMeth](onStr + event.type);
   if (match && (match = split(match[valueStr]))) {
     me[isDialogAttr] || event.preventDefault();
-    if (!me[timerAttr]) {
-      if (me[throttleAttr]) {
-        me[timerAttr] = startTimer(() => execute(me, match), me[throttleAttr]);
-      } else if (me[debounceAttr]) {
-        clearTimer(me[timerAttr]);
-        me[timerAttr] = startTimer(() => execute(me, match), me[debounceAttr]);
-      } else {
-        execute(me, match);
-      }
+    if (me[throttleAttr]) {
+      me[timerAttr] = me[timerAttr] || startTimer(() => execute(me, match), me[throttleAttr]);
+    } else if (me[debounceAttr]) {
+      clearTimer(me[timerAttr]);
+      me[timerAttr] = startTimer(() => execute(me, match), me[debounceAttr]);
+    } else {
+      execute(me, match);
     }
   }
 };
 
-for (evtName in doc) evtName.startsWith("on") && doc[addEventListenerMeth](evtName.substring(2), onEvent, yes);
+doc.cookie = `tzo=${new Date().getTimezoneOffset()};Path=/;Max-Age=` + 9 ** 8;
+for (evtName in doc) startsWith(evtName, "on") && doc[addEventListenerMeth](trimStart(evtName), onEvent, yes);
 for (evtName of [revealStr, concealStr, navigateStr, resultStr]) doc[addEventListenerMeth](evtName, onEvent, yes);
 for (evtName of ["reset", "input", "change"]) doc[addEventListenerMeth](evtName, onChange, yes);
 doc[addEventListenerMeth]("DOMContentLoaded", onLoad, yes);

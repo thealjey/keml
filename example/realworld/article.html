@@ -1,0 +1,96 @@
+<div class="article-page">
+  <div class="banner">
+    <div class="container">
+      <h1>{article_title}</h1>
+      <div
+        on:result="replaceState"
+        on="removeArticle-{article_id}"
+        delete="{url('article_id', id=article_id)}"
+        redirect="{url('home')}"
+        class="article-meta"
+      >
+        <include value="info">
+        <yes value="{user and user.user_id != author.user_id}">
+          <include value="followRequest">
+          <span render="followButton-{author.user_id}">
+            <include value="followButton">
+          </span>
+          <include value="likeRequest" label="b">
+          <span render="likeButton-{article_id}" class="ml2">
+            <include value="likeButton" label="b">
+          </span>
+        </yes>
+        <yes value="{user and user.user_id == author.user_id}">
+          <include value="editArticleButton">
+          <include value="removeArticleButton">
+        </yes>
+      </div>
+    </div>
+  </div>
+  <div class="container page">
+    <div class="row article-content">
+      <div class="col-md-12">
+        <div>{markdown(long)}</div>
+        <ul class="tag-list">
+          <for value="tags">
+            <li class="tag-default tag-pill tag-outline">{item}</li>
+          </for>
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <div class="article-actions">
+      <div class="article-meta">
+        <include value="info">
+        <yes value="{user and user.user_id != author.user_id}">
+          <span render="followButton-{author.user_id}">
+            <include value="followButton">
+          </span>
+          <span render="likeButton-{article_id}" class="ml2">
+            <include value="likeButton" label="b">
+          </span>
+        </yes>
+        <yes value="{user and user.user_id == author.user_id}">
+          <include value="editArticleButton">
+          <include value="removeArticleButton">
+        </yes>
+      </div>
+    </div>
+    <yes value="user">
+      <div class="row">
+        <div class="col-xs-12 col-md-8 offset-md-2">
+          <form
+            on:submit="postComment reset"
+            if:invalid="formInvalid"
+            on="postComment"
+            method="post"
+            action="{url('comment', id=article_id)}"
+            result="newComment"
+            class="card comment-form"
+          >
+            <div class="card-block">
+              <textarea
+                class="form-control"
+                placeholder="Write a comment..."
+                rows="3"
+                name="comment_text"
+                required
+              ></textarea>
+            </div>
+            <div class="card-footer">
+              <img src="{user.avatar}" class="comment-author-img">
+              <button if="formInvalid" x-disabled class="btn btn-sm btn-primary">
+                Post Comment
+              </button>
+            </div>
+          </form>
+          <div render="newComment" position="append">
+            <for value="comments">
+              <include value="comment">
+            </for>
+          </div>
+        </div>
+      </div>
+    </yes>
+  </div>
+</div>

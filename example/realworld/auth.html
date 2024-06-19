@@ -1,0 +1,86 @@
+<div class="auth-page">
+  <div class="container page">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 col-xs-12">
+        <h1 class="text-xs-center">
+          <yes value="{active_route == 'login'}">Sign in</yes>
+          <yes value="{active_route == 'register'}">Sign up</yes>
+        </h1>
+        <p class="text-xs-center">
+          <a on:click="pushState" href="{url('register' if active_route == 'login' else 'login')}">
+            <yes value="{active_route == 'login'}">Need an account?</yes>
+            <yes value="{active_route == 'register'}">Have an account?</yes>
+          </a>
+        </p>
+        <ul class="error-messages">
+          <li if="usernameInvalid" x-class class="dn">
+            Please enter a username
+          </li>
+          <li if="emailInvalid" x-class class="dn">
+            Please enter a valid email
+          </li>
+          <li if="passwordInvalid" x-class class="dn">
+            Please enter a password longer than 4 characters
+          </li>
+          <div render="submitErrors"></div>
+        </ul>
+        <form
+          on:submit="submitAuth"
+          on:result="pushState"
+          on:navigate="reset"
+          if:invalid="formInvalid"
+          on="submitAuth"
+          error="submitErrors"
+          redirect="{url('home')}"
+          action="{url(active_route)}"
+          method="post"
+        >
+          <yes value="{active_route == 'register'}">
+            <fieldset class="form-group">
+              <input
+                if:invalid="usernameInvalid"
+                type="text"
+                class="form-control form-control-lg"
+                name="username"
+                placeholder="Username"
+                autocomplete="username"
+                required
+              >
+            </fieldset>
+          </yes>
+          <fieldset class="form-group">
+            <input
+              if:invalid="emailInvalid"
+              type="email"
+              class="form-control form-control-lg"
+              name="email"
+              placeholder="Email"
+              autocomplete="email"
+              required
+            >
+          </fieldset>
+          <fieldset class="form-group">
+            <input
+              if:invalid="passwordInvalid"
+              type="password"
+              class="form-control form-control-lg"
+              name="password"
+              placeholder="Password"
+              autocomplete="{'current-password' if active_route == 'login' else 'new-password' if active_route == 'register' else None}"
+              required
+              minlength="5"
+            >
+          </fieldset>
+          <button
+            if="formInvalid"
+            x-disabled
+            class="btn btn-lg btn-primary pull-xs-right"
+          >
+            <yes value="{active_route == 'login'}">Sign in</yes>
+            <yes value="{active_route == 'register'}">Sign up</yes>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

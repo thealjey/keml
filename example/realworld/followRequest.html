@@ -1,0 +1,12 @@
+<input
+  on="unfollow-{author.user_id}"
+  delete="{url('follow', id=author.user_id)}"
+  result="followButton-{author.user_id}"
+  type="hidden"
+>
+<input
+  on="follow-{author.user_id}"
+  post="{url('follow', id=author.user_id)}"
+  result="followButton-{author.user_id}"
+  type="hidden"
+>

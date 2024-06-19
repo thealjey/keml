@@ -1,0 +1,13 @@
+site_name: keml
+repo_url: https://github.com/thealjey/keml/
+edit_uri: blob/main/docs/
+site_description: An HTMX alternative with a focus on performance, flexibility and, most of all, simplicity.
+site_author: Eugene Kuzmenko
+nav:
+  - Home: index.md
+  - Install: install.md
+  - Event: event.md
+  - Request: request.md
+  - Render: render.md
+  - State: state.md
+  - Special: special.md

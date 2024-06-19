@@ -1,0 +1,33 @@
+<div class="settings-page">
+  <div class="container page">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 col-xs-12">
+        <h1 class="text-xs-center">Your Settings</h1>
+        <ul class="error-messages">
+          <li if="urlInvalid" x-class class="dn">
+            Please enter a valid url
+          </li>
+          <li if="emailInvalid" x-class class="dn">
+            Please enter a valid email
+          </li>
+          <li if="passwordInvalid" x-class class="dn">
+            Please enter a password longer than 4 characters
+          </li>
+          <div render="submitErrors"></div>
+        </ul>
+        <include value="settingsForm">
+        <hr>
+        <button
+          on:click="logout"
+          on:result="pushState"
+          on="logout"
+          delete="{url('login')}"
+          redirect="{url('home')}"
+          class="btn btn-outline-danger"
+        >
+          Or click here to logout.
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
