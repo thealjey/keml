@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="An HTMX alternative with a focus on performance, flexibility and, most of all, simplicity.">
+        <meta name="author" content="Eugene Kuzmenko">
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>keml</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body class="homepage">
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href=".">keml</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="." class="nav-link active" aria-current="page">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="install/" class="nav-link">Install</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="event/" class="nav-link">Event</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="request/" class="nav-link">Request</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="render/" class="nav-link">Render</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="state/" class="nav-link">State</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="special/" class="nav-link">Special</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" class="nav-link disabled">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="install/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://github.com/thealjey/keml/blob/main/docs/index.md" class="nav-link"><i class="fa-brands fa-github"></i> Edit on GitHub</a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="2"><a href="#what-is-keml" class="nav-link">What is KEML?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="2"><a href="#motivation" class="nav-link">Motivation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="2"><a href="#how-is-keml-different" class="nav-link">How is KEML different?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="2"><a href="#is-keml-feature-complete" class="nav-link">Is KEML feature-complete?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<p><img src="img/logo192.png" style="float: left; margin-right: 25px"></p>
+<h2 id="what-is-keml">What is KEML?</h2>
+<p>KEML is a lightweight flexible alternative to <a href="https://htmx.org/">HTMX</a>, built
+around the concept of actions.</p>
+<p>The ideas that HTMX has recently made popular are, frankly, the best that the
+web community collectively has ever had.</p>
+<p>However, like most great ideas, it is far more important than any actual
+specific implementation.</p>
+<h2 id="motivation">Motivation</h2>
+<p>Being small and fast and configuration/plugin free is not enough, when you are
+trying to compete with a well established and popular library.</p>
+<h4 id="so-why-does-keml-need-to-exist">So, why does KEML need to exist?</h4>
+<p>KEML was born out of the classic 1-to-1 problem of the traditional jQuery-esque
+web application, that the HTMX api does nothing to address.</p>
+<p>Consider the following "idiomatic" HTMX code:</p>
+<pre><code class="language-html">&lt;button hx-post=&quot;/clicked&quot;
+        hx-trigger=&quot;click&quot;
+        hx-target=&quot;#result&quot;
+        hx-swap=&quot;innerHTML&quot;
+&gt;
+    Click Me!
+&lt;/button&gt;
+
+&lt;div id=&quot;result&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>Here the button element:</p>
+<ol>
+<li>can only react to exactly 1 event ("click")</li>
+<li>can only do 1 thing when that event happens (send a request to "/clicked")</li>
+<li>cannot delegate the request-sending to some other element/-s</li>
+<li>can only render the result into 1 (usually) target element</li>
+<li>has to know where that element is in the page, what its "id" and/or "class"
+   attributes are</li>
+<li>has to decide for the target element the exact "hx-swap", of which there can
+   only be 1</li>
+</ol>
+<p>Out of these limitations arise:</p>
+<ol>
+<li>the need for a custom selector syntax built on top of the normal
+   css-selector syntax</li>
+<li>the need for selectors in the first place, which you need to learn and
+   understand to use the library effectively</li>
+<li>the implicit special handling of certain elements, like title and meta,
+   present in the server response</li>
+<li>out of band swaps</li>
+<li>response selectors</li>
+<li>"hx-preserve"</li>
+<li>etc, etc, etc...</li>
+</ol>
+<p>All which, are meant to solve real tangible application needs, but in the
+process of doing that over-complicate things that do not need to be
+complicated.</p>
+<h2 id="how-is-keml-different">How is KEML different?</h2>
+<p>Consider the following KEML code, that works with the same backend:</p>
+<pre><code class="language-html">&lt;html&gt;
+  &lt;head&gt;
+
+    &lt;title  render=&quot;result&quot;&gt;&lt;/title&gt;
+
+  &lt;/head&gt;
+  &lt;body&gt;
+
+    &lt;button on:click=&quot;handleClick doSomethingElse&quot;
+            on:dblclick=&quot;handleDoubleClick&quot;
+    &gt;
+      Click Me!
+    &lt;/button&gt;
+
+    &lt;button on:click=&quot;handleClick&quot;&gt;
+      Click Me, maybe?!
+    &lt;/button&gt;
+
+    &lt;input  on=&quot;handleClick&quot;
+            post=&quot;/clicked&quot;
+            type=&quot;text&quot;
+            name=&quot;input1&quot;
+            result=&quot;result&quot;
+    &gt;
+
+    &lt;input  on=&quot;handleClick&quot;
+            put=&quot;/notification&quot;
+            type=&quot;text&quot;
+            name=&quot;input2&quot;
+    &gt;
+
+    &lt;div    render=&quot;result&quot;
+            position=&quot;replaceWith&quot;
+    &gt;&lt;/div&gt;
+
+    &lt;p      render=&quot;result&quot;
+            position=&quot;append&quot;
+    &gt;&lt;/p&gt;
+
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<ol>
+<li>both buttons initiate the same "handleClick" action on "click"</li>
+<li>the first button actually initiates two independent actions on "click", that
+   could both do completely different things</li>
+<li>the first button also reacts to the double click event</li>
+<li>neither of the buttons needs to know how those actions are being handled, if
+   at all</li>
+<li>the two text inputs both handle the "handleClick" action, but send
+   completely different requests</li>
+<li>the first input gives the server response a render-able name "result"</li>
+<li>neither of the inputs knows anything about the rendering, whether or not
+   anything is even going to be rendered at all, where and how</li>
+<li>the div, p and title elements render the same server response differently</li>
+<li>the div will be completely replaced with the response</li>
+<li>the p will append the response after its last child</li>
+<li>the title will replace all of its children with the response</li>
+<li>there is nothing special about the title element at all</li>
+<li>there's no need for ids, classes or selectors and the location of each
+   element in the document is completely unimportant</li>
+</ol>
+<p>None of the problems that HTMX tries to solve with the complications listed
+above even exist in this paradigm!</p>
+<h2 id="is-keml-feature-complete">Is KEML feature-complete?</h2>
+<p>While nothing is ever truly complete, the current feature-set should be able to
+cover 99% of actually useful HTMX features.</p>
+<p>I'm not going to claim that it is completely bug free and supports every
+browser under the sun, because it still has a long way to go until that
+becomes a reality.</p>
+<p>Thus, all constructive feedback and criticism are very welcome!</p>
+<p>If a feature of HTMX is missing, that means one of the following:</p>
+<ul>
+<li>it is made unnecessary by a more flexible API</li>
+<li>it is downright evil and/or going against the spirit of
+  <a href="https://en.wikipedia.org/wiki/HATEOAS">HATEOAS</a> (e.g JSON endpoints, local
+  templates and most forms of local state)</li>
+<li>it wasn't implemented yet</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js"></script>
+        <script src="search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.6.0
+Build Date UTC : 2024-06-19 13:44:04.709303+00:00
+-->
