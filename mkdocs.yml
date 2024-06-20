@@ -1,4 +1,5 @@
 site_name: keml
+site_url: https://thealjey.github.io/keml/
 repo_url: https://github.com/thealjey/keml/
 edit_uri: blob/main/docs/
 site_description: An HTMX alternative with a focus on performance, flexibility and, most of all, simplicity.
