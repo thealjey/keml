@@ -35,8 +35,7 @@ class Handler(BaseHandler):
     return [x for x in todos if x.completed == True]
 
   def find_todo(self):
-    id = self.parsed_params.get("id")
-    if id:
+    if id := self.parsed_params.get("id"):
       return next((x for x in todos if x.id == int(id)), None)
 
   def get_js(self):
@@ -67,8 +66,7 @@ class Handler(BaseHandler):
       self.send_tpl("item", action=action, **asdict(todo))
 
   def post_home(self):
-    title = self.single_parsed_data("todo")
-    if title:
+    if title := self.single_parsed_data("todo"):
       todos.append(Todo(title))
 
   def post_todo(self):
@@ -84,9 +82,8 @@ class Handler(BaseHandler):
       todo.completed = completed
 
   def put_todo(self):
-    todo = self.find_todo()
     completed = self.single_parsed_query("completed") == "on"
-    if todo:
+    if todo := self.find_todo():
       todo.completed = completed
 
   def delete_home(self):
@@ -95,8 +92,7 @@ class Handler(BaseHandler):
 
   def delete_todo(self):
     global todos
-    id = self.parsed_params.get("id")
-    if id:
+    if id := self.parsed_params.get("id"):
       todos = [x for x in todos if x.id != int(id)]
 
 
