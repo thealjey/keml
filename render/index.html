@@ -44,7 +44,7 @@
                                 <a href="../event/" class="nav-link">Event</a>
                             </li>
                             <li class="nav-item">
-                                <a href="../request/" class="nav-link">Request</a>
+                                <a href="../action/" class="nav-link">Action</a>
                             </li>
                             <li class="nav-item">
                                 <a href="./" class="nav-link active" aria-current="page">Render</a>
@@ -53,7 +53,10 @@
                                 <a href="../state/" class="nav-link">State</a>
                             </li>
                             <li class="nav-item">
-                                <a href="../special/" class="nav-link">Special</a>
+                                <a href="../glossary/" class="nav-link">Glossary</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../news/" class="nav-link">News</a>
                             </li>
                         </ul>
 
@@ -64,7 +67,7 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" href="../request/" class="nav-link">
+                                <a rel="prev" href="../action/" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
@@ -118,14 +121,14 @@ receiving a server response.</p>
 render of a different response under the same action name.</p>
 <p>Multiple elements can subscribe to the same result action and render the same
 server response.</p>
-<p>Computes the minimum set of DOM mutations necessary to synchronize the document
-with the server response.</p>
+<p>KEML applies the minimum set of DOM mutations necessary to synchronize the
+document with the server response.</p>
 <p>If the server response can be determined to be the same as what is currently
 rendered in the document, no changes are applied at all.</p>
 <h2 id="attributes">Attributes</h2>
 <ol>
 <li><code>result</code> specified on an element that performs a request and contains a
-   space separated list of result actions to initiate</li>
+   space separated list of render actions to initiate</li>
 <li><code>error</code> works exactly like <code>result</code> but for situations when the server
    responds with an unsuccessful status code</li>
 <li><code>render</code> specified on any element, including the same one that triggered the
@@ -155,19 +158,20 @@ rendered in the document, no changes are applied at all.</p>
 <li>the span subscribes to the <code>userCount</code> action and replaces itself with the
   server response</li>
 </ul>
-<pre><code class="language-html">&lt;button on:click=&quot;getUserCount&quot;
-        on=&quot;getUserCount&quot;
-        get=&quot;/user-count&quot;
-        result=&quot;userCount&quot;
+<pre><code class="language-html">&lt;button
+  on:click=&quot;getUserCount&quot;
+  on=&quot;getUserCount&quot;
+  get=&quot;/user-count&quot;
+  result=&quot;userCount&quot;
 &gt;
   click me
 &lt;/button&gt;
 
-&lt;div    render=&quot;userCount&quot;
-&gt;&lt;/div&gt;
+&lt;div render=&quot;userCount&quot;&gt;&lt;/div&gt;
 
-&lt;span   render=&quot;userCount&quot;
-        position=&quot;replaceWith&quot;
+&lt;span
+  render=&quot;userCount&quot;
+  position=&quot;replaceWith&quot;
 &gt;&lt;/span&gt;
 </code></pre></div>
             </div>

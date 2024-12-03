@@ -6,9 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <meta name="author" content="Eugene Kuzmenko">
-        <link rel="canonical" href="https://thealjey.github.io/keml/request/">
+        <link rel="canonical" href="https://thealjey.github.io/keml/action/">
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>Request - keml</title>
+        <title>Action - keml</title>
         <link href="../css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/fontawesome.min.css" rel="stylesheet">
         <link href="../css/brands.min.css" rel="stylesheet">
@@ -44,7 +44,7 @@
                                 <a href="../event/" class="nav-link">Event</a>
                             </li>
                             <li class="nav-item">
-                                <a href="./" class="nav-link active" aria-current="page">Request</a>
+                                <a href="./" class="nav-link active" aria-current="page">Action</a>
                             </li>
                             <li class="nav-item">
                                 <a href="../render/" class="nav-link">Render</a>
@@ -53,7 +53,10 @@
                                 <a href="../state/" class="nav-link">State</a>
                             </li>
                             <li class="nav-item">
-                                <a href="../special/" class="nav-link">Special</a>
+                                <a href="../glossary/" class="nav-link">Glossary</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../news/" class="nav-link">News</a>
                             </li>
                         </ul>
 
@@ -74,7 +77,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="https://github.com/thealjey/keml/blob/main/docs/request.md" class="nav-link"><i class="fa-brands fa-github"></i> Edit on GitHub</a>
+                                <a href="https://github.com/thealjey/keml/blob/main/docs/action.md" class="nav-link"><i class="fa-brands fa-github"></i> Edit on GitHub</a>
                             </li>
                     </ul>
                 </div>
@@ -94,13 +97,21 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#sending-requests" class="nav-link">Sending requests</a>
+            <li class="nav-item" data-bs-level="1"><a href="#handling-actions" class="nav-link">Handling actions</a>
               <ul class="nav flex-column">
             <li class="nav-item" data-bs-level="2"><a href="#attributes" class="nav-link">Attributes</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#example" class="nav-link">Example</a>
+            <li class="nav-item" data-bs-level="2"><a href="#request-example" class="nav-link">Request Example</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#redirect-example" class="nav-link">Redirect Example</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#reset-example" class="nav-link">Reset Example</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -111,43 +122,72 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="sending-requests">Sending requests</h1>
-<p>HTML elements can trigger server requests in response to an action.</p>
+<h1 id="handling-actions">Handling actions</h1>
+<p>HTML elements can trigger server requests and redirects in response to an
+action.</p>
 <p>More than one element can handle the same action and can trigger different
 requests.</p>
-<p>Relative endpoints are supported, so given a current URI of
+<p>Relative endpoints are supported, so given a current URL of
 "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/some/path":</p>
 <ul>
 <li>"list-todo" or "./list-todo" will both resolve to
-  "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/some/path/list-todo"</li>
+  "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/some/path/list-todo/"</li>
 <li>"../list-todo" will resolve to
-  "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/some/list-todo"</li>
+  "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/some/list-todo/"</li>
 <li>"/list-todo" will resolve to
-  "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/list-todo"</li>
+  "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/list-todo/"</li>
+<li>"/file.html" will resolve to
+  "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/file.html" (a trailing slash is always
+  present for paths not ending with a file extension, and is never present for
+  ones that are)</li>
 </ul>
 <p>Forms and form fields values are automatically serialized and sent to the
 server.</p>
 <p>What's more is that ANY element that sends a request can also be made
 serializable by giving it the "name" and the "value" attributes.</p>
+<p>A request is only allowed if an element is considered valid (i.e. it either does
+not have a <code>checkValidity</code> method or it returns true).</p>
+<p>KEML makes the server aware of the AJAX nature of its requests by automatically
+including a special "X-Requested-With" header in each request.</p>
+<p>KEML makes the server aware of the browsers timezone for the server-side
+date formatting by setting a "tzo" cookie to the value produced by the
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset">getTimezoneOffset</a>
+function.</p>
 <h2 id="attributes">Attributes</h2>
 <ol>
 <li><code>on</code> subscribes the element to a single action, initiated by any element,
   including the current one</li>
+<li><code>reset</code> also subscribes the element to a single action, initiated by any
+element, including the current one, but is used specifically for resetting the
+current element (like a form or a form field, but really any element that has a
+<code>reset</code> method with the following signature: <code>() =&gt; void</code>); resets are immediate
+and are not affected by <code>debounce</code> and <code>throttle</code></li>
+<li><code>redirect</code> if specified on an element with an <code>on</code> attribute makes it issue
+redirects instead of requests; redirect URIs are resolved exactly the same way
+as the request URIs; can have one of four possible values:<ul>
+<li><code>pushState</code> will call the same method of the history api</li>
+<li><code>replaceState</code> will call the same method of the history api</li>
+<li><code>assign</code> the same as <code>pushState</code>, but will cause a full page reload</li>
+<li><code>replace</code> the same as <code>replaceState</code>, but will cause a full page reload</li>
+</ul>
+</li>
 <li><code>href</code>, <code>action</code>, <code>src</code>, <code>get</code>, <code>post</code>, <code>put</code> or <code>delete</code> are used to specify
-  an endpoint to call</li>
+  an endpoint to call (the default endpoint is "")</li>
 <li><code>method</code>, <code>get</code>, <code>post</code>, <code>put</code> or <code>delete</code> are used to specify the HTTP
-  method to use in the request</li>
+  method to use in the request (the default method is "GET")</li>
 <li><code>name</code> and <code>value</code> can be used on any element, not just on form fields</li>
-<li><code>debounce</code> specifies a number of milliseconds by which to debounce a request</li>
-<li><code>throttle</code> specifies a number of milliseconds by which to throttle a request</li>
+<li><code>debounce</code> specifies a number of milliseconds by which to debounce a
+request/redirect</li>
+<li><code>throttle</code> specifies a number of milliseconds by which to throttle a
+request/redirect</li>
 <li>any attribute that starts with <code>h-</code> and contains a custom request header value</li>
 <li><code>credentials</code> with any value or none at all, sets the
   <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials">XMLHttpRequest.withCredentials</a>
   value to <code>true</code></li>
 <li><code>once</code> with any value or none at all, automatically removes the <code>on</code>
-  attribute after a successful request</li>
+attribute before starting a request/redirect</li>
 </ol>
-<h2 id="example">Example</h2>
+<h2 id="request-example">Request Example</h2>
 <ul>
 <li>clicking the button initiates the <code>doSomething</code> action</li>
 <li>the div subscribes to that action and sends a "GET" request to "/data"</li>
@@ -158,15 +198,41 @@ serializable by giving it the "name" and the "value" attributes.</p>
 </ul>
 <pre><code class="language-html">&lt;button on:click=&quot;doSomething&quot;&gt;click me&lt;/button&gt;
 
-&lt;div    on=&quot;doSomething&quot;
-        get=&quot;/data&quot;
+&lt;div
+  on=&quot;doSomething&quot;
+  get=&quot;/data&quot;
 &gt;&lt;/div&gt;
 
-&lt;input  on=&quot;doSomething&quot;
-        post=&quot;/toggle&quot;
-        type=&quot;checkbox&quot;
-        name=&quot;agree&quot;
+&lt;input
+  on=&quot;doSomething&quot;
+  post=&quot;/toggle&quot;
+  type=&quot;checkbox&quot;
+  name=&quot;agree&quot;
 &gt;
+</code></pre>
+<h2 id="redirect-example">Redirect Example</h2>
+<ul>
+<li>this is exactly like the example above, but, because of the <code>redirect</code>
+attribute, instead of sending a network request we perform a redirect using the
+history api; in this case specifying an http method does nothing as it is
+meaningless in a redirect</li>
+</ul>
+<pre><code class="language-html">&lt;button on:click=&quot;doSomething&quot;&gt;click me&lt;/button&gt;
+
+&lt;div
+  on=&quot;doSomething&quot;
+  redirect=&quot;pushState&quot;
+  get=&quot;/data&quot;
+&gt;&lt;/div&gt;
+</code></pre>
+<h2 id="reset-example">Reset Example</h2>
+<ul>
+<li>clicking the button resets the input and the form</li>
+</ul>
+<pre><code class="language-html">&lt;button on:click=&quot;resetField resetForm&quot;&gt;click me&lt;/button&gt;
+
+&lt;input reset=&quot;resetField&quot;&gt;
+&lt;form reset=&quot;resetForm&quot;&gt;&lt;/form&gt;
 </code></pre></div>
             </div>
         </div>

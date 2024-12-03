@@ -6,9 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <meta name="author" content="Eugene Kuzmenko">
-        <link rel="canonical" href="https://thealjey.github.io/keml/special/">
+        <link rel="canonical" href="https://thealjey.github.io/keml/news/">
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>Special - keml</title>
+        <title>News - keml</title>
         <link href="../css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/fontawesome.min.css" rel="stylesheet">
         <link href="../css/brands.min.css" rel="stylesheet">
@@ -44,7 +44,7 @@
                                 <a href="../event/" class="nav-link">Event</a>
                             </li>
                             <li class="nav-item">
-                                <a href="../request/" class="nav-link">Request</a>
+                                <a href="../action/" class="nav-link">Action</a>
                             </li>
                             <li class="nav-item">
                                 <a href="../render/" class="nav-link">Render</a>
@@ -53,7 +53,10 @@
                                 <a href="../state/" class="nav-link">State</a>
                             </li>
                             <li class="nav-item">
-                                <a href="./" class="nav-link active" aria-current="page">Special</a>
+                                <a href="../glossary/" class="nav-link">Glossary</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">News</a>
                             </li>
                         </ul>
 
@@ -64,7 +67,7 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" href="../state/" class="nav-link">
+                                <a rel="prev" href="../glossary/" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
@@ -74,7 +77,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="https://github.com/thealjey/keml/blob/main/docs/special.md" class="nav-link"><i class="fa-brands fa-github"></i> Edit on GitHub</a>
+                                <a href="https://github.com/thealjey/keml/blob/main/docs/news.md" class="nav-link"><i class="fa-brands fa-github"></i> Edit on GitHub</a>
                             </li>
                     </ul>
                 </div>
@@ -94,17 +97,9 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#special-actions" class="nav-link">Special Actions</a>
+            <li class="nav-item" data-bs-level="1"><a href="#news" class="nav-link">News</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#form-reset-example" class="nav-link">Form Reset Example</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#redirect-example" class="nav-link">Redirect Example</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#navigate-event-example" class="nav-link">Navigate Event Example</a>
+            <li class="nav-item" data-bs-level="2"><a href="#v3-is-finally-out" class="nav-link">v3 is finally out!</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -115,77 +110,80 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="special-actions">Special Actions</h1>
-<p>There a few action names that have a special meaning:</p>
-<ol>
-<li><code>reset</code> - if used on a form, will reset said form</li>
-<li><code>pushState</code> - will call the same method of the history api, changing the
-   browser URI to the one provided by the <code>redirect</code> attribute, or of it is
-   absent - to the same URI that a request would have been sent by this element</li>
-<li><code>replaceState</code> - will call the same method of the history api, changing the
-   browser URI to the one provided by the <code>redirect</code> attribute, or of it is
-   absent - to the same URI that a request would have been sent by this element</li>
-<li><code>follow</code> - following the same logic of <code>pushState</code> and <code>replaceState</code> is
-   also going to perform a redirect, but without using the history api and
-   instead going to trigger a full page reload</li>
-</ol>
-<p>KEML makes the server aware of the AJAX nature of its requests by automatically
-including a special "X-Requested-With" header in each request.</p>
-<p>KEML makes the server aware of the browsers timezone for the server-side
-date formatting by setting a "tzo" cookie to the value produced by the
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset">getTimezoneOffset</a> function.</p>
-<h2 id="form-reset-example">Form Reset Example</h2>
-<ul>
-<li>the form will be automatically reset after a submit (please do note that
-  actions are initiated sequentially from left to right; so if the action list
-  was in the reverse order i.e "reset handleSubmit", the form would be reset
-  before submit, making it invalid because the input is required, triggering no
-  actual server request)</li>
-</ul>
-<pre><code class="language-html">&lt;form on:submit=&quot;handLeSubmit reset&quot;
-      on=&quot;handLeSubmit&quot;
-      method=&quot;post&quot;
-      action=&quot;/server-path&quot;
-&gt;
-  &lt;input type=&quot;text&quot; name=&quot;name&quot; required&gt;
-  &lt;button&gt;Submit&lt;/button&gt;
-&lt;/form&gt;
+<h1 id="news">News</h1>
+<hr />
+<hr />
+<h2 id="v3-is-finally-out">v3 is finally out!</h2>
+<p>It is said that simplicity is hard and absolute simplicity is hard absolutely.</p>
+<p>KEML v3 was that and much more.</p>
+<p>And, while a major version of a library could simply be prompted by any breaking
+change, what we have here is certainly not that case.</p>
+<p>It was probably more like v123, or something like that, behind the scenes with
+the sheer number of complete rewrites, head scratching, and a couple of moments
+of brilliance.</p>
+<p>v3 brings new features, stability, reliability, resilience, performance, memory
+efficiency and optimizations that were nigh impossible with v2.</p>
+<p>And it does it all while having an even smaller file size.</p>
+<hr />
+<h3 id="so-what-changed">So, what changed?</h3>
+<h4 id="no-magic">No Magic</h4>
+<p>Magic, in programming, can be described as - behaviors determined by nothing
+other than naming something a certain way or placing it in a certain place.</p>
+<p>And it is almost always a really bad idea.</p>
+<p>The so called "special actions" were a major pain in the rear end that came out
+of technical limitations and nothing else.</p>
+<p>v3 embraces actions to the max, literally everything is controlled by them and
+nothing else and there are no special and/or reserved action names at all.</p>
+<h4 id="observing-the-dom">Observing the DOM</h4>
+<p>DOM changes are automatically observed in v3.</p>
+<p>Whether an element came from the server on the initial page load, after
+subsequent AJAX requests, is created or modified by userland code, by you
+changing something through the dev tools DOM Inspector tab, or even by some
+browser extension, it makes no difference at all.</p>
+<p>That's right, KEML will never be broken by another password manager ever again
+:&rpar;</p>
+<p>And if you want to use jQuery or React alongside KEML, you totally can. And you
+never need to tell it that you've changed something in the document.</p>
+<h4 id="new-features">New Features</h4>
+<p>v3 comes with a couple of new states, a couple of new ways to perform a redirect
+and somewhat of a way to handle hotkeys, but really, nothing Earth-shattering.</p>
+<p>The big deal is that the greatly improved codebase allows adding new features
+easily and without breaking the existing ones or negatively affecting the
+performance.</p>
+<hr />
+<h3 id="breaking-changes">Breaking Changes</h3>
+<p>The only breaking change is the absence of "special" actions.</p>
+<p>So, this:</p>
+<pre><code class="language-html">&lt;a
+  on:click=&quot;pushState&quot;
+  href=&quot;/something&quot;
+&gt;&lt;/a&gt;
 </code></pre>
-<h2 id="redirect-example">Redirect Example</h2>
-<ul>
-<li>redirect to "/" using the history api after a successful submission of the
-  form</li>
-</ul>
-<pre><code class="language-html">&lt;form on:submit=&quot;handLeSubmit&quot;
-      on:result=&quot;pushState&quot;
-      on=&quot;handLeSubmit&quot;
-      method=&quot;post&quot;
-      action=&quot;/login&quot;
-      redirect=&quot;/&quot;
-&gt;
-  &lt;input type=&quot;text&quot;     name=&quot;username&quot;&gt;
-  &lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;
-  &lt;button&gt;Login&lt;/button&gt;
-&lt;/form&gt;
+<p>Has to turn into this (the same with <code>replaceState</code>):</p>
+<pre><code class="language-html">&lt;a
+  on:click=&quot;someUniqueName&quot;
+  on=&quot;someUniqueName&quot;
+  redirect=&quot;pushState&quot;
+  href=&quot;/something&quot;
+&gt;&lt;/a&gt;
 </code></pre>
-<ul>
-<li>just a normal link, but supercharged by the history api</li>
-</ul>
-<pre><code class="language-html">&lt;a on:click=&quot;replaceState&quot; href=&quot;/about&quot;&gt;About&lt;/a&gt;
+<p>The <code>redirect</code> attribute cannot contain an endpoint configuration anymore.</p>
+<p>And this:</p>
+<pre><code class="language-html">&lt;form on:submit=&quot;doSubmit reset&quot;&gt;&lt;/form&gt;
 </code></pre>
-<p>Both of the above examples are going to trigger a navigate event.</p>
-<h2 id="navigate-event-example">Navigate Event Example</h2>
-<ul>
-<li>send a GET request to "content" when a navigate event is triggered and
-  replace all of the children of the div with the server response</li>
-</ul>
-<pre><code class="language-html">&lt;div on:navigate=&quot;loadContent&quot;
-     on=&quot;loadContent&quot;
-     get=&quot;content&quot;
-     result=&quot;pageContent&quot;
-     render=&quot;pageContent&quot;
-&gt;&lt;/div&gt;
-</code></pre></div>
+<p>Has to turn into this:</p>
+<pre><code class="language-html">&lt;form
+  on:submit=&quot;doSubmit resetThisForm&quot;
+  reset=&quot;resetThisForm&quot;
+&gt;&lt;/form&gt;
+</code></pre>
+<p>It looks more verbose, but offers infinitely more flexibility.</p>
+<hr />
+<p>That's all, folks!</p>
+<p>Happy coding and have an awesome day,<br />
+Eugene K.</p>
+<hr />
+<hr /></div>
             </div>
         </div>
 

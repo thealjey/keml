@@ -6,9 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <meta name="author" content="Eugene Kuzmenko">
-        <link rel="canonical" href="https://thealjey.github.io/keml/state/">
+        <link rel="canonical" href="https://thealjey.github.io/keml/glossary/">
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>State - keml</title>
+        <title>Glossary - keml</title>
         <link href="../css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/fontawesome.min.css" rel="stylesheet">
         <link href="../css/brands.min.css" rel="stylesheet">
@@ -50,10 +50,10 @@
                                 <a href="../render/" class="nav-link">Render</a>
                             </li>
                             <li class="nav-item">
-                                <a href="./" class="nav-link active" aria-current="page">State</a>
+                                <a href="../state/" class="nav-link">State</a>
                             </li>
                             <li class="nav-item">
-                                <a href="../glossary/" class="nav-link">Glossary</a>
+                                <a href="./" class="nav-link active" aria-current="page">Glossary</a>
                             </li>
                             <li class="nav-item">
                                 <a href="../news/" class="nav-link">News</a>
@@ -67,17 +67,17 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" href="../render/" class="nav-link">
+                                <a rel="prev" href="../state/" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="../glossary/" class="nav-link">
+                                <a rel="next" href="../news/" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="https://github.com/thealjey/keml/blob/main/docs/state.md" class="nav-link"><i class="fa-brands fa-github"></i> Edit on GitHub</a>
+                                <a href="https://github.com/thealjey/keml/blob/main/docs/glossary.md" class="nav-link"><i class="fa-brands fa-github"></i> Edit on GitHub</a>
                             </li>
                     </ul>
                 </div>
@@ -97,32 +97,8 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#state-actions" class="nav-link">State actions</a>
+            <li class="nav-item" data-bs-level="1"><a href="#attribute-glossary" class="nav-link">Attribute Glossary</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#attributes" class="nav-link">Attributes</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#loading-state-example" class="nav-link">Loading State Example</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#error-state-example" class="nav-link">Error State Example</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#invalid-state-example" class="nav-link">Invalid State Example</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#value-state-example" class="nav-link">Value State Example</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#intersects-state-example" class="nav-link">Intersects State Example</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
               </ul>
             </li>
         </ul>
@@ -130,186 +106,148 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="state-actions">State actions</h1>
-<p>HTML elements can configure any number of attributes in response to state
-<code>actions</code> by prepending their names with <code>x-</code>.</p>
-<p>Multiple elements can handle the same action and configure their attributes
-differently.</p>
-<p>A state can essentially be viewed as a boolean flag that is always set to false
-by default.</p>
-<h2 id="attributes">Attributes</h2>
-<ol>
-<li><code>if:loading</code> specified on an element that launches a request, contains a
-  space separated list of state actions to turn ON immediately before starting
-  a request and to turn OFF immediately after a request completes</li>
-<li><code>if:error</code> specified on an element that launches a request, contains a space
-  separated list of state actions to turn OFF immediately before starting a
-  request and to turn ON immediately after a request fails</li>
-<li><code>if:invalid</code> specified on a form or a form field, contains a space separated
-  list of state actions to turn ON when the element becomes invalid and to turn
-  OFF when the element becomes valid (invalid forms and fields do not trigger
-  server requests)</li>
-<li><code>if:value</code> inputs, selects, text areas and checkboxes can be considered to
-  have a value when they are not empty</li>
-<li><code>if:intersects</code> is turned ON when the element intersects the viewport</li>
-<li><code>if</code> specified on any element, including the same one that issued a state
-  action, and subscribes to a single state action</li>
-</ol>
-<h2 id="loading-state-example">Loading State Example</h2>
-<ul>
-<li>the first div is initially visible and the second div is initially hidden</li>
-<li>clicking the button:<ul>
-<li>initiates the <code>loadData</code> action</li>
-<li>turns ON the <code>isLoadingData</code> state action, thus the first div becomes
-invisible and the second visible</li>
-<li>sends a "GET" request to "/data"</li>
-<li>after completion of the request turns OFF the <code>isLoadingData</code> state
-action, thus the first div becomes visible and the second invisible again</li>
-</ul>
-</li>
-</ul>
-<pre><code class="language-html">&lt;button
-  on:click=&quot;loadData&quot;
-  on=&quot;loadData&quot;
-  get=&quot;/data&quot;
-  if:loading=&quot;isLoadingData&quot;
-&gt;
-  click me
-&lt;/button&gt;
-
-&lt;div
-  if=&quot;isLoadingData&quot;
-  x-style=&quot;display: none&quot;
-&gt;
-  not loading
-&lt;/div&gt;
-
-&lt;div
-  if=&quot;isLoadingData&quot;
-  style=&quot;display: none&quot;
-  x-style
-&gt;
-  loading
-&lt;/div&gt;
-</code></pre>
-<h2 id="error-state-example">Error State Example</h2>
-<ul>
-<li>the first div is initially visible and the second div is initially hidden</li>
-<li>clicking the button<ul>
-<li>initiates the <code>loadWrong</code> action</li>
-<li>turns OFF the <code>isError</code> state action, which does not change the visibility
-  of the divs</li>
-<li>sends a "GET" request to "/non-existent"</li>
-<li>after completion of the request turns ON the <code>isError</code> state action,
-  because the request has failed, thus the first div becomes invisible and
-  the second visible</li>
-</ul>
-</li>
-</ul>
-<pre><code class="language-html">&lt;button
-  on:click=&quot;loadWrong&quot;
-  on=&quot;loadWrong&quot;
-  get=&quot;/non-existent&quot;
-  if:error=&quot;isError&quot;
-&gt;
-  click me
-&lt;/button&gt;
-
-&lt;div
-  if=&quot;isError&quot;
-  x-style=&quot;display: none&quot;
-&gt;
-  no error
-&lt;/div&gt;
-
-&lt;div
-  if=&quot;isError&quot;
-  style=&quot;display: none&quot;
-  x-style
-&gt;
-  error
-&lt;/div&gt;
-</code></pre>
-<h2 id="invalid-state-example">Invalid State Example</h2>
-<ul>
-<li>the first div will be visible initially as well as when the inputs' value
-  becomes a valid email</li>
-<li>the second div will be visible only when the inputs' value becomes an invalid
-  email</li>
-</ul>
-<pre><code class="language-html">&lt;input
-  if:invalid=&quot;invalidEmail&quot;
-  type=&quot;email&quot;
-&gt;
-
-&lt;div
-  if=&quot;invalidEmail&quot;
-  x-style=&quot;display: none&quot;
-&gt;
-  valid
-&lt;/div&gt;
-
-&lt;div
-  if=&quot;invalidEmail&quot;
-  style=&quot;display: none&quot;
-  x-style
-&gt;
-  invalid
-&lt;/div&gt;
-</code></pre>
-<h2 id="value-state-example">Value State Example</h2>
-<ul>
-<li>the first div will be visible when the input value is cleared in some way</li>
-<li>the second div will be visible when the user enters something into the input</li>
-</ul>
-<pre><code class="language-html">&lt;input
-  if:value=&quot;isNotEmpty&quot;
-  type=&quot;text&quot;
-&gt;
-
-&lt;div
-  if=&quot;isNotEmpty&quot;
-  x-style=&quot;display: none&quot;
-&gt;
-  empty
-&lt;/div&gt;
-
-&lt;div
-  if=&quot;isNotEmpty&quot;
-  style=&quot;display: none&quot;
-  x-style
-&gt;
-  not empty
-&lt;/div&gt;
-</code></pre>
-<h2 id="intersects-state-example">Intersects State Example</h2>
-<ul>
-<li>the first div will be visible when the user scrolls the page such that the
-paragraph is out of view or if the paragraph is removed from the page altogether</li>
-<li>the second div will be visible when the paragraph becomes visible in the
-viewport</li>
-</ul>
-<pre><code class="language-html">&lt;p if:intersects=&quot;canSee&quot;&gt;&lt;/p&gt;
-
-&lt;br&gt;
-&lt;br&gt;
-&lt;br&gt;
-
-&lt;div
-  if=&quot;canSee&quot;
-  x-style=&quot;display: none&quot;
-&gt;
-  out of viewport
-&lt;/div&gt;
-
-&lt;div
-  if=&quot;canSee&quot;
-  style=&quot;display: none&quot;
-  x-style
-&gt;
-  in the viewport
-&lt;/div&gt;
-</code></pre></div>
+<h1 id="attribute-glossary">Attribute Glossary</h1>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Applied With</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>on:&lt;event name&gt;</code></td>
+<td>*</td>
+<td>initiate event actions</td>
+</tr>
+<tr>
+<td><code>event:&lt;event name&gt;</code></td>
+<td><code>on:&lt;event name&gt;</code></td>
+<td>cancel the event handling if the event object does not match the specified shape</td>
+</tr>
+<tr>
+<td><code>on</code></td>
+<td>*</td>
+<td>subscribe to an action to perform a network request or a redirect</td>
+</tr>
+<tr>
+<td><code>debounce</code></td>
+<td><code>on</code></td>
+<td>debounce network requests and redirects</td>
+</tr>
+<tr>
+<td><code>throttle</code></td>
+<td><code>on</code></td>
+<td>throttle network requests and redirects</td>
+</tr>
+<tr>
+<td><code>get</code>, <code>href</code>, <code>action</code> or <code>src</code></td>
+<td><code>on</code></td>
+<td>specify a server endpoint for a GET request</td>
+</tr>
+<tr>
+<td><code>post</code></td>
+<td><code>on</code></td>
+<td>specify a server endpoint for a POST request</td>
+</tr>
+<tr>
+<td><code>put</code></td>
+<td><code>on</code></td>
+<td>specify a server endpoint for a PUT request</td>
+</tr>
+<tr>
+<td><code>delete</code></td>
+<td><code>on</code></td>
+<td>specify a server endpoint for a DELETE request</td>
+</tr>
+<tr>
+<td><code>method</code></td>
+<td><code>on</code></td>
+<td>specify an http method, overriding any otherwise inferred</td>
+</tr>
+<tr>
+<td><code>name</code> + <code>value</code></td>
+<td><code>on</code></td>
+<td>make any element serializable for the server request</td>
+</tr>
+<tr>
+<td><code>credentials</code></td>
+<td><code>on</code></td>
+<td>set the <code>XMLHttpRequest.withCredentials</code> flag to <code>true</code> for this request</td>
+</tr>
+<tr>
+<td><code>h-&lt;header name&gt;</code></td>
+<td><code>on</code></td>
+<td>specify any additional request headers</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td><code>on</code></td>
+<td>initiate render actions after a successful response</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td><code>on</code></td>
+<td>initiate render actions after an unsuccessful response</td>
+</tr>
+<tr>
+<td><code>redirect</code></td>
+<td><code>on</code></td>
+<td>disregard any request configuration except for the URL resolution and do a redirect instead</td>
+</tr>
+<tr>
+<td><code>once</code></td>
+<td><code>on</code></td>
+<td>automatically remove the <code>on</code> attribute right before sending a request/redirect for the first time</td>
+</tr>
+<tr>
+<td><code>if:loading</code></td>
+<td><code>on</code></td>
+<td>initiate loading state actions right before starting a request</td>
+</tr>
+<tr>
+<td><code>if:error</code></td>
+<td><code>on</code></td>
+<td>initiate error state actions after an unsuccessful server response</td>
+</tr>
+<tr>
+<td><code>render</code></td>
+<td>*</td>
+<td>render a server response identified by a specific render action</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><code>render</code></td>
+<td>specify where to place the server response in relation to the current element</td>
+</tr>
+<tr>
+<td><code>if:invalid</code></td>
+<td>*</td>
+<td>initiate invalid state actions if an elements' value becomes invalid</td>
+</tr>
+<tr>
+<td><code>if:value</code></td>
+<td>*</td>
+<td>initiate value state actions when the elements' value is not empty</td>
+</tr>
+<tr>
+<td><code>if:intersects</code></td>
+<td>*</td>
+<td>initiate intersects state actions when the element intersects the viewport</td>
+</tr>
+<tr>
+<td><code>if</code></td>
+<td>*</td>
+<td>react to a single state action</td>
+</tr>
+<tr>
+<td><code>x-&lt;attribute name&gt;</code></td>
+<td><code>if</code></td>
+<td>turn an "x-" attribute into an ordinary attribute when a state action activates</td>
+</tr>
+</tbody>
+</table></div>
             </div>
         </div>
 

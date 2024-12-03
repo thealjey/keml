@@ -44,7 +44,7 @@
                                 <a href="event/" class="nav-link">Event</a>
                             </li>
                             <li class="nav-item">
-                                <a href="request/" class="nav-link">Request</a>
+                                <a href="action/" class="nav-link">Action</a>
                             </li>
                             <li class="nav-item">
                                 <a href="render/" class="nav-link">Render</a>
@@ -53,7 +53,10 @@
                                 <a href="state/" class="nav-link">State</a>
                             </li>
                             <li class="nav-item">
-                                <a href="special/" class="nav-link">Special</a>
+                                <a href="glossary/" class="nav-link">Glossary</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="news/" class="nav-link">News</a>
                             </li>
                         </ul>
 
@@ -126,6 +129,10 @@ around the concept of actions.</p>
 web community collectively has ever had.</p>
 <p>However, like most great ideas, they are far more important than any actual
 specific implementation.</p>
+<p>Despite offering a multitude of conveniences over HTMX and much greater
+flexibility, KEML still manages to be absolutely tiny in comparison.<br />
+KEML v3 is ~4.7k minified and not gzipped and HTMX v2 is ~49.2k minified and not
+gzipped (~10.5x smaller).</p>
 <h2 id="motivation">Motivation</h2>
 <p>Being small and fast and configuration/plugin free is not enough, when you are
 trying to compete with a well established and popular library.</p>
@@ -133,12 +140,13 @@ trying to compete with a well established and popular library.</p>
 <p>KEML was born out of the classic 1-to-1 problem of the traditional jQuery-esque
 web application, that the HTMX api does nothing to address.</p>
 <p>Consider the following "idiomatic" HTMX code:</p>
-<pre><code class="language-html">&lt;button hx-post=&quot;/clicked&quot;
-        hx-trigger=&quot;click&quot;
-        hx-target=&quot;#result&quot;
-        hx-swap=&quot;innerHTML&quot;
+<pre><code class="language-html">&lt;button
+  hx-post=&quot;/clicked&quot;
+  hx-trigger=&quot;click&quot;
+  hx-target=&quot;#result&quot;
+  hx-swap=&quot;innerHTML&quot;
 &gt;
-    Click Me!
+  Click Me!
 &lt;/button&gt;
 
 &lt;div id=&quot;result&quot;&gt;&lt;/div&gt;
@@ -149,7 +157,7 @@ web application, that the HTMX api does nothing to address.</p>
 <li>can only do 1 thing when that event happens (send a request to "/clicked")</li>
 <li>cannot delegate the request-sending to some other element/-s</li>
 <li>can only render the result into 1 (usually) target element</li>
-<li>has to know where that element is in the page, what its "id" and/or "class"
+<li>has to know where that element is on the page, what its "id" and/or "class"
    attributes are</li>
 <li>has to decide for the target element the exact "hx-swap", of which there can
    only be 1</li>
@@ -173,45 +181,47 @@ complicated.</p>
 <h2 id="how-is-keml-different">How is KEML different?</h2>
 <p>Consider the following KEML code, that works with the same backend:</p>
 <pre><code class="language-html">&lt;html&gt;
-  &lt;head&gt;
 
-    &lt;title  render=&quot;result&quot;&gt;&lt;/title&gt;
+&lt;head&gt;
+  &lt;title render=&quot;result&quot;&gt;&lt;/title&gt;
+&lt;/head&gt;
 
-  &lt;/head&gt;
-  &lt;body&gt;
+&lt;body&gt;
+  &lt;button
+    on:click=&quot;handleClick doSomethingElse&quot;
+    on:dblclick=&quot;handleDoubleClick&quot;
+  &gt;
+    Click Me!
+  &lt;/button&gt;
 
-    &lt;button on:click=&quot;handleClick doSomethingElse&quot;
-            on:dblclick=&quot;handleDoubleClick&quot;
-    &gt;
-      Click Me!
-    &lt;/button&gt;
+  &lt;button on:click=&quot;handleClick&quot;&gt;Click Me, maybe?!&lt;/button&gt;
 
-    &lt;button on:click=&quot;handleClick&quot;&gt;
-      Click Me, maybe?!
-    &lt;/button&gt;
+  &lt;input
+    on=&quot;handleClick&quot;
+    post=&quot;/clicked&quot;
+    type=&quot;text&quot;
+    name=&quot;input1&quot;
+    result=&quot;result&quot;
+  &gt;
 
-    &lt;input  on=&quot;handleClick&quot;
-            post=&quot;/clicked&quot;
-            type=&quot;text&quot;
-            name=&quot;input1&quot;
-            result=&quot;result&quot;
-    &gt;
+  &lt;input
+    on=&quot;handleClick&quot;
+    put=&quot;/notification&quot;
+    type=&quot;text&quot;
+    name=&quot;input2&quot;
+  &gt;
 
-    &lt;input  on=&quot;handleClick&quot;
-            put=&quot;/notification&quot;
-            type=&quot;text&quot;
-            name=&quot;input2&quot;
-    &gt;
+  &lt;div
+    render=&quot;result&quot;
+    position=&quot;replaceWith&quot;
+  &gt;&lt;/div&gt;
 
-    &lt;div    render=&quot;result&quot;
-            position=&quot;replaceWith&quot;
-    &gt;&lt;/div&gt;
+  &lt;p
+    render=&quot;result&quot;
+    position=&quot;append&quot;
+  &gt;&lt;/p&gt;
+&lt;/body&gt;
 
-    &lt;p      render=&quot;result&quot;
-            position=&quot;append&quot;
-    &gt;&lt;/p&gt;
-
-  &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
 <ol>
@@ -331,6 +341,6 @@ becomes a reality.</p>
 </html>
 
 <!--
-MkDocs version : 1.6.0
-Build Date UTC : 2024-06-20 14:04:57.295772+00:00
+MkDocs version : 1.6.1
+Build Date UTC : 2024-12-03 12:38:25.830940+00:00
 -->
