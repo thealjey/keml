@@ -1,0 +1,55 @@
+<li
+  on="{action}-{id}"
+  get="{url('todo', id=id, action='edit' if action == 'todo' else 'todo')}"
+  result="todoResult-{id}"
+  render="todoResult-{id}"
+  position="replaceWith"
+  class="{'completed' if completed else ''} {'editing' if action == 'todo' else ''}"
+>
+  <div class="view">
+    <input
+      on:change="toggleCompleted-{id}"
+      on:result="updateTodos"
+      on="toggleCompleted-{id}"
+      put="{url('todo', id=id)}"
+      type="checkbox"
+      class="toggle"
+      name="completed"
+      checked="{completed}"
+    >
+    <label
+      on:dblclick="edit-{id}"
+      render="rename-{id}"
+    >{title}</label>
+    <button
+      on:click="remove-{id}"
+      on:result="updateTodos"
+      on="remove-{id}"
+      delete="{url('todo', id=id)}"
+      class="destroy"
+    ></button>
+  </div>
+  <yes value="{action == 'todo'}">
+    <form
+      on:submit="rename-{id}"
+      on:result="todo-{id}"
+      on="rename-{id}"
+      action="{url('todo', id=id)}"
+      method="post"
+      result="rename-{id}"
+      class="input-container"
+    >
+      <input
+        on:blur="todo-{id}"
+        on:keyup="todo-{id}"
+        event:keyup="code=Escape"
+        id="edit-todo-input"
+        class="edit"
+        name="todo"
+        value="{title}"
+        required
+        autofocus
+      >
+    </form>
+  </yes>
+</li>

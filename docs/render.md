@@ -9,8 +9,8 @@ render of a different response under the same action name.
 Multiple elements can subscribe to the same result action and render the same
 server response.
 
-Computes the minimum set of DOM mutations necessary to synchronize the document
-with the server response.
+KEML applies the minimum set of DOM mutations necessary to synchronize the
+document with the server response.
 
 If the server response can be determined to be the same as what is currently
 rendered in the document, no changes are applied at all.
@@ -18,7 +18,7 @@ rendered in the document, no changes are applied at all.
 ## Attributes
 
 1. `result` specified on an element that performs a request and contains a
-   space separated list of result actions to initiate
+   space separated list of render actions to initiate
 1. `error` works exactly like `result` but for situations when the server
    responds with an unsuccessful status code
 1. `render` specified on any element, including the same one that triggered the
@@ -47,18 +47,19 @@ rendered in the document, no changes are applied at all.
   server response
 
 ```html
-<button on:click="getUserCount"
-        on="getUserCount"
-        get="/user-count"
-        result="userCount"
+<button
+  on:click="getUserCount"
+  on="getUserCount"
+  get="/user-count"
+  result="userCount"
 >
   click me
 </button>
 
-<div    render="userCount"
-></div>
+<div render="userCount"></div>
 
-<span   render="userCount"
-        position="replaceWith"
+<span
+  render="userCount"
+  position="replaceWith"
 ></span>
 ```

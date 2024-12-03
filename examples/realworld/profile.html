@@ -1,0 +1,112 @@
+<div class="profile-page">
+  <div class="user-info">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-md-10 offset-md-1">
+          <img
+            src="{author.avatar}"
+            class="user-img"
+          />
+          <h4>{author.username}</h4>
+          <div>{markdown(author.bio)}</div>
+          <yes value="{user and user.user_id != author.user_id}">
+            <include value="followRequest" />
+            <span
+              render="followButton-{author.user_id}"
+              class="ml2 fr"
+            >
+              <include value="followButton" />
+            </span>
+          </yes>
+          <yes value="{user and user.user_id == author.user_id}">
+            <a
+              on:click="replaceSettings"
+              href="{url('settings')}"
+              class="btn btn-sm btn-outline-secondary action-btn"
+            >
+              <i
+                inert
+                class="ion-gear-a"
+              ></i>
+              Edit Profile Settings
+            </a>
+          </yes>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-md-10 offset-md-1">
+        <div class="articles-toggle">
+          <ul class="nav nav-pills outline-active">
+            <li class="nav-item">
+              <yes value="{active_route in ['profile', 'profile_pages']}">
+                <a
+                  inert
+                  class="nav-link active"
+                >My Articles</a>
+              </yes>
+              <no value="{active_route in ['profile', 'profile_pages']}">
+                <a
+                  on:click="redirect-{increment(True)}"
+                  on="redirect-{increment()}"
+                  redirect="pushState"
+                  href="{url('profile', slug=author.user_slug)}"
+                  class="nav-link"
+                >
+                  My Articles
+                </a>
+              </no>
+            </li>
+            <li class="nav-item">
+              <yes value="{active_route in ['favorites', 'favorites_pages']}">
+                <a
+                  inert
+                  class="nav-link active"
+                >Favorited Articles</a>
+              </yes>
+              <no value="{active_route in ['favorites', 'favorites_pages']}">
+                <a
+                  on:click="redirect-{increment(True)}"
+                  on="redirect-{increment()}"
+                  redirect="pushState"
+                  href="{url('favorites', slug=author.user_slug)}"
+                  class="nav-link"
+                >
+                  Favorited Articles
+                </a>
+              </no>
+            </li>
+          </ul>
+        </div>
+        <yes value="{active_route in ['profile', 'profile_pages']}">
+          <include
+            value="articles"
+            articles="{author_articles}"
+            total="{author_article_count}"
+            route="profile"
+            params="{{'slug': author.user_slug}}"
+          />
+          <no value="author_article_count">
+            <h2 class="mt4">Nothing to show here yet.</h2>
+            <p>Post your first article, to see it here.</p>
+          </no>
+        </yes>
+        <yes value="{active_route in ['favorites', 'favorites_pages']}">
+          <include
+            value="articles"
+            articles="{liked_articles}"
+            total="{liked_article_count}"
+            route="favorites"
+            params="{{'slug': author.user_slug}}"
+          />
+          <no value="liked_article_count">
+            <h2 class="mt4">Nothing to show here yet.</h2>
+            <p>Add some articles to favorites, to see them here.</p>
+          </no>
+        </yes>
+      </div>
+    </div>
+  </div>
+</div>

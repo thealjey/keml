@@ -1,8 +1,0 @@
-<button
-  on:click="{'un' if author.is_followed else ''}follow-{author.user_id}"
-  class="btn btn-sm btn{'' if author.is_followed else '-outline'}-secondary"
->
-  <i inert class="ion-{'minus' if author.is_followed else 'plus'}-round"></i>
-  <yes value="{author.is_followed}">Un-</yes>Follow
-  {author.username} ({author.total_follows})
-</button>

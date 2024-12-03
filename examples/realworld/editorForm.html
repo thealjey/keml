@@ -1,0 +1,65 @@
+<form
+  on:submit="createArticle"
+  on:result="redirect-{increment(True)}"
+  if:invalid="formInvalid"
+  on="createArticle"
+  error="submitErrors"
+  result="updatedForm"
+  render="updatedForm"
+  position="replaceWith"
+  method="post"
+>
+  <fieldset
+    on="redirect-{increment()}"
+    redirect="replaceState"
+    src="{url('article', slug=article_slug)}"
+  >
+    <fieldset class="form-group">
+      <input
+        if:invalid="titleInvalid"
+        type="text"
+        class="form-control form-control-lg"
+        placeholder="Article Title"
+        name="article_title"
+        required
+        value="{article_title}"
+      >
+    </fieldset>
+    <fieldset class="form-group">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="What's this article about?"
+        name="short"
+        value="{short}"
+        title="Leaving this field blank will default it to a truncated version of the main article text."
+      >
+    </fieldset>
+    <fieldset class="form-group">
+      <textarea
+        if:invalid="longInvalid"
+        class="form-control"
+        rows="8"
+        placeholder="Write your article (in markdown)"
+        name="long"
+        required
+      >
+        {long}
+      </textarea>
+    </fieldset>
+    <fieldset
+      render="articleTags"
+      class="form-group"
+    >
+      <include value="articleTags" />
+    </fieldset>
+    <button
+      if="formInvalid"
+      x-disabled
+      class="btn btn-lg pull-xs-right btn-primary"
+    >
+      <yes value="article_slug">Save Article</yes>
+      <no value="article_slug">Publish Article</no>
+    </button>
+  </fieldset>
+</form>

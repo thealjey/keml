@@ -1,14 +1,15 @@
 {
   "name": "keml",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "An HTMX alternative with a focus on performance, flexibility and, most of all, simplicity.",
-  "main": "keml.min.js",
+  "main": "keml.js",
   "scripts": {
-    "build": "java -jar closure-compiler-v20240317.jar --js=keml.js --js_output_file keml.min.js -O ADVANCED -W VERBOSE --assume_function_wrapper --output_wrapper \"(()=>{%output%})()\"",
+    "install": "pip install -r requirements.txt",
+    "build": "npx esbuild keml.ts --minify --format=esm --mangle-props=_$ --outdir=.",
     "docs:serve": "mkdocs serve",
     "docs:deploy": "mkdocs gh-deploy --force",
-    "todo": "python -m example.todo.server",
-    "realworld": "python -m example.realworld.server"
+    "todo": "python -m examples.todo.server",
+    "realworld": "python -m examples.realworld.server"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,7 @@
   "files": [
     "LICENSE",
     "README.md",
-    "keml.min.js"
+    "keml.js"
   ],
   "author": "Eugene Kuzmenko",
   "license": "MIT",

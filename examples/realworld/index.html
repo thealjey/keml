@@ -1,0 +1,98 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <meta
+    on="pushHome"
+    src="{url('home')}"
+    redirect="pushState"
+  >
+  <meta
+    on="replaceHome"
+    src="{url('home')}"
+    redirect="replaceState"
+  >
+  <meta
+    on="pushCreate"
+    src="{url('create')}"
+    redirect="pushState"
+  >
+  <meta
+    on="pushSettings"
+    src="{url('settings')}"
+    redirect="pushState"
+  >
+  <meta
+    on="replaceSettings"
+    src="{url('settings')}"
+    redirect="replaceState"
+  >
+  <meta
+    on="pushLogin"
+    src="{url('login')}"
+    redirect="pushState"
+  >
+  <meta
+    on="pushRegister"
+    src="{url('register')}"
+    redirect="pushState"
+  >
+  <meta
+    on="pushFeed"
+    src="{url('feed')}"
+    redirect="pushState"
+  >
+  <title>Conduit</title>
+  <link
+    rel="stylesheet"
+    href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
+  >
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Titillium+Web:700|Source+Serif+Pro:400,700|Merriweather+Sans:400,700|Source+Sans+Pro:400,300,600,700,300italic,400italic,600italic,700italic"
+  >
+  <link
+    rel="stylesheet"
+    href="https://demo.productionready.io/main.css"
+  >
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/tachyons@4.12.0/css/tachyons.css"
+  >
+  <script src="{url('js')}"></script>
+</head>
+
+<body>
+  <main
+    on:navigate="refreshContent"
+    on="refreshContent"
+    result="content"
+    error="content"
+    render="content"
+  >
+    <include value="content" />
+  </main>
+  <footer>
+    <div class="container">
+      <a
+        on:click="pushHome"
+        href="{url('home')}"
+        class="logo-font"
+      >conduit</a>
+      <span class="attribution">
+        An interactive learning project from
+        <a
+          target="_blank"
+          href="https://thinkster.io"
+        >Thinkster</a>.
+        Code & design licensed under MIT.
+      </span>
+    </div>
+  </footer>
+</body>
+
+</html>

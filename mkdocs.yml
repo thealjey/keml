@@ -8,7 +8,8 @@ nav:
   - Home: index.md
   - Install: install.md
   - Event: event.md
-  - Request: request.md
+  - Action: action.md
   - Render: render.md
   - State: state.md
-  - Special: special.md
+  - Glossary: glossary.md
+  - News: news.md

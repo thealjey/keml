@@ -1,0 +1,87 @@
+<nav class="navbar navbar-light">
+  <div class="container">
+    <a
+      on:click="pushHome"
+      href="{url('home')}"
+      class="navbar-brand"
+    >
+      conduit
+    </a>
+    <ul class="nav navbar-nav pull-xs-right">
+      <li class="nav-item">
+        <a
+          on:click="pushHome"
+          href="{url('home')}"
+          class="nav-link{' active' if active_route in ['home', 'home_pages', 'feed', 'feed_pages', 'tag', 'tag_pages'] else ''}"
+        >
+          Home
+        </a>
+      </li>
+      <yes value="user">
+        <li class="nav-item">
+          <a
+            on:click="pushCreate"
+            href="{url('create')}"
+            class="nav-link{' active' if active_route == 'create' else ''}"
+          >
+            <i
+              inert
+              class="ion-compose"
+            ></i>
+            New Article
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            on:click="pushSettings"
+            href="{url('settings')}"
+            class="nav-link{' active' if active_route == 'settings' else ''}"
+          >
+            <i
+              inert
+              class="ion-gear-a"
+            ></i>
+            Settings
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            on:click="redirect-{increment(True)}"
+            on="redirect-{increment()}"
+            redirect="pushState"
+            href="{url('profile', slug=user.user_slug)}"
+            class="nav-link{' active' if active_route in ['profile', 'profile_pages', 'favorites', 'favorites_pages'] else ''}"
+          >
+            <img
+              inert
+              src="{user.avatar}"
+              class="user-pic"
+            >
+            {user.username}
+          </a>
+        </li>
+      </yes>
+      <no value="user">
+        <li class="nav-item">
+          <a
+            on:click="pushLogin"
+            href="{url('login')}"
+            class="nav-link{' active' if active_route == 'login' else ''}"
+          >
+            Sign in
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            on:click="pushRegister"
+            href="{url('register')}"
+            class="nav-link{' active' if active_route == 'register' else ''}"
+          >
+            Sign up
+          </a>
+        </li>
+      </no>
+    </ul>
+  </div>
+</nav>
+<include value="{content}" />

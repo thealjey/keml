@@ -1,0 +1,121 @@
+<div class="home-page">
+  <div class="banner">
+    <div class="container">
+      <h1 class="logo-font">conduit</h1>
+      <p>A place to share your knowledge.</p>
+    </div>
+  </div>
+  <div class="container page">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="feed-toggle">
+          <ul class="nav nav-pills outline-active">
+            <li class="nav-item">
+              <yes value="{active_route in ['home', 'home_pages']}">
+                <a
+                  inert
+                  class="nav-link active"
+                >Global Feed</a>
+              </yes>
+              <no value="{active_route in ['home', 'home_pages']}">
+                <a
+                  on:click="pushHome"
+                  href="{url('home')}"
+                  class="nav-link"
+                >
+                  Global Feed
+                </a>
+              </no>
+            </li>
+            <yes value="user">
+              <li class="nav-item">
+                <yes value="{active_route in ['feed', 'feed_pages']}">
+                  <a
+                    inert
+                    class="nav-link active"
+                  >Your Feed</a>
+                </yes>
+                <no value="{active_route in ['feed', 'feed_pages']}">
+                  <a
+                    on:click="pushFeed"
+                    href="{url('feed')}"
+                    class="nav-link"
+                  >
+                    Your Feed
+                  </a>
+                </no>
+              </li>
+            </yes>
+            <yes value="tag">
+              <li class="nav-item">
+                <a
+                  inert
+                  class="nav-link active"
+                >#{tag}</a>
+              </li>
+            </yes>
+          </ul>
+        </div>
+        <yes value="{active_route in ['home', 'home_pages']}">
+          <include
+            value="articles"
+            articles="{global_articles}"
+            total="{total_article_count}"
+            route="home"
+            params="{{}}"
+          />
+          <no value="total_article_count">
+            <h2 class="mt4">Nothing to show here yet.</h2>
+            <p>No one has posted any articles yet, so you can be the first &#128170;.</p>
+          </no>
+        </yes>
+        <yes value="{active_route in ['feed', 'feed_pages']}">
+          <include
+            value="articles"
+            articles="{feed_articles}"
+            total="{followed_article_count}"
+            route="feed"
+            params="{{}}"
+          />
+          <no value="followed_article_count">
+            <h2 class="mt4">Nothing to show here yet.</h2>
+            <p>Follow some users to see their articles here.</p>
+          </no>
+        </yes>
+        <yes value="{active_route in ['tag', 'tag_pages']}">
+          <include
+            value="articles"
+            articles="{tag_articles}"
+            total="{tag_article_count}"
+            route="tag"
+            params="{{'tag': tag}}"
+          />
+          <no value="tag_article_count">
+            <h2 class="mt4">Nothing to show here yet.</h2>
+            <p>No articles with this tag seem to exist yet.</p>
+          </no>
+        </yes>
+      </div>
+      <yes value="popular_tag_count">
+        <div class="col-md-3">
+          <div class="sidebar">
+            <p>Popular Tags</p>
+            <div class="tag-list">
+              <for value="popular_tags">
+                <a
+                  on:click="redirect-{increment(True)}"
+                  on="redirect-{increment()}"
+                  redirect="pushState"
+                  href="{url('tag', tag=item)}"
+                  class="tag-pill tag-default"
+                >
+                  {item}
+                </a>
+              </for>
+            </div>
+          </div>
+        </div>
+      </yes>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div
+  render="deletedComment-{comment_id}"
+  position="replaceWith"
+  class="card"
+>
+  <div class="card-block">
+    {markdown(comment_text)}
+  </div>
+  <div class="card-footer">
+    <a
+      on:click="redirect-{increment(True)}"
+      on="redirect-{increment()}"
+      redirect="pushState"
+      href="{url('profile', slug=commenter.user_slug)}"
+      class="comment-author"
+    >
+      <img
+        inert
+        src="{commenter.avatar}"
+        class="comment-author-img"
+      >
+    </a>
+    <a
+      on:click="redirect-{increment(True)}"
+      on="redirect-{increment()}"
+      redirect="pushState"
+      href="{url('profile', slug=commenter.user_slug)}"
+      class="comment-author"
+    >
+      {commenter.username}
+    </a>
+    <span class="date-posted">{ftime(comment_ctime)}</span>
+    <yes value="{user and user.user_id == commenter.user_id}">
+      <span class="mod-options">
+        <i
+          on:click="remove-comment-{comment_id}"
+          on="remove-comment-{comment_id}"
+          delete="{url('comment', id=comment_id)}"
+          result="deletedComment-{comment_id}"
+          class="ion-trash-a"
+        ></i>
+      </span>
+    </yes>
+  </div>
+</div>

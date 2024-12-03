@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": false,
+    "exactOptionalPropertyTypes": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "noEmit": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "target": "ESNext"
+  }
+}

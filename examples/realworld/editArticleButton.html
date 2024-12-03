@@ -1,0 +1,13 @@
+<a
+  on:click="redirect-{increment(True)}"
+  on="redirect-{increment()}"
+  redirect="replaceState"
+  href="{url('editor', slug=article_slug)}"
+  class="btn btn-sm btn-outline-secondary"
+>
+  <i
+    inert
+    class="ion-edit"
+  ></i>
+  Edit Article
+</a>

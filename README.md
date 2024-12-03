@@ -11,6 +11,11 @@ web community collectively has ever had.
 However, like most great ideas, they are far more important than any actual
 specific implementation.
 
+Despite offering a multitude of conveniences over HTMX and much greater
+flexibility, KEML still manages to be absolutely tiny in comparison.  
+KEML v3 is ~4.7k minified and not gzipped and HTMX v2 is ~49.2k minified and not
+gzipped (~10.5x smaller).
+
 ## Motivation
 
 Being small and fast and configuration/plugin free is not enough, when you are
@@ -24,12 +29,13 @@ web application, that the HTMX api does nothing to address.
 Consider the following "idiomatic" HTMX code:
 
 ```html
-<button hx-post="/clicked"
-        hx-trigger="click"
-        hx-target="#result"
-        hx-swap="innerHTML"
+<button
+  hx-post="/clicked"
+  hx-trigger="click"
+  hx-target="#result"
+  hx-swap="innerHTML"
 >
-    Click Me!
+  Click Me!
 </button>
 
 <div id="result"></div>
@@ -41,7 +47,7 @@ Here the button element:
 1. can only do 1 thing when that event happens (send a request to "/clicked")
 1. cannot delegate the request-sending to some other element/-s
 1. can only render the result into 1 (usually) target element
-1. has to know where that element is in the page, what its "id" and/or "class"
+1. has to know where that element is on the page, what its "id" and/or "class"
    attributes are
 1. has to decide for the target element the exact "hx-swap", of which there can
    only be 1
@@ -69,45 +75,47 @@ Consider the following KEML code, that works with the same backend:
 
 ```html
 <html>
-  <head>
 
-    <title  render="result"></title>
+<head>
+  <title render="result"></title>
+</head>
 
-  </head>
-  <body>
+<body>
+  <button
+    on:click="handleClick doSomethingElse"
+    on:dblclick="handleDoubleClick"
+  >
+    Click Me!
+  </button>
 
-    <button on:click="handleClick doSomethingElse"
-            on:dblclick="handleDoubleClick"
-    >
-      Click Me!
-    </button>
+  <button on:click="handleClick">Click Me, maybe?!</button>
 
-    <button on:click="handleClick">
-      Click Me, maybe?!
-    </button>
+  <input
+    on="handleClick"
+    post="/clicked"
+    type="text"
+    name="input1"
+    result="result"
+  >
 
-    <input  on="handleClick"
-            post="/clicked"
-            type="text"
-            name="input1"
-            result="result"
-    >
+  <input
+    on="handleClick"
+    put="/notification"
+    type="text"
+    name="input2"
+  >
 
-    <input  on="handleClick"
-            put="/notification"
-            type="text"
-            name="input2"
-    >
+  <div
+    render="result"
+    position="replaceWith"
+  ></div>
 
-    <div    render="result"
-            position="replaceWith"
-    ></div>
+  <p
+    render="result"
+    position="append"
+  ></p>
+</body>
 
-    <p      render="result"
-            position="append"
-    ></p>
-
-  </body>
 </html>
 ```
 
