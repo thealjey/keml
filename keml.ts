@@ -143,6 +143,7 @@ interface XMLHttpRequest {
   var unNode = (node: Node) => {
     if (isInstance(ELT, node)) {
       del(actionElements, node);
+      del(resetElements, node);
       del(conditionElements, node);
       del(navigateElements, node);
       del(renderElements, node);
