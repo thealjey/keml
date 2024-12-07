@@ -1,6 +1,7 @@
 interface Element {
   loading_: boolean;
   error_: boolean;
+  timeoutId_: number | undefined;
   value: string | undefined;
   reset?: () => void;
   checkValidity?: () => void;
@@ -84,7 +85,6 @@ interface XMLHttpRequest {
   var renderElements = createSet();
   var stateElements = createSet();
   var resetElements = createSet();
-  var timeoutIdElements = new Map<Element, number>();
 
   var validate = (el: Element) => el.checkValidity?.() ?? YES;
   var createFormData = (a?: HTMLFormElement) => new FormData(a);
@@ -161,7 +161,6 @@ interface XMLHttpRequest {
   var commitAction = (el: Element) => {
     var a, b, c, d: XMLHttpRequest | string | null | [string, string | File], e;
     stopTimer(el);
-    del(timeoutIdElements, el);
     if (validate(el)) {
       hasAttribute(el, "once") && removeAttribute(el, ON);
       for (a = 7; a--; ) {
@@ -223,9 +222,10 @@ interface XMLHttpRequest {
   };
 
   var startTimer = (el: Element, delay: string) =>
-    timeoutIdElements.set(el, setTimeout(commitAction, +delay, el));
+    (el.timeoutId_ = setTimeout(commitAction, +delay, el));
 
-  var stopTimer = (el: Element) => clearTimeout(timeoutIdElements.get(el));
+  var stopTimer = (el: Element) =>
+    (el.timeoutId_ = clearTimeout(el.timeoutId_) as undefined);
 
   var onEvent = (e: Event) => {
     var a, b;
@@ -255,7 +255,7 @@ interface XMLHttpRequest {
           for (b of actionElements) {
             if (a == getAttribute(b, ON)) {
               if ((a = getAttribute(b, "throttle"))) {
-                timeoutIdElements.has(b) || startTimer(b, a);
+                b.timeoutId_ || startTimer(b, a);
               } else if ((a = getAttribute(b, "debounce"))) {
                 stopTimer(b);
                 startTimer(b, a);
