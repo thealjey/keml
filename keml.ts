@@ -99,11 +99,12 @@ interface XMLHttpRequest {
     stateQueue = 1;
   });
 
+  var isActionElement = (attrName: string) =>
+    startsWith(attrName, IF_COLON) || includes([ON, RESET, "render"], attrName);
+
   var onAttribute = (el: Element, attrName: string, present: boolean) => {
     var a;
-    if (includes([ON, RESET, "render"], attrName)) {
-      present ? add(actionElements, el) : del(actionElements, el);
-    } else if (attrName == "if") {
+    if (attrName == "if") {
       present ? add(conditionElements, el) : del(conditionElements, el);
     } else if (attrName == ON_COLON + NAVIGATE) {
       present ? add(navigateElements, el) : del(navigateElements, el);
@@ -112,8 +113,8 @@ interface XMLHttpRequest {
         el.focus();
         el.setSelectionRange((a = size(a)), a);
       } catch {}
-    } else if (((a = from(attributes(el))), startsWith(attrName, IF_COLON))) {
-      a.find(attr => startsWith(getName(attr), IF_COLON))
+    } else if (((a = from(attributes(el))), isActionElement(attrName))) {
+      a.find(attr => isActionElement(getName(attr)))
         ? add(actionElements, el)
         : del(actionElements, el);
     } else if (includes(INTERSECT_NAMES, attrName)) {
