@@ -270,23 +270,23 @@ interface XMLHttpRequest {
       for (a of ["nodeValue", VALUE, "checked"]) {
         (left as any)[a] == (b = (right as any)[a]) || ((left as any)[a] = b);
       }
-      if (left.nodeType == 1) {
-        disableState(left as Element);
-        for (b = size((a = attributes(left as Element))); b--; ) {
+      if (isInstance(ELT, left)) {
+        disableState(left);
+        for (b = size((a = attributes(left))); b--; ) {
           hasAttribute(right as Element, (c = getName(a[b] as Attr))) ||
-            removeAttribute(left as Element, c);
+            removeAttribute(left, c);
         }
         for (b = size((a = attributes(right as Element))); b--; ) {
           e = value((c = a[b] as Attr));
-          if ((c = getAttributeNode(left as Element, (d = getName(c))))) {
+          if ((c = getAttributeNode(left, (d = getName(c))))) {
             if (value(c) != e) {
               c.value = e;
             }
           } else {
-            setAttribute(left as Element, d, e);
+            setAttribute(left, d, e);
           }
         }
-        replaceChildren(left as Element, from(childNodes(right)));
+        replaceChildren(left, from(childNodes(right)));
       }
     } else {
       left[REPLACE_WITH](right);
