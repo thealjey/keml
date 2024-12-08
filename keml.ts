@@ -1,5 +1,5 @@
 interface Element {
-  loading_: boolean;
+  loading_: 0 | 1;
   error_: boolean;
   timeoutId_: number | undefined;
   value: string | undefined;
@@ -20,7 +20,6 @@ interface XMLHttpRequest {
   var TAR = HTMLTextAreaElement;
   var DOC = document;
   var YES = true;
-  var UNDEF: undefined;
   var SPACE_PATTERN = /\S+/g;
   var NAVIGATE = "navigate";
   var RESULT = "result";
@@ -76,15 +75,12 @@ interface XMLHttpRequest {
   var size = getter("length");
 
   var createSet = () => new Set<Element>();
-  var stateQueue = YES;
+  var stateQueue: 0 | 1 = 1;
   var renderQueue: Array<XMLHttpRequest> = [];
   var frm = DOC.createElement("form");
   var navigateElements = createSet();
   var actionElements = createSet();
   var conditionElements = createSet();
-  var renderElements = createSet();
-  var stateElements = createSet();
-  var resetElements = createSet();
 
   var validate = (el: Element) => el.checkValidity?.() ?? YES;
   var createFormData = (a?: HTMLFormElement) => new FormData(a);
@@ -100,21 +96,17 @@ interface XMLHttpRequest {
     for (var entry of entries) {
       fire(target(entry), entry.isIntersecting ? REVEAL : CONCEAL);
     }
-    stateQueue = YES;
+    stateQueue = 1;
   });
 
   var onAttribute = (el: Element, attrName: string, present: boolean) => {
     var a;
-    if (attrName == ON) {
+    if (includes([ON, RESET, "render"], attrName)) {
       present ? add(actionElements, el) : del(actionElements, el);
-    } else if (attrName == RESET) {
-      present ? add(resetElements, el) : del(resetElements, el);
     } else if (attrName == "if") {
       present ? add(conditionElements, el) : del(conditionElements, el);
     } else if (attrName == ON_COLON + NAVIGATE) {
       present ? add(navigateElements, el) : del(navigateElements, el);
-    } else if (attrName == "render") {
-      present ? add(renderElements, el) : del(renderElements, el);
     } else if (attrName == "autofocus" && present && (a = value(el))) {
       try {
         el.focus();
@@ -122,8 +114,8 @@ interface XMLHttpRequest {
       } catch {}
     } else if (((a = from(attributes(el))), startsWith(attrName, IF_COLON))) {
       a.find(attr => startsWith(getName(attr), IF_COLON))
-        ? add(stateElements, el)
-        : del(stateElements, el);
+        ? add(actionElements, el)
+        : del(actionElements, el);
     } else if (includes(INTERSECT_NAMES, attrName)) {
       observer.unobserve(el);
       a.find(attr => includes(INTERSECT_NAMES, getName(attr))) &&
@@ -143,11 +135,8 @@ interface XMLHttpRequest {
   var unNode = (node: Node) => {
     if (isInstance(ELT, node)) {
       del(actionElements, node);
-      del(resetElements, node);
       del(conditionElements, node);
       del(navigateElements, node);
-      del(renderElements, node);
-      del(stateElements, node);
       observer.unobserve(node);
       each(childNodes(node), unNode);
     }
@@ -159,7 +148,11 @@ interface XMLHttpRequest {
   ) as string[];
 
   var commitAction = (el: Element) => {
-    var a, b, c, d: XMLHttpRequest | string | null | [string, string | File], e;
+    var a: URL | number | Attr,
+      b,
+      c,
+      d: XMLHttpRequest | string | null | [string, string | File],
+      e;
     stopTimer(el);
     if (validate(el)) {
       hasAttribute(el, "once") && removeAttribute(el, ON);
@@ -184,16 +177,17 @@ interface XMLHttpRequest {
           ? createFormData(el)
           : isInstance(INP, el) || isInstance(SEL, el) || isInstance(TAR, el)
           ? (frm.replaceChildren(el.cloneNode(YES)), createFormData(frm))
-          : ((c = getAttribute(el, "name")) &&
+          : ((e = createFormData()),
+            (c = getAttribute(el, "name")) &&
               (d = getAttribute(el, VALUE)) &&
-              (e = createFormData()).set(c, d),
+              e.set(c, d),
             e)) &&
         b != "POST"
       ) {
-        for (d of c) {
-          typeof d[1] == "string" && a.searchParams.append(d[0], d[1]);
-        }
-        c = UNDEF;
+        c = each(
+          c,
+          (b, c) => typeof b == "string" && (a as URL).searchParams.append(c, b)
+        ) as undefined;
       }
       if (
         (d = getAttribute(el, "redirect")) == "pushState" ||
@@ -215,7 +209,8 @@ interface XMLHttpRequest {
           startsWith((b = getName(a)), "h-") &&
             setRequestHeader(d, substring(b, 2), value(a));
         }
-        el.error_ = !(el.loading_ = stateQueue = YES);
+        el.error_ = false;
+        el.loading_ = stateQueue = 1;
         d.send(c);
       }
     }
@@ -228,7 +223,7 @@ interface XMLHttpRequest {
     (el.timeoutId_ = clearTimeout(el.timeoutId_) as undefined);
 
   var onEvent = (e: Event) => {
-    var a, b;
+    var a, b, c;
     if (isInstance(ELT, (a = target(e)))) {
       if (
         (b = getAttribute(a, "event:" + e.type)) &&
@@ -251,22 +246,18 @@ interface XMLHttpRequest {
         (a = match(a, SPACE_PATTERN))
       ) {
         e.preventDefault();
-        for (a of a) {
-          for (b of actionElements) {
-            if (a == getAttribute(b, ON)) {
-              if ((a = getAttribute(b, "throttle"))) {
-                b.timeoutId_ || startTimer(b, a);
-              } else if ((a = getAttribute(b, "debounce"))) {
-                stopTimer(b);
-                startTimer(b, a);
-              } else {
-                commitAction(b);
-              }
+        for (b of actionElements) {
+          if (includes(a, getAttribute(b, ON) || "")) {
+            if ((c = getAttribute(b, "throttle"))) {
+              b.timeoutId_ || startTimer(b, c);
+            } else if ((c = getAttribute(b, "debounce"))) {
+              stopTimer(b);
+              startTimer(b, c);
+            } else {
+              commitAction(b);
             }
           }
-          for (b of resetElements) {
-            a == getAttribute(b, RESET) && b[RESET]?.();
-          }
+          includes(a, getAttribute(b, RESET) || "") && b[RESET]?.();
         }
       }
     }
@@ -369,8 +360,8 @@ interface XMLHttpRequest {
         (c = match(c, SPACE_PATTERN))
       ) {
         a = a.responseXML?.body;
-        for (d of renderElements) {
-          if (includes(c, getAttribute(d, "render") as string)) {
+        for (d of actionElements) {
+          if (includes(c, getAttribute(d, "render") || "")) {
             f = a ? from(childNodes((e = e ? a.cloneNode(YES) : a))) : [];
             if (
               includes(
@@ -393,14 +384,14 @@ interface XMLHttpRequest {
           }
         }
       }
-      b.loading_ = false;
-      stateQueue = YES;
+      b.loading_ = 0;
+      stateQueue = 1;
       b.error_ || fire(b, RESULT);
     }
     if (stateQueue) {
-      stateQueue = false;
+      stateQueue = 0;
       a = [] as string[];
-      for (b of stateElements) {
+      for (b of actionElements) {
         (c = getAttribute(b, IF_COLON + "invalid")) &&
           (c = match(c, SPACE_PATTERN)) &&
           !validate(b) &&
@@ -413,7 +404,7 @@ interface XMLHttpRequest {
             ? b.type == "checkbox"
               ? b.checked
               : value(b)
-            : UNDEF) &&
+            : 0) &&
           push(a, ...c);
         (c = getAttribute(b, IF_INTERSECTS)) &&
           (c = match(c, SPACE_PATTERN)) &&
@@ -462,7 +453,7 @@ interface XMLHttpRequest {
           (b = a.attributeName) &&
             onAttribute((a = target(a) as Element), b, hasAttribute(a, b));
         }
-        stateQueue = YES;
+        stateQueue = 1;
       }).observe(DOC, { attributes: YES, childList: YES, subtree: YES });
       for (var name in DOC) {
         startsWith(name, ON) &&
@@ -472,7 +463,7 @@ interface XMLHttpRequest {
         addListener(DOC, name, onEvent, YES);
       }
       for (name of ["change", "input", RESET]) {
-        addListener(DOC, name, () => (stateQueue = YES), YES);
+        addListener(DOC, name, () => (stateQueue = 1), YES);
       }
       addListener(window, "popstate", dispatchNavigate, YES);
       render();

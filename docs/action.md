@@ -113,11 +113,10 @@ meaningless in a redirect
 
 ## Reset Example
 
-- clicking the button resets the input and the form
+- clicking the button resets the form
 
 ```html
-<button on:click="resetField resetForm">click me</button>
+<button on:click="resetForm">click me</button>
 
-<input reset="resetField">
 <form reset="resetForm"></form>
 ```
