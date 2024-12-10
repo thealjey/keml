@@ -99,6 +99,10 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#installation" class="nav-link">Installation</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#using-with-other-libraries-and-frameworks" class="nav-link">Using with other libraries and frameworks</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -111,7 +115,13 @@
 configure.</p>
 <p>You load the library from a CDN and forget that JS even existed at all.</p>
 <pre><code class="language-html">&lt;script src=&quot;https://unpkg.com/keml&quot;&gt;&lt;/script&gt;
-</code></pre></div>
+</code></pre>
+<h2 id="using-with-other-libraries-and-frameworks">Using with other libraries and frameworks</h2>
+<p>There's also nothing special that you need to do here.</p>
+<p>KEML automatically observes all changes to the DOM.</p>
+<p>That means that your custom code can simply create elements and update their
+attributes at any point, and they will continue to work with KEML exactly the
+same as if they were rendered on the server.</p></div>
             </div>
         </div>
 
