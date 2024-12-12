@@ -14,7 +14,7 @@ specific implementation.
 Despite offering a multitude of conveniences over HTMX and much greater
 flexibility, KEML still manages to be absolutely tiny in comparison.  
 KEML v3 is ~4.5k minified and not gzipped and HTMX v2 is ~49.2k minified and not
-gzipped (~10.9x smaller).
+gzipped (~11x smaller).
 
 ## Motivation
 

@@ -118,9 +118,9 @@ interface XMLHttpRequest {
         ? add(actionElements, el)
         : del(actionElements, el);
     } else if (includes(INTERSECT_NAMES, attrName)) {
-      observer.unobserve(el);
-      a.find(attr => includes(INTERSECT_NAMES, getName(attr))) &&
-        observer.observe(el);
+      a.find(attr => includes(INTERSECT_NAMES, getName(attr)))
+        ? observer.observe(el)
+        : observer.unobserve(el);
     }
   };
 
@@ -143,10 +143,7 @@ interface XMLHttpRequest {
     }
   };
 
-  var methods = match(
-    "src action href get delete put post",
-    SPACE_PATTERN
-  ) as string[];
+  var methods = match("src action href get delete put post", SPACE_PATTERN)!;
 
   var commitAction = (el: Element) => {
     var a: URL | number | Attr,
@@ -158,17 +155,12 @@ interface XMLHttpRequest {
     if (validate(el)) {
       hasAttribute(el, "once") && removeAttribute(el, ON);
       for (a = 7; a--; ) {
-        if (hasAttribute(el, methods[a] as string)) {
+        if (hasAttribute(el, methods[a]!)) {
           break;
         }
       }
-      b = (
-        getAttribute(el, "method") ?? (methods[a < 3 ? 3 : a] as string)
-      ).toUpperCase();
-      a = new URL(
-        a == -1 ? "" : (getAttribute(el, methods[a] as string) as string),
-        el.baseURI
-      );
+      b = (getAttribute(el, "method") ?? methods[a < 3 ? 3 : a]!).toUpperCase();
+      a = new URL(a == -1 ? "" : getAttribute(el, methods[a]!)!, el.baseURI);
       a.pathname = (e = a.pathname).replace(
         /\/*$/,
         /\.[^\/]+\/*$/.test(e) ? "" : "/"
@@ -248,7 +240,7 @@ interface XMLHttpRequest {
       ) {
         e.preventDefault();
         for (b of actionElements) {
-          if (includes(a, getAttribute(b, ON) || "")) {
+          if (includes(a, getAttribute(b, ON)!)) {
             if ((c = getAttribute(b, "throttle"))) {
               b.timeoutId_ || startTimer(b, c);
             } else if ((c = getAttribute(b, "debounce"))) {
@@ -258,7 +250,7 @@ interface XMLHttpRequest {
               commitAction(b);
             }
           }
-          includes(a, getAttribute(b, RESET) || "") && b[RESET]?.();
+          includes(a, getAttribute(b, RESET)!) && b[RESET]?.();
         }
       }
     }
@@ -273,11 +265,11 @@ interface XMLHttpRequest {
       if (isInstance(ELT, left)) {
         disableState(left);
         for (b = size((a = attributes(left))); b--; ) {
-          hasAttribute(right as Element, (c = getName(a[b] as Attr))) ||
+          hasAttribute(right as Element, (c = getName(a[b]!))) ||
             removeAttribute(left, c);
         }
         for (b = size((a = attributes(right as Element))); b--; ) {
-          e = value((c = a[b] as Attr));
+          e = value((c = a[b]!));
           if ((c = getAttributeNode(left, (d = getName(c))))) {
             if (value(c) != e) {
               c.value = e;
@@ -294,25 +286,16 @@ interface XMLHttpRequest {
   };
 
   var replaceChildren = (el: Element, nodes: Node[]) => {
-    for (
-      var len = Math.max(size(childNodes(el)), size(nodes)), i = 0, left, right;
-      i < len;
-      ++i
-    ) {
-      left = childNodes(el)[i];
-      right = nodes[i] as Node;
-      if (left) {
-        if (right) {
-          replaceWith(left, right);
-        } else {
-          left.remove();
-          --i;
-          --len;
-        }
-      } else {
-        el.appendChild(right);
-      }
+    var left = childNodes(el);
+    var i = size(nodes);
+    var node: ChildNode | undefined;
+    while ((node = left[i])) {
+      node.remove();
     }
+    for (i = -1; (node = left[++i]); ) {
+      replaceWith(node, nodes[i]!);
+    }
+    el.append(...nodes.slice(size(left)));
   };
 
   var applyState = (el: Element) => {
@@ -362,12 +345,12 @@ interface XMLHttpRequest {
       ) {
         a = a.responseXML?.body;
         for (d of actionElements) {
-          if (includes(c, getAttribute(d, "render") || "")) {
+          if (includes(c, getAttribute(d, "render")!)) {
             f = a ? from(childNodes((e = e ? a.cloneNode(YES) : a))) : [];
             if (
               includes(
-                match("after append before prepend", SPACE_PATTERN) as string[],
-                (g = getAttribute(d, "position") as string)
+                match("after append before prepend", SPACE_PATTERN)!,
+                (g = getAttribute(d, "position")!)
               )
             ) {
               d[g as "after" | "append" | "before" | "prepend"](...f);
@@ -425,7 +408,7 @@ interface XMLHttpRequest {
           push(a, ...c);
       }
       for (b of conditionElements) {
-        if (includes(a, getAttribute(b, "if") as string)) {
+        if (includes(a, getAttribute(b, "if")!)) {
           if (!hasAttribute(b, STATE)) {
             applyState(b);
             setAttribute(b, STATE, "");
