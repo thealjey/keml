@@ -50,6 +50,8 @@ interface XMLHttpRequest {
   ): b is InstanceType<A> => b instanceof a;
 
   var from = Array.from;
+  var setTimer = setTimeout;
+  var clearTimer = clearTimeout as (id: number | undefined) => undefined;
   var addListener = method("addEventListener");
   var add = method("add");
   var push = method("push");
@@ -108,10 +110,10 @@ interface XMLHttpRequest {
       present ? add(conditionElements, el) : del(conditionElements, el);
     } else if (attrName == ON_COLON + NAVIGATE) {
       present ? add(navigateElements, el) : del(navigateElements, el);
-    } else if (attrName == "autofocus" && present && (a = value(el))) {
+    } else if (attrName == "autofocus") {
       try {
         el.focus();
-        el.setSelectionRange((a = size(a)), a);
+        el.setSelectionRange((a = size(value(el)!)), a);
       } catch {}
     } else if (((a = from(attributes(el))), isActionElement(attrName))) {
       a.find(attr => isActionElement(getName(attr)))
@@ -151,7 +153,7 @@ interface XMLHttpRequest {
       c,
       d: XMLHttpRequest | string | null | [string, string | File],
       e;
-    stopTimer(el);
+    el.timeoutId_ = clearTimer(el.timeoutId_);
     if (validate(el)) {
       hasAttribute(el, "once") && removeAttribute(el, ON);
       for (a = 7; a--; ) {
@@ -209,12 +211,6 @@ interface XMLHttpRequest {
     }
   };
 
-  var startTimer = (el: Element, delay: string) =>
-    (el.timeoutId_ = setTimeout(commitAction, +delay, el));
-
-  var stopTimer = (el: Element) =>
-    (el.timeoutId_ = clearTimeout(el.timeoutId_) as undefined);
-
   var onEvent = (e: Event) => {
     var a, b, c;
     if (isInstance(ELT, (a = target(e)))) {
@@ -242,10 +238,10 @@ interface XMLHttpRequest {
         for (b of actionElements) {
           if (includes(a, getAttribute(b, ON)!)) {
             if ((c = getAttribute(b, "throttle"))) {
-              b.timeoutId_ || startTimer(b, c);
+              b.timeoutId_ ??= setTimer(commitAction, +c, b);
             } else if ((c = getAttribute(b, "debounce"))) {
-              stopTimer(b);
-              startTimer(b, c);
+              clearTimer(b.timeoutId_);
+              b.timeoutId_ = setTimer(commitAction, +c, b);
             } else {
               commitAction(b);
             }
