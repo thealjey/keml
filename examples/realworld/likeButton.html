@@ -2,10 +2,7 @@
   on:click="{'un' if is_liked else ''}likeArticle-{article_id}"
   class="btn btn-sm btn{'' if is_liked else '-outline'}-primary"
 >
-  <i
-    inert
-    class="ion-heart"
-  ></i>
+  <i class="ion-heart"></i>
   <yes value="{label == 'b'}">
     Favorite Article ({total_likes})
   </yes>

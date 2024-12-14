@@ -25,18 +25,12 @@
       href="{url('article', slug=article_slug)}"
       class="preview-link"
     >
-      <h1 inert>{article_title}</h1>
-      <p inert>{short}</p>
-      <span inert>Read more...</span>
-      <ul
-        inert
-        class="tag-list"
-      >
+      <h1>{article_title}</h1>
+      <p>{short}</p>
+      <span>Read more...</span>
+      <ul class="tag-list">
         <for value="tags">
-          <li
-            inert
-            class="tag-default tag-pill tag-outline"
-          >{item}</li>
+          <li class="tag-default tag-pill tag-outline">{item}</li>
         </for>
       </ul>
     </a>

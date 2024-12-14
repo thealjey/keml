@@ -4,6 +4,44 @@
 
 --------------------------------------------------------------------------------
 
+## v3.1
+
+### Event Bubbling
+
+Event handling now bubbles up the DOM tree as you would expect.
+
+This is mostly a non-breaking convenience feature.
+
+Previously it was necessary to make sure that an event is always triggered
+on the exact same element that contains the event handling logic.
+
+Like in the following example, using the `inert` attribute to make sure that the
+nested image does not "steal" the click events for itself:
+
+```html
+<button on:click="handleClick">
+  <img
+    inert
+    src="bat-cat.jpg"
+  >
+</button>
+```
+
+With v3.1 this is no longer the case, because KEML will automatically locate
+the first parent element that matches the event.
+
+So, this is now equivalent:
+
+```html
+<button on:click="handleClick">
+  <img src="bat-cat.jpg">
+</button>
+```
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+
 ## v3 is finally out!
 
 It is said that simplicity is hard and absolute simplicity is hard absolutely.

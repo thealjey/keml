@@ -24,10 +24,7 @@
             href="{url('create')}"
             class="nav-link{' active' if active_route == 'create' else ''}"
           >
-            <i
-              inert
-              class="ion-compose"
-            ></i>
+            <i class="ion-compose"></i>
             New Article
           </a>
         </li>
@@ -37,10 +34,7 @@
             href="{url('settings')}"
             class="nav-link{' active' if active_route == 'settings' else ''}"
           >
-            <i
-              inert
-              class="ion-gear-a"
-            ></i>
+            <i class="ion-gear-a"></i>
             Settings
           </a>
         </li>
@@ -53,7 +47,6 @@
             class="nav-link{' active' if active_route in ['profile', 'profile_pages', 'favorites', 'favorites_pages'] else ''}"
           >
             <img
-              inert
               src="{user.avatar}"
               class="user-pic"
             >

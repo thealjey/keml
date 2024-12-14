@@ -19,6 +19,8 @@ following:
    can already rely on new attributes being present and working when this event
    is triggered)
 
+All events bubble to the root of the dom tree.
+
 ## Attributes
 
 - any attribute that starts with `on:` and contains a space separated list of
@@ -29,12 +31,10 @@ following:
   object, otherwise the event handling is skipped; can be used for associating
   hotkeys with an element, for example
 
-## Example
+## Basic Example
 
 - moving the mouse cursor into the button initiates the `doSomething` action
 - clicking the button initiates two actions: `loadData` and `updateCounter`
-- putting the cursor inside of the input and pressing `Alt+Esc` initiates the
-  `hotkeysAreCool` action
 - nothing happens as a result, since none of the elements subscribe to any
   of these actions
 
@@ -45,10 +45,31 @@ following:
 >
   click me
 </button>
+```
+
+## Hotkey Example
+
+- putting the cursor inside of the input and pressing `Alt+Esc` initiates the
+  `hotkeysAreCool` action
+
+```html
 <input
   on:keyup="hotkeysAreCool"
   event:keyup="code=Escape, altKey"
 >
+```
+
+## Bubbling Example
+
+- when you click on the image the `handleClick` action of a button is initiated,
+  because it is the first matching `on:<event name>` of a parent element
+- this will work with any number of nesting levels (e.g. global hotkeys on the
+  body element)
+
+```html
+<button on:click="handleClick">
+  <img src="bat-cat.jpg">
+</button>
 ```
 
 Please be mindful that all actions are, by design, global for a page that they

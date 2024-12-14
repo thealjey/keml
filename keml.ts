@@ -214,39 +214,41 @@ interface XMLHttpRequest {
   var onEvent = (e: Event) => {
     var a, b, c;
     if (isInstance(ELT, (a = target(e)))) {
-      if (
-        (b = getAttribute(a, "event:" + e.type)) &&
-        (b = b.split(/\s*,\s*/))
-      ) {
-        for (b of b) {
-          if (
-            (b = b.split(/\s*=\s*/) as
-              | [keyof Event]
-              | [keyof Event, string]
-              | null) &&
-            e[b[0]] + "" != (b[1] ?? YES + "")
-          ) {
-            return;
-          }
-        }
+      while (a && !(b = getAttribute(a, ON_COLON + e.type))) {
+        a = a.parentElement;
       }
-      if (
-        (a = getAttribute(a, ON_COLON + e.type)) &&
-        (a = match(a, SPACE_PATTERN))
-      ) {
-        e.preventDefault();
-        for (b of actionElements) {
-          if (includes(a, getAttribute(b, ON)!)) {
-            if ((c = getAttribute(b, "throttle"))) {
-              b.timeoutId_ ??= setTimer(commitAction, +c, b);
-            } else if ((c = getAttribute(b, "debounce"))) {
-              clearTimer(b.timeoutId_);
-              b.timeoutId_ = setTimer(commitAction, +c, b);
-            } else {
-              commitAction(b);
+      if (a && b) {
+        if (
+          (c = getAttribute(a, "event:" + e.type)) &&
+          (c = c.split(/\s*,\s*/))
+        ) {
+          for (c of c) {
+            if (
+              (c = c.split(/\s*=\s*/) as
+                | [keyof Event]
+                | [keyof Event, string]
+                | null) &&
+              e[c[0]] + "" != (c[1] ?? YES + "")
+            ) {
+              return;
             }
           }
-          includes(a, getAttribute(b, RESET)!) && b[RESET]?.();
+        }
+        if ((a = match(b, SPACE_PATTERN))) {
+          e.preventDefault();
+          for (b of actionElements) {
+            if (includes(a, getAttribute(b, ON)!)) {
+              if ((c = getAttribute(b, "throttle"))) {
+                b.timeoutId_ ??= setTimer(commitAction, +c, b);
+              } else if ((c = getAttribute(b, "debounce"))) {
+                clearTimer(b.timeoutId_);
+                b.timeoutId_ = setTimer(commitAction, +c, b);
+              } else {
+                commitAction(b);
+              }
+            }
+            includes(a, getAttribute(b, RESET)!) && b[RESET]?.();
+          }
         }
       }
     }
