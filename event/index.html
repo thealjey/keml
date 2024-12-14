@@ -103,7 +103,15 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#example" class="nav-link">Example</a>
+            <li class="nav-item" data-bs-level="2"><a href="#basic-example" class="nav-link">Basic Example</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#hotkey-example" class="nav-link">Hotkey Example</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#bubbling-example" class="nav-link">Bubbling Example</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -131,6 +139,7 @@ following:</p>
    can already rely on new attributes being present and working when this event
    is triggered)</li>
 </ol>
+<p>All events bubble to the root of the dom tree.</p>
 <h2 id="attributes">Attributes</h2>
 <ul>
 <li>any attribute that starts with <code>on:</code> and contains a space separated list of
@@ -141,12 +150,10 @@ following:</p>
   object, otherwise the event handling is skipped; can be used for associating
   hotkeys with an element, for example</li>
 </ul>
-<h2 id="example">Example</h2>
+<h2 id="basic-example">Basic Example</h2>
 <ul>
 <li>moving the mouse cursor into the button initiates the <code>doSomething</code> action</li>
 <li>clicking the button initiates two actions: <code>loadData</code> and <code>updateCounter</code></li>
-<li>putting the cursor inside of the input and pressing <code>Alt+Esc</code> initiates the
-  <code>hotkeysAreCool</code> action</li>
 <li>nothing happens as a result, since none of the elements subscribe to any
   of these actions</li>
 </ul>
@@ -156,10 +163,27 @@ following:</p>
 &gt;
   click me
 &lt;/button&gt;
-&lt;input
+</code></pre>
+<h2 id="hotkey-example">Hotkey Example</h2>
+<ul>
+<li>putting the cursor inside of the input and pressing <code>Alt+Esc</code> initiates the
+  <code>hotkeysAreCool</code> action</li>
+</ul>
+<pre><code class="language-html">&lt;input
   on:keyup=&quot;hotkeysAreCool&quot;
   event:keyup=&quot;code=Escape, altKey&quot;
 &gt;
+</code></pre>
+<h2 id="bubbling-example">Bubbling Example</h2>
+<ul>
+<li>when you click on the image the <code>handleClick</code> action of a button is initiated,
+  because it is the first matching <code>on:&lt;event name&gt;</code> of a parent element</li>
+<li>this will work with any number of nesting levels (e.g. global hotkeys on the
+  body element)</li>
+</ul>
+<pre><code class="language-html">&lt;button on:click=&quot;handleClick&quot;&gt;
+  &lt;img src=&quot;bat-cat.jpg&quot;&gt;
+&lt;/button&gt;
 </code></pre>
 <p>Please be mindful that all actions are, by design, global for a page that they
 are used on.</p>

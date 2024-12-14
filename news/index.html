@@ -99,6 +99,10 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#news" class="nav-link">News</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#v31" class="nav-link">v3.1</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#v3-is-finally-out" class="nav-link">v3 is finally out!</a>
               <ul class="nav flex-column">
               </ul>
@@ -111,6 +115,30 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="news">News</h1>
+<hr />
+<hr />
+<h2 id="v31">v3.1</h2>
+<h3 id="event-bubbling">Event Bubbling</h3>
+<p>Event handling now bubbles up the DOM tree as you would expect.</p>
+<p>This is mostly a non-breaking convenience feature.</p>
+<p>Previously it was necessary to make sure that an event is always triggered
+on the exact same element that contains the event handling logic.</p>
+<p>Like in the following example, using the <code>inert</code> attribute to make sure that the
+nested image does not "steal" the click events for itself:</p>
+<pre><code class="language-html">&lt;button on:click=&quot;handleClick&quot;&gt;
+  &lt;img
+    inert
+    src=&quot;bat-cat.jpg&quot;
+  &gt;
+&lt;/button&gt;
+</code></pre>
+<p>With v3.1 this is no longer the case, because KEML will automatically locate
+the first parent element that matches the event.</p>
+<p>So, this is now equivalent:</p>
+<pre><code class="language-html">&lt;button on:click=&quot;handleClick&quot;&gt;
+  &lt;img src=&quot;bat-cat.jpg&quot;&gt;
+&lt;/button&gt;
+</code></pre>
 <hr />
 <hr />
 <h2 id="v3-is-finally-out">v3 is finally out!</h2>
