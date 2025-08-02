@@ -12,11 +12,13 @@
         <meta name="author" content="Eugene Kuzmenko">
       
       
-        <link rel="canonical" href="https://thealjey.github.io/keml/index.html">
+        <link rel="canonical" href="https://thealjey.github.io/keml/render.html">
       
       
+        <link rel="prev" href="action.html">
       
-        <link rel="next" href="install.html">
+      
+        <link rel="next" href="state.html">
       
       
       <link rel="icon" href="img/favicon.ico">
@@ -24,7 +26,7 @@
     
     
       
-        <title>keml</title>
+        <title>Render - keml</title>
       
     
     
@@ -66,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#keml" class="md-skip">
+        <a href="#rendering-responses" class="md-skip">
           Skip to content
         </a>
       
@@ -101,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Render
             
           </span>
         </div>
@@ -217,32 +219,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Home
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="index.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
         
   
   
@@ -253,59 +233,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#motivation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Motivation
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Motivation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#so-why-does-keml-need-to-exist" class="md-nav__link">
-    <span class="md-ellipsis">
-      So, why does KEML need to exist?
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#how-is-keml-different" class="md-nav__link">
-    <span class="md-ellipsis">
-      How is KEML different?
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -380,10 +307,32 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="render.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Render
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="render.html" class="md-nav__link md-nav__link--active">
         
   
   
@@ -394,6 +343,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attributes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-based-optimization-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key based optimization example
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -491,35 +487,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#motivation" class="md-nav__link">
+  <a href="#attributes" class="md-nav__link">
     <span class="md-ellipsis">
-      Motivation
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Motivation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#so-why-does-keml-need-to-exist" class="md-nav__link">
-    <span class="md-ellipsis">
-      So, why does KEML need to exist?
+      Attributes
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#how-is-keml-different" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#basic-example" class="md-nav__link">
     <span class="md-ellipsis">
-      How is KEML different?
+      Basic example
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#key-based-optimization-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key based optimization example
+    </span>
+  </a>
   
 </li>
       
@@ -542,84 +532,54 @@
   
 
 
-<h1 id="keml">KEML<a class="headerlink" href="#keml" title="Permanent link">&para;</a></h1>
-<p><strong>KEML — Actions over abstractions.</strong><br />
-<em>Enhance HTML with expressive, declarative attributes that connect your frontend
-directly to your server logic.</em></p>
-<p><img alt="Build Status" src="https://github.com/thealjey/keml/actions/workflows/pr-check.yml/badge.svg" />
-<img alt="Package size" src="https://img.shields.io/packagephobia/minzip/keml?style=flat" />
-<img alt="Latest Release" src="https://img.shields.io/npm/v/keml?style=flat" />
-<img alt="License" src="https://img.shields.io/github/license/thealjey/keml?style=flat" />
-<img alt="Open Issues" src="https://img.shields.io/github/issues/thealjey/keml?style=flat" />
-<img alt="Open PRs" src="https://img.shields.io/github/issues-pr/thealjey/keml?style=flat" />
-<a href="https://thealjey.github.io/keml/"><img alt="Docs" src="https://img.shields.io/badge/docs-online-blue" /></a></p>
-<p>KEML is a modern HTML extension that adds powerful, declarative attributes to
-standard markup. With KEML, you define behaviors like form submission,
-navigation, state transitions, and conditional rendering directly in your HTML
-— all handled by the server. There's no client-side JavaScript to write, manage,
-or debug. Just clean, maintainable, server-driven apps.</p>
-<p>KEML builds on the core idea that HTML can drive your application's behavior.
-Inspired by the elegance of HTMX (https://htmx.org), KEML takes that vision
-further — removing limitations, embracing composability, and keeping everything
-within your markup.</p>
-<p>No selectors. No JavaScript. No surprises.<br />
-Just expressive, maintainable, declarative HTML.</p>
-<h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">&para;</a></h2>
-<p>Being small and fast and configuration/plugin free is not enough, when you are
-trying to compete with a well established and popular library.</p>
-<h4 id="so-why-does-keml-need-to-exist">So, why does KEML need to exist?<a class="headerlink" href="#so-why-does-keml-need-to-exist" title="Permanent link">&para;</a></h4>
-<p>KEML was born out of the classic 1-to-1 problem of the traditional jQuery-esque
-web application, that the HTMX api does nothing to address.</p>
-<p>Consider the following "idiomatic" HTMX code:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
-  <span class="na">hx-post</span><span class="o">=</span><span class="s">&quot;/clicked&quot;</span>
-  <span class="na">hx-trigger</span><span class="o">=</span><span class="s">&quot;click&quot;</span>
-  <span class="na">hx-target</span><span class="o">=</span><span class="s">&quot;#result&quot;</span>
-  <span class="na">hx-swap</span><span class="o">=</span><span class="s">&quot;innerHTML&quot;</span>
-<span class="p">&gt;</span>
-  Click Me!
-<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-
-<span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;result&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>Here the button element:</p>
+<h1 id="rendering-responses">Rendering responses<a class="headerlink" href="#rendering-responses" title="Permanent link">&para;</a></h1>
+<p>HTML elements that trigger requests can initiate multiple result actions after
+receiving a server response.</p>
+<p>Multiple elements can initiate the same result action, thus triggering the
+render different responses under the same action name.</p>
+<p>Multiple elements can subscribe to the same result action and render the same
+server response.</p>
+<p>KEML applies the minimum set of DOM mutations necessary to synchronize the
+document with the server response.</p>
+<p>If the server response is determined to be the same as what is currently
+rendered in the document, no changes are applied.</p>
+<h2 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
 <ol>
-<li>can only react to exactly 1 event ("click")</li>
-<li>can only do 1 thing when that event happens (send a request to "/clicked")</li>
-<li>cannot delegate the request-sending to some other element/-s</li>
-<li>can only render the result into 1 (usually) target element</li>
-<li>has to know where that element is on the page, what its "id" and/or "class"
-   attributes are</li>
-<li>has to decide for the target element the exact "hx-swap", of which there can
-   only be 1</li>
+<li><code>result</code> specified on an element that performs a request and contains a
+   space separated list of render actions to initiate</li>
+<li><code>error</code> works exactly like <code>result</code> but for situations when the server
+   responds with an unsuccessful status code</li>
+<li><code>render</code> specified on any element, including the same one that triggered the
+   request and contains the render action name to subscribe to</li>
+<li><code>key</code> is used to uniquely identify an element among its DOM siblings
+   (same level nodes). It is used to improve the performance of the diffing
+   algorithm and is always advisable to be used on elements whose position can
+   change among their siblings - when elements are added, removed, or reordered</li>
+<li><code>position</code> controls the render strategy to apply to itself:<ul>
+<li><code>replaceChildren</code> (default) replaces all of the elements' children with
+  the server response</li>
+<li><code>replaceWith</code> replaces the element itself with the server response</li>
+<li><code>before</code> renders the server response directly before the current element</li>
+<li><code>after</code> renders the server response directly after the current element</li>
+<li><code>prepend</code> prepends the server response before the first child of the
+  current element</li>
+<li><code>append</code> appends the server response after the last child of the current
+  element</li>
+</ul>
+</li>
 </ol>
-<p>Out of these limitations arise:</p>
-<ol>
-<li>the need for a custom selector syntax built on top of the normal
-   css-selector syntax</li>
-<li>the need for selectors in the first place, which you need to learn and
-   understand to use the library effectively</li>
-<li>the implicit special handling of certain elements, like title and meta,
-   present in the server response</li>
-<li>out of band swaps</li>
-<li>response selectors</li>
-<li>"hx-preserve"</li>
-<li>etc, etc, etc...</li>
-</ol>
-<p>All which, are meant to solve real tangible application needs, but in the
-process of doing that over-complicate things that do not need to be
-complicated.</p>
-<h4 id="how-is-keml-different">How is KEML different?<a class="headerlink" href="#how-is-keml-different" title="Permanent link">&para;</a></h4>
-<p>Consider the following KEML code, that works with the same backend:</p>
+<h2 id="basic-example">Basic example<a class="headerlink" href="#basic-example" title="Permanent link">&para;</a></h2>
+<ul>
+<li>clicking the button initiates the <code>getUserCount</code> action</li>
+<li>the button itself subscribes to that action using the <code>on</code> attribute</li>
+<li>the button sends a "GET" request to "/user-count"</li>
+<li>upon successfully receiving the response the button initiates the <code>userCount</code>
+  result action</li>
+<li>the div subscribes to the <code>userCount</code> action and renders the server response
+  into itself</li>
+<li>the span subscribes to the <code>userCount</code> action and replaces itself with the
+  server response</li>
+</ul>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
 <span class="normal"> 3</span>
@@ -634,100 +594,80 @@ complicated.</p>
 <span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;getUserCount&quot;</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">&quot;getUserCount&quot;</span>
+  <span class="na">get</span><span class="o">=</span><span class="s">&quot;/user-count&quot;</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">&quot;userCount&quot;</span>
+<span class="p">&gt;</span>
+  click me
+<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 
-<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">title</span> <span class="na">render</span><span class="o">=</span><span class="s">&quot;result&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">render</span><span class="o">=</span><span class="s">&quot;userCount&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 
-<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">button</span>
-    <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;handleClick doSomethingElse&quot;</span>
-    <span class="na">on:dblclick</span><span class="o">=</span><span class="s">&quot;handleDoubleClick&quot;</span>
-  <span class="p">&gt;</span>
-    Click Me!
-  <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-
-  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;handleClick&quot;</span><span class="p">&gt;</span>Click Me, maybe?!<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-
-  <span class="p">&lt;</span><span class="nt">input</span>
-    <span class="na">on</span><span class="o">=</span><span class="s">&quot;handleClick&quot;</span>
-    <span class="na">post</span><span class="o">=</span><span class="s">&quot;/clicked&quot;</span>
-    <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span>
-    <span class="na">name</span><span class="o">=</span><span class="s">&quot;input1&quot;</span>
-    <span class="na">result</span><span class="o">=</span><span class="s">&quot;result&quot;</span>
-  <span class="p">&gt;</span>
-
-  <span class="p">&lt;</span><span class="nt">input</span>
-    <span class="na">on</span><span class="o">=</span><span class="s">&quot;handleClick&quot;</span>
-    <span class="na">put</span><span class="o">=</span><span class="s">&quot;/notification&quot;</span>
-    <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span>
-    <span class="na">name</span><span class="o">=</span><span class="s">&quot;input2&quot;</span>
-  <span class="p">&gt;</span>
-
-  <span class="p">&lt;</span><span class="nt">div</span>
-    <span class="na">render</span><span class="o">=</span><span class="s">&quot;result&quot;</span>
-    <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
-  <span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-
-  <span class="p">&lt;</span><span class="nt">p</span>
-    <span class="na">render</span><span class="o">=</span><span class="s">&quot;result&quot;</span>
-    <span class="na">position</span><span class="o">=</span><span class="s">&quot;append&quot;</span>
-  <span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
-
-<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">span</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">&quot;userCount&quot;</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
+<span class="p">&gt;&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
-<ol>
-<li>both buttons initiate the same "handleClick" action on "click"</li>
-<li>the first button actually initiates two independent actions on "click", that
-   could both do completely different things</li>
-<li>the first button also reacts to the double click event</li>
-<li>neither of the buttons needs to know how those actions are being handled, if
-   at all</li>
-<li>the two text inputs both handle the "handleClick" action, but send
-   completely different requests</li>
-<li>the first input gives the server response a render-able name "result"</li>
-<li>neither of the inputs knows anything about the rendering, whether or not
-   anything is even going to be rendered at all, where and how</li>
-<li>the div, p and title elements render the same server response differently</li>
-<li>the div will be completely replaced with the response</li>
-<li>the p will append the response after its last child</li>
-<li>the title will replace all of its children with the response</li>
-<li>there is nothing special about the title element at all</li>
-<li>there's no need for ids, classes or selectors and the location of each
-   element in the document is completely unimportant</li>
-</ol>
-<p>None of the problems that HTMX tries to solve with the complications listed
-above even exist in this paradigm!</p>
+<h2 id="key-based-optimization-example">Key based optimization example<a class="headerlink" href="#key-based-optimization-example" title="Permanent link">&para;</a></h2>
+<p>Let's imagine that you server endpoint returns this html on the first request:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
+  <span class="cm">&lt;!-- heavy DOM with a lot of rows --&gt;</span>
+<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
+<p>And on the next request it returns:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;info&quot;</span><span class="p">&gt;</span>
+  Notification text
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
+  <span class="cm">&lt;!-- heavy DOM with a lot of rows --&gt;</span>
+<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
+<p>The table used to be at position 0 amongst its siblings, and now it is at
+position 1.</p>
+<p>The renderer would have no way of knowing that that is the same table and would
+have to rerender everything from scratch.</p>
+<p>And since the tag names are not even the same in the same place they were
+before, we cannot take advantage of any diffing algorithm to help us.</p>
+<p>It would still work, but the performance would suffer greatly.</p>
+<p>Here is what your server should do:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span>
+  <span class="na">key</span><span class="o">=</span><span class="s">&quot;notification&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;info&quot;</span>
+<span class="p">&gt;</span>
+  Notification text
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">table</span> <span class="na">key</span><span class="o">=</span><span class="s">&quot;table&quot;</span><span class="p">&gt;</span>
+  <span class="cm">&lt;!-- heavy DOM with a lot of rows --&gt;</span>
+<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
+<p>Now, both elements clearly introduce themselves to the renderer, and the
+performance is amazing once again.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Keys are not actions.</p>
+<p>They do not need to be globally unique, only across sibling DOM elements.</p>
+</div>
 
 
 

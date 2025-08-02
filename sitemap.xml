@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://thealjey.github.io/keml/</loc>
-         <lastmod>2024-12-14</lastmod>
+         <loc>https://thealjey.github.io/keml/index.html</loc>
+         <lastmod>2025-08-02</lastmod>
     </url>
     <url>
-         <loc>https://thealjey.github.io/keml/action/</loc>
-         <lastmod>2024-12-14</lastmod>
+         <loc>https://thealjey.github.io/keml/action.html</loc>
+         <lastmod>2025-08-02</lastmod>
     </url>
     <url>
-         <loc>https://thealjey.github.io/keml/event/</loc>
-         <lastmod>2024-12-14</lastmod>
+         <loc>https://thealjey.github.io/keml/event.html</loc>
+         <lastmod>2025-08-02</lastmod>
     </url>
     <url>
-         <loc>https://thealjey.github.io/keml/glossary/</loc>
-         <lastmod>2024-12-14</lastmod>
+         <loc>https://thealjey.github.io/keml/glossary.html</loc>
+         <lastmod>2025-08-02</lastmod>
     </url>
     <url>
-         <loc>https://thealjey.github.io/keml/install/</loc>
-         <lastmod>2024-12-14</lastmod>
+         <loc>https://thealjey.github.io/keml/install.html</loc>
+         <lastmod>2025-08-02</lastmod>
     </url>
     <url>
-         <loc>https://thealjey.github.io/keml/news/</loc>
-         <lastmod>2024-12-14</lastmod>
+         <loc>https://thealjey.github.io/keml/news.html</loc>
+         <lastmod>2025-08-02</lastmod>
     </url>
     <url>
-         <loc>https://thealjey.github.io/keml/render/</loc>
-         <lastmod>2024-12-14</lastmod>
+         <loc>https://thealjey.github.io/keml/render.html</loc>
+         <lastmod>2025-08-02</lastmod>
     </url>
     <url>
-         <loc>https://thealjey.github.io/keml/state/</loc>
-         <lastmod>2024-12-14</lastmod>
+         <loc>https://thealjey.github.io/keml/state.html</loc>
+         <lastmod>2025-08-02</lastmod>
     </url>
 </urlset>
