@@ -4,7 +4,6 @@
 *Enhance HTML with expressive, declarative attributes that connect your frontend
 directly to your server logic.*
 
-![Build Status](https://github.com/thealjey/keml/actions/workflows/pr-check.yml/badge.svg)
 ![Package size](https://img.shields.io/packagephobia/minzip/keml?style=flat)
 ![Latest Release](https://img.shields.io/npm/v/keml?style=flat)
 ![License](https://img.shields.io/github/license/thealjey/keml?style=flat)
