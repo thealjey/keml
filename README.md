@@ -1,161 +1,169 @@
-<img src="docs/img/logo192.png" style="float: left; margin-right: 25px">
+![Logo](docs/img/logo192.png)
 
-## What is KEML?
+# KEML
 
-KEML is a lightweight flexible alternative to [HTMX](https://htmx.org/), built
-around the concept of actions.
+**KEML — Actions over abstractions.**  
+*Enhance HTML with expressive, declarative attributes that connect your frontend
+directly to your server logic.*
 
-The ideas that HTMX has recently made popular are, frankly, the best that the
-web community collectively has ever had.
+![Build Status](https://github.com/thealjey/keml/actions/workflows/pr-check.yml/badge.svg)
+![Package size](https://img.shields.io/packagephobia/minzip/keml?style=flat)
+![Latest Release](https://img.shields.io/npm/v/keml?style=flat)
+![License](https://img.shields.io/github/license/thealjey/keml?style=flat)
+![Open Issues](https://img.shields.io/github/issues/thealjey/keml?style=flat)
+![Open PRs](https://img.shields.io/github/issues-pr/thealjey/keml?style=flat)
+[![Docs](https://img.shields.io/badge/docs-online-blue)](https://thealjey.github.io/keml/)
 
-However, like most great ideas, they are far more important than any actual
-specific implementation.
+KEML is a modern HTML extension that adds powerful, declarative attributes to
+standard markup. With KEML, you define behaviors like form submission,
+navigation, state transitions, and conditional rendering directly in your HTML
+— all handled by the server. There's no client-side JavaScript to write, manage,
+or debug. Just clean, maintainable, server-driven apps.
 
-Despite offering a multitude of conveniences over HTMX and much greater
-flexibility, KEML still manages to be absolutely tiny in comparison.  
-KEML v3 is ~4.5k minified and not gzipped and HTMX v2 is ~49.2k minified and not
-gzipped (~11x smaller).
+KEML builds on the core idea that HTML can drive your application's behavior.
+Inspired by the elegance of HTMX (https://htmx.org), KEML takes that vision
+further — removing limitations, embracing composability, and keeping everything
+within your markup.
 
-## Motivation
+No selectors. No JavaScript. No surprises.  
+Just expressive, maintainable, declarative HTML.
 
-Being small and fast and configuration/plugin free is not enough, when you are
-trying to compete with a well established and popular library.
+After years of building large-scale enterprise apps with various JavaScript
+frameworks, I grew frustrated. These tools, while powerful, come with
+overwhelming infrastructure demands, duplicated logic across server and client,
+and inevitably slow down as the app grows — no matter how much you optimize.
+Projects reach a point where rewriting feels like the only way forward, again
+and again.
 
-#### So, why does KEML need to exist?
+I built KEML to break this cycle. It lets you build dynamic, responsive
+frontends without ever writing JavaScript. The server remains the single source
+of truth. The frontend becomes fully declarative. Complexity vanishes. And
+frontend performance can never, even in theory, degrade over time.
 
-KEML was born out of the classic 1-to-1 problem of the traditional jQuery-esque
-web application, that the HTMX api does nothing to address.
+It’s not a framework. It’s not magic. It’s just a better way to structure the
+relationship between your HTML and your backend.
 
-Consider the following "idiomatic" HTMX code:
+---
 
+## ✨ Why KEML?
+
+HTMX showed the world that HTML could do more.
+KEML is what happens when you fully embrace that idea — and remove all friction.
+
+- 🔄 Multiple actions per event
+- 🎯 Decoupled events, requests, and rendering
+- 🧠 Smart, reusable naming for response handling
+- 🧩 No need for IDs, selectors, or tightly coupled components
+- ⚡️ Fully declarative logic — powered by HTML attributes
+- ✅ Built-in conditional behaviors, state control, and visibility handling
+
+---
+
+## 📦 Installation
+
+Install via NPM:
+```bash
+npm install keml
+```
+Or use directly in the browser:
+```html
+<script src="https://unpkg.com/keml"></script>
+```
+That’s it. No build tools, configs, or JavaScript required.
+
+---
+
+## 🔍 Example
+
+KEML replaces complex selector wiring with clear, modular declarations:
 ```html
 <button
-  hx-post="/clicked"
-  hx-trigger="click"
-  hx-target="#result"
-  hx-swap="innerHTML"
+  on:click="submit notify"
 >
-  Click Me!
+  Submit
 </button>
 
-<div id="result"></div>
+<input
+  on="submit"
+  post="/api"
+  name="email"
+  result="response"
+>
+
+<div
+  render="response"
+  position="replaceWith"
+></div>
+
+<p
+  render="response"
+  position="append"
+></p>
 ```
+In this example:
 
-Here the button element:
+- Multiple actions (submit, notify) can be triggered by a single event
+- Multiple elements can respond to the same named action in different ways
+- Logic flows from events to actions, requests, responses, and rendering
+- No JavaScript, IDs, or selectors involved
 
-1. can only react to exactly 1 event ("click")
-1. can only do 1 thing when that event happens (send a request to "/clicked")
-1. cannot delegate the request-sending to some other element/-s
-1. can only render the result into 1 (usually) target element
-1. has to know where that element is on the page, what its "id" and/or "class"
-   attributes are
-1. has to decide for the target element the exact "hx-swap", of which there can
-   only be 1
+---
 
-Out of these limitations arise:
+## ⚙️ Core Attributes
 
-1. the need for a custom selector syntax built on top of the normal
-   css-selector syntax
-1. the need for selectors in the first place, which you need to learn and
-   understand to use the library effectively
-1. the implicit special handling of certain elements, like title and meta,
-   present in the server response
-1. out of band swaps
-1. response selectors
-1. "hx-preserve"
-1. etc, etc, etc...
+| Attribute               | Description                                      |
+|-------------------------|-------------------------------------------------|
+| on:event                | Triggers one or more named actions               |
+| on                      | Listens for named actions from any source        |
+| get, post, put, delete  | Sends a request when triggered                    |
+| result                  | Labels the response with a reusable name         |
+| render                  | Renders a named result                            |
+| position                | Controls how content is inserted (replace, append, etc.) |
+| if:*                    | Conditional triggers such as if:value, if:loading, etc. |
 
-All which, are meant to solve real tangible application needs, but in the
-process of doing that over-complicate things that do not need to be
-complicated.
+---
 
-## How is KEML different?
+## 💡 Philosophy
 
-Consider the following KEML code, that works with the same backend:
+KEML is built on a simple principle:
 
-```html
-<html>
+"Let HTML describe what should happen. Let the server decide how."
 
-<head>
-  <title render="result"></title>
-</head>
+Instead of binding actions to fixed elements with hardcoded selectors, KEML lets you declare event-driven behaviors directly on your HTML elements.
+This approach dramatically reduces boilerplate and complexity, and scales effortlessly.
 
-<body>
-  <button
-    on:click="handleClick doSomethingElse"
-    on:dblclick="handleDoubleClick"
-  >
-    Click Me!
-  </button>
+---
 
-  <button on:click="handleClick">Click Me, maybe?!</button>
+## 📚 See It in Action
 
-  <input
-    on="handleClick"
-    post="/clicked"
-    type="text"
-    name="input1"
-    result="result"
-  >
+- 🧪 Dive into real examples — every demo in the [/examples](https://github.com/thealjey/keml/tree/main/examples) folder is built with **pure framework-less Python**, and **zero JavaScript**.
+- ⚙️ KEML powers fully interactive apps using just HTML — no client-side logic, no build steps, no complexity.
+- 📖 Curious how it works? [Read the full docs](https://thealjey.github.io/keml) and see how KEML keeps your frontend declarative and your backend in control.
 
-  <input
-    on="handleClick"
-    put="/notification"
-    type="text"
-    name="input2"
-  >
+---
 
-  <div
-    render="result"
-    position="replaceWith"
-  ></div>
+## ❤️ Inspired by HTMX
 
-  <p
-    render="result"
-    position="append"
-  ></p>
-</body>
+KEML exists thanks to the path paved by HTMX.
+If you’ve ever used HTMX and wished for more flexibility, cleaner semantics, or
+fewer plugin dependencies — KEML is for you.
 
-</html>
-```
+It’s not a replacement — it’s an evolution.
 
-1. both buttons initiate the same "handleClick" action on "click"
-1. the first button actually initiates two independent actions on "click", that
-   could both do completely different things
-1. the first button also reacts to the double click event
-1. neither of the buttons needs to know how those actions are being handled, if
-   at all
-1. the two text inputs both handle the "handleClick" action, but send
-   completely different requests
-1. the first input gives the server response a render-able name "result"
-1. neither of the inputs knows anything about the rendering, whether or not
-   anything is even going to be rendered at all, where and how
-1. the div, p and title elements render the same server response differently
-1. the div will be completely replaced with the response
-1. the p will append the response after its last child
-1. the title will replace all of its children with the response
-1. there is nothing special about the title element at all
-1. there's no need for ids, classes or selectors and the location of each
-   element in the document is completely unimportant
+---
 
-None of the problems that HTMX tries to solve with the complications listed
-above even exist in this paradigm!
+## 🙌 Contribute
 
-## Is KEML feature-complete?
+KEML is still growing, and your feedback helps shape its future.
 
-While nothing is ever truly complete, the current feature-set should be able to
-cover 99% of actually useful HTMX features.
+- Found a bug? [Open an issue](https://github.com/thealjey/keml/issues)
+- Have ideas? Share them — or submit a PR
+- Using KEML in a project? Let us know!
 
-I'm not going to claim that it is completely bug free and supports every
-browser under the sun, because it still has a long way to go until that
-becomes a reality.
+---
 
-Thus, all constructive feedback and criticism are very welcome!
+## 🌱 Try It
 
-If a feature of HTMX is missing, that means one of the following:
+No JavaScript. No selectors. No problem.
 
-- it is made unnecessary by a more flexible API
-- it is downright evil and/or going against the spirit of
-  [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) (e.g JSON endpoints, local
-  templates and most forms of local state)
-- it wasn't implemented yet
+Drop KEML into any HTML page — and let your markup express the logic.

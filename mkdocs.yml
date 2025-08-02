@@ -2,8 +2,15 @@ site_name: keml
 site_url: https://thealjey.github.io/keml/
 repo_url: https://github.com/thealjey/keml/
 edit_uri: blob/main/docs/
-site_description: An HTMX alternative with a focus on performance, flexibility and, most of all, simplicity.
+site_description: Enhance HTML with custom attributes for clean, server-driven interactivity.
 site_author: Eugene Kuzmenko
+copyright: Copyright &copy; 2025 Eugene Kuzmenko
+theme:
+  name: material
+  favicon: img/favicon.ico
+  logo: img/logo192.png
+  features:
+    - navigation.instant
 nav:
   - Home: index.md
   - Install: install.md
@@ -13,3 +20,10 @@ nav:
   - State: state.md
   - Glossary: glossary.md
   - News: news.md
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      linenums: true
+  - pymdownx.superfences
+  - toc:
+      permalink: true

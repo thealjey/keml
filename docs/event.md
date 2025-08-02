@@ -3,10 +3,9 @@
 HTML elements can trigger any number of application actions in response to any
 number of events.
 
-Furthermore, more than one element is allowed to initiate the same action.
+More than one element can initiate the same action.
 
-An action notifies the application of "something" happening, but in itself does
-nothing at all.
+An action signals that something happened, but by itself does nothing.
 
 All event types supported by the document object can be used, plus the
 following:
@@ -19,7 +18,7 @@ following:
    can already rely on new attributes being present and working when this event
    is triggered)
 
-All events bubble to the root of the dom tree.
+All events bubble to the root of the DOM tree.
 
 ## Attributes
 
@@ -72,12 +71,15 @@ All events bubble to the root of the dom tree.
 </button>
 ```
 
-Please be mindful that all actions are, by design, global for a page that they
-are used on.
+--------------------------------------------------------------------------------
 
-It is your responsibility to generate unique action names if you want to be
-certain that no other parts of the application will be affected by the actions
-that you trigger.
+!!! warning "Warning"
+    Please be mindful that all actions are, by design, global for a page that
+    they are used on.
+
+    It is your responsibility to generate unique action names if you want to be
+    certain that no other parts of the application will be affected by the
+    actions that you trigger.
 
 Example of a potential pitfall:
 

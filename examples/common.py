@@ -17,8 +17,14 @@ from sys import exit
 from traceback import format_exc
 from typing import Any, Callable, Iterable, Iterator, TypeVar
 from unicodedata import normalize
-from urllib.parse import parse_qs, urlencode, urlparse
+from urllib.parse import parse_qs, urlencode, urlparse, quote
 from xml.dom.minidom import Node
+from enum import Enum
+
+
+class Encode(Enum):
+    STR = 1
+    URL = 2
 
 
 T = TypeVar("T")
@@ -42,8 +48,11 @@ def asdict(value: Any) -> dict[str, Any]:
 
 
 def split_commas(value: str | None) -> list[str]:
-    return [x for x in set(split(r"\s*,\s*", value)) if len(
-        x)] if value and len(value) else []
+    return (
+        [x for x in set(split(r"\s*,\s*", value)) if len(x)]
+        if value and len(value)
+        else []
+    )
 
 
 def parse_segments(template: str) -> list[tuple[bool, str]]:
@@ -68,7 +77,9 @@ def parse_segments(template: str) -> list[tuple[bool, str]]:
     return results
 
 
-def eval_segments(segments: list[tuple[bool, str]], **kwargs: Any) -> list[str | Any]:
+def eval_segments(
+    segments: list[tuple[bool, str]], **kwargs: Any
+) -> list[str | Any]:
     results: list[str | Any] = []
     for inside, value in segments:
         if inside:
@@ -81,7 +92,9 @@ def eval_segments(segments: list[tuple[bool, str]], **kwargs: Any) -> list[str |
     return results
 
 
-def match_segments(template: str, string: str, segments: list[tuple[bool, str]]) -> dict[str, str] | None:
+def match_segments(
+    template: str, string: str, segments: list[tuple[bool, str]]
+) -> dict[str, str] | None:
     result: dict[str, str] = {}
     offset = 0
     limits: list[tuple[str, int, int | None]] = []
@@ -113,13 +126,24 @@ def match_segments(template: str, string: str, segments: list[tuple[bool, str]])
     return result
 
 
-def make_str(value: Any | None) -> str:
-    return "" if value is None else str(value)
+def make_str(value: Any | None, encode: Encode = Encode.STR) -> str:
+    if value is None:
+        return ""
+    result = str(value)
+    if encode == Encode.URL:
+        result = quote(result)
+    return result
 
 
-def join_segments(values: list[str | Any]) -> Any | str | None:
+def join_segments(
+    values: list[str | Any], encode: Encode = Encode.STR
+) -> Any | str | None:
     count = len(values)
-    return values[0] if count == 1 else "".join(make_str(x) for x in values) if count else None
+    return (
+        values[0]
+        if count == 1
+        else "".join(make_str(x, encode) for x in values) if count else None
+    )
 
 
 def fstr(value: str, **kwargs: Any) -> Any | str | None:
@@ -135,7 +159,9 @@ def extract_names(segments: list[tuple[bool, str]]) -> list[str]:
     return [value.strip() for inside, value in segments if inside]
 
 
-def split_known(names: list[str], **kwargs: Any) -> tuple[dict[str, Any], dict[str, Any]]:
+def split_known(
+    names: list[str], **kwargs: Any
+) -> tuple[dict[str, Any], dict[str, Any]]:
     extra = kwargs.copy()
     known: dict[str, Any] = {}
     for name in names:
@@ -145,9 +171,13 @@ def split_known(names: list[str], **kwargs: Any) -> tuple[dict[str, Any], dict[s
     return known, extra
 
 
-def generate_url(segments: list[tuple[bool, str]], names: list[str], **kwargs: Any) -> str:
+def generate_url(
+    segments: list[tuple[bool, str]], names: list[str], **kwargs: Any
+) -> str:
     ctx, query = split_known(names, **kwargs)
-    return make_str(join_segments(eval_segments(segments, **ctx))) + join_query(**query)
+    return make_str(
+        join_segments(eval_segments(segments, **ctx), Encode.URL)
+    ) + join_query(**query)
 
 
 gravatar_segments = parse_segments("https://www.gravatar.com/avatar/{hash}")
@@ -159,7 +189,7 @@ def generate_gravatar_url(email: str, size: int = 100) -> str:
         gravatar_segments,
         gravatar_names,
         hash=sha256(email.strip().lower().encode()).hexdigest(),
-        s=size
+        s=size,
     )
 
 
@@ -170,7 +200,9 @@ def hash_password(password: str, salt: str | None = None) -> tuple[str, str]:
 
 def btoa(value: str | dict[str, Any] | bytes) -> str:
     sb = dumps(value) if isinstance(value, dict) else value
-    return urlsafe_b64encode(sb.encode() if isinstance(sb, str) else sb).decode()
+    return urlsafe_b64encode(
+        sb.encode() if isinstance(sb, str) else sb
+    ).decode()
 
 
 def generate_signature(secret: str, start: str) -> str:
@@ -185,15 +217,18 @@ def generate_token(secret: str, user_id: int) -> str:
 
 def verify_token(secret: str, token: str) -> bool:
     try:
-        header, payload, signature = token.split('.')
+        header, payload, signature = token.split(".")
         return signature == generate_signature(secret, f"{header}.{payload}")
     except:
         return False
 
 
 def generate_slug(value: str) -> str:
-    return sub(r"[^a-z0-9]+", "-", normalize("NFKD", value).encode(
-        "ascii", "ignore").decode().lower()).strip("-")
+    return sub(
+        r"[^a-z0-9]+",
+        "-",
+        normalize("NFKD", value).encode("ascii", "ignore").decode().lower(),
+    ).strip("-")
 
 
 def strip_path(path: str):
@@ -204,8 +239,9 @@ def strip_path(path: str):
 class Server(HTTPServer):
 
     def start(self, fn: Callable[[], Any] | None = None):
-        path, port = self.server_address
-        print(f"Server running at http://{path}:{port}")
+        print(
+            f"Server running at http://{self.server_address[0]}:{self.server_address[1]}"
+        )
         try:
             self.serve_forever()
         except KeyboardInterrupt:
@@ -214,9 +250,25 @@ class Server(HTTPServer):
             exit(0)
 
 
-self_closing = ["area", "base", "br", "col", "command", "embed", "hr", "img",
-                "input", "keygen", "link", "meta", "param", "source", "track",
-                "wbr", "include"]
+self_closing = [
+    "area",
+    "base",
+    "br",
+    "col",
+    "command",
+    "embed",
+    "hr",
+    "img",
+    "input",
+    "keygen",
+    "link",
+    "meta",
+    "param",
+    "source",
+    "track",
+    "wbr",
+    "include",
+]
 
 
 class SimpleNode:
@@ -255,8 +307,12 @@ class SimpleNode:
         return node
 
     def textContent(self) -> str:
-        text = self.nodeValue if self.parentNode and self.parentNode.tagName in [
-            "textarea", "pre"] else sub(r"\s+", " ", self.nodeValue, flags=MULTILINE)
+        text = (
+            self.nodeValue
+            if self.parentNode
+            and self.parentNode.tagName in ["textarea", "pre"]
+            else sub(r"\s+", " ", self.nodeValue, flags=MULTILINE)
+        )
         if not self.previousSibling:
             text = text.lstrip()
         if not self.nextSibling:
@@ -265,14 +321,22 @@ class SimpleNode:
 
     def innerHTML(self) -> str:
         it: Iterator[str] = (x.outerHTML() for x in self.childNodes)
-        return self.textContent() if self.nodeType == Node.TEXT_NODE else "".join(it)
+        return (
+            self.textContent()
+            if self.nodeType == Node.TEXT_NODE
+            else "".join(it)
+        )
 
     def outerHTML(self) -> str:
-        return self.textContent() if self.nodeType == Node.TEXT_NODE else f"{
+        return (
+            self.textContent()
+            if self.nodeType == Node.TEXT_NODE
+            else f"{
             "<!DOCTYPE html>" if self.tagName == "html" else ""}<{self.tagName}{
             "".join(f" {attr}{f'="{value.strip()}"' if value and len(
                 value.strip()) else ""}" for attr, value in self.attrs.items())}>{
             "" if self.tagName in self_closing else f"{self.innerHTML()}</{self.tagName}>"}"
+        )
 
 
 class Parser(HTMLParser):
@@ -330,13 +394,20 @@ def tree(path: str, left: SimpleNode, right: SimpleNode, **kwargs: Any):
                     if isinstance(value, str):
                         value = kwargs.get(value)
                 if isinstance(value, (list, set)):
-                    lst: Iterable[Any] = value
-                    for index, item in enumerate(lst):
+                    lst: Iterable[Any] = value  # type: ignore
+                    for index, item in enumerate(lst):  # type: ignore
                         tree(
                             path,
                             left,
                             node,
-                            **{**kwargs, **asdict(item), "i": index, "item": item, "items": value})
+                            **{
+                                **kwargs,
+                                **asdict(item),
+                                "i": index,
+                                "item": item,
+                                "items": value,
+                            },
+                        )
             elif node.tagName == "include":
                 value = node.getAttribute("value")
                 if value:
@@ -358,7 +429,9 @@ def tree(path: str, left: SimpleNode, right: SimpleNode, **kwargs: Any):
                         value = fstr(value, **kwargs)
                         if isinstance(value, str) or value:
                             element.setAttribute(
-                                attr, None if isinstance(value, bool) else str(value))
+                                attr,
+                                None if isinstance(value, bool) else str(value),
+                            )
                     else:
                         element.setAttribute(attr, value)
                 tree(path, element, node, **kwargs)
@@ -408,24 +481,40 @@ class BaseHandler(BaseHTTPRequestHandler):
         self.is_xhr = self.headers.get("X-Requested-With") == "XMLHttpRequest"
         self.response_headers: list[tuple[str, str]] = []
         self.status_sent = False
-        self.parsed_cookies = SimpleCookie(self.headers.get('Cookie'))
+        self.parsed_cookies = SimpleCookie(self.headers.get("Cookie"))
         self.user = None
         self.active_route = None
         self.method_msg: list[str] = []
-        token = self.parsed_cookies.get('jwt')
+        token = self.parsed_cookies.get("jwt")
         if token:
             try:
-                self.set_user(loads(urlsafe_b64decode(
-                    token.value.split(".")[1] + "==").decode()).get("user_id"))
+                self.set_user(
+                    loads(
+                        urlsafe_b64decode(
+                            token.value.split(".")[1] + "=="
+                        ).decode()
+                    ).get("user_id")
+                )
             except:
                 print(format_exc())
-        self.response_headers.append((
-            "Content-Type",
-            "text/javascript" if self.parsed_path.endswith(
-                ".js") else "text/css" if self.parsed_path.endswith(
-                ".css") else "image/x-icon" if self.parsed_path.endswith(
-                ".ico") else "text/html"
-        ))
+        self.response_headers.append(
+            (
+                "Content-Type",
+                (
+                    "text/javascript"
+                    if self.parsed_path.endswith(".js")
+                    else (
+                        "text/css"
+                        if self.parsed_path.endswith(".css")
+                        else (
+                            "image/x-icon"
+                            if self.parsed_path.endswith(".ico")
+                            else "text/html"
+                        )
+                    )
+                ),
+            )
+        )
         return parent
 
     def set_user(self, user_id: int):
@@ -510,9 +599,15 @@ class BaseHandler(BaseHTTPRequestHandler):
 
     def ftime(self, time: int, format: str | None = None):
         offset = self.parsed_cookies.get("tzo")
-        return datetime.fromtimestamp(time).astimezone(timezone(timedelta(minutes=int(
-            offset.value) * -1 if offset else 0))).strftime(
-            format if format else self.DATETIME_FORMAT)
+        return (
+            datetime.fromtimestamp(time)
+            .astimezone(
+                timezone(
+                    timedelta(minutes=int(offset.value) * -1 if offset else 0)
+                )
+            )
+            .strftime(format if format else self.DATETIME_FORMAT)
+        )
 
     def ctx_increment(self, inc: bool = False):
         global increment
@@ -523,16 +618,25 @@ class BaseHandler(BaseHTTPRequestHandler):
     def tpl(self, name: str, **kwargs: Any) -> str:
         doc = SimpleNode("document")
         real, xml = parse_html(resolve_filename(), name)
-        tree(real, doc, xml, **{
-            "ceil": ceil,
-            "markdown": markdown,
-            "url": self.url,
-            "ftime": self.ftime,
-            "user": self.user,
-            "active_route": self.active_route,
-            **dict((x[4:], getattr(self, x)) for x in dir(self) if x.startswith("ctx_")),
-            **kwargs,
-        })
+        tree(
+            real,
+            doc,
+            xml,
+            **{
+                "ceil": ceil,
+                "markdown": markdown,
+                "url": self.url,
+                "ftime": self.ftime,
+                "user": self.user,
+                "active_route": self.active_route,
+                **dict(
+                    (x[4:], getattr(self, x))
+                    for x in dir(self)
+                    if x.startswith("ctx_")
+                ),
+                **kwargs,
+            },
+        )
         return doc.innerHTML()
 
     def parse_multipart(self, content_type: str):
@@ -556,14 +660,17 @@ class BaseHandler(BaseHTTPRequestHandler):
                     print("Unsupported payload: ", value)
 
     def sign_in(self, user_id: int):
-        self.response_headers.append((
-            "Set-Cookie",
-            f"jwt={generate_token(self.SECRET, user_id)};HttpOnly;Path=/;SameSite=lax"))
+        self.response_headers.append(
+            (
+                "Set-Cookie",
+                f"jwt={generate_token(self.SECRET, user_id)};HttpOnly;Path=/;SameSite=lax",
+            )
+        )
 
     def sign_out(self):
-        self.response_headers.append((
-            "Set-Cookie",
-            "jwt=;HttpOnly;Path=/;SameSite=lax;Max-Age=0"))
+        self.response_headers.append(
+            ("Set-Cookie", "jwt=;HttpOnly;Path=/;SameSite=lax;Max-Age=0")
+        )
 
     def do_GET(self):
         self.match_path("get")

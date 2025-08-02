@@ -4,6 +4,62 @@
 
 --------------------------------------------------------------------------------
 
+## v3.2
+
+This release changes both everything and nothing at the same time.
+
+It is fully backward compatible, but shares almost no code in common with the
+old version.
+
+Nothing in your apps needs to change.  
+If they are already working fine - they will continue to do so.
+
+You will be taking advantage of the improved performance, memory efficiency and
+correctness/reliability completely for free.
+
+So, what changed?
+
+#### Performance
+
+3.2 does away with trying to be as small as possible at the expense of
+everything else.  
+It will happily be larger if the payoff is better run-time performance.  
+As a result, it has doubled in size to the still incredibly tiny 8kb.
+
+1. no functional code
+1. no regular expressions
+1. no recursion if it can be avoided
+1. minimal allocations
+1. low level APIs are used whenever possible
+1. no DOM updates outside of the render loop, no matter how trivial
+1. dedicated per-attribute intersection observers
+1. no subscribing to events not used by the application
+1. the [key](render.md#attributes) attribute
+1. etc
+
+#### Maintainability
+
+The code is no longer allowed to be an unreadable cryptic mess, whose only
+purpose is to be optimally minify-able.
+
+Related functionality is grouped into separate files.
+
+#### Quality
+
+The source code is thoroughly documented and unit tested with 100% coverage.
+
+File imports are automatically verified not to cause any cyclic dependencies.
+
+Since python was never a requirement for the functionality of the project, but
+only for the documentation and the examples, having it as an install script was
+clearly a mistake that made installing the package through npm potentially
+inconvenient.  
+That has now been fixed.
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+
 ## v3.1
 
 ### Event Bubbling
@@ -12,7 +68,7 @@ Event handling now bubbles up the DOM tree as you would expect.
 
 This is mostly a non-breaking convenience feature.
 
-Previously it was necessary to make sure that an event is always triggered
+Previously, it was necessary to make sure that an event is always triggered
 on the exact same element that contains the event handling logic.
 
 Like in the following example, using the `inert` attribute to make sure that the
@@ -27,7 +83,7 @@ nested image does not "steal" the click events for itself:
 </button>
 ```
 
-With v3.1 this is no longer the case, because KEML will automatically locate
+With v3.1, this is no longer the case, because KEML will automatically locate
 the first parent element that matches the event.
 
 So, this is now equivalent:
@@ -44,7 +100,7 @@ So, this is now equivalent:
 
 ## v3 is finally out!
 
-It is said that simplicity is hard and absolute simplicity is hard absolutely.
+It is said that simplicity is hard, and absolute simplicity is hard absolutely.
 
 KEML v3 was that and much more.
 
@@ -60,9 +116,7 @@ efficiency and optimizations that were nigh impossible with v2.
 
 And it does it all while having an even smaller file size.
 
---------------------------------------------------------------------------------
-
-### So, what changed?
+So, what changed?
 
 #### No Magic
 

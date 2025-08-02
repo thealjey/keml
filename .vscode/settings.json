@@ -1,34 +1,54 @@
 {
-  "editor.formatOnSave": true,
-  "editor.rulers": [80],
-  "editor.tabSize": 2,
-  "editor.codeActionsOnSave": {
-    "source.addMissingImports.ts": "always",
-    "source.fixAll.ts": "always",
-    "source.organizeImports": "always",
-    "source.removeUnused.ts": "always",
-    "source.removeUnusedImports": "always",
-    "source.sortImports": "always"
-  },
-  "html.customData": [".vscode/html.html-data.json"],
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
   },
   "[markdown]": {
-    "editor.formatOnSave": false
+    "editor.formatOnSave": false,
+    "files.trimTrailingWhitespace": false
   },
   "[python]": {
-    "editor.defaultFormatter": "ms-python.autopep8"
+    "editor.defaultFormatter": "ms-python.black-formatter"
   },
+  "black-formatter.args": [
+    "--line-length=80"
+  ],
+  "cSpell.words": [
+    "depcruise",
+    "htmx",
+    "keml",
+    "Kuzmenko",
+    "mkdocs"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports": "always",
+    "source.fixAll": "always",
+    "source.organizeImports": "always",
+    "source.removeUnused": "always",
+    "source.removeUnusedImports": "always",
+    "source.sort.json": "always",
+    "source.sortImports": "always",
+    "source.unusedImports": "always"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.dragAndDrop": false,
+  "editor.emptySelectionClipboard": false,
+  "editor.formatOnSave": true,
+  "editor.rulers": [
+    80
+  ],
+  "editor.tabSize": 2,
   "files.eol": "\n",
-  "files.trimFinalNewlines": true,
   "files.insertFinalNewline": true,
-  "python.analysis.autoImportCompletions": true,
-  "python.analysis.typeCheckingMode": "strict",
-  "python.analysis.autoFormatStrings": true,
-  "python.analysis.completeFunctionParens": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "html.customData": [
+    ".vscode/html.html-data.json"
+  ],
   "html.format.wrapAttributes": "force-expand-multiline",
+  "prettier.arrowParens": "avoid",
   "prettier.experimentalTernaries": true,
-  "prettier.arrowParens": "avoid"
+  "python.analysis.autoFormatStrings": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.completeFunctionParens": true,
+  "python.analysis.typeCheckingMode": "strict"
 }

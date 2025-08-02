@@ -1,20 +1,31 @@
 # Installation
 
-There is no programmatic API, nothing is exported in JS, nothing to install or
-configure.
+KEML is designed to be ultra-simple to use — there is no programmatic API, no
+JavaScript exports, and no setup or configuration required.
 
-You load the library from a CDN and forget that JS even existed at all.
+Simply include the library via CDN in your HTML:
 
 ```html
 <script src="https://unpkg.com/keml"></script>
 ```
 
-## Using with other libraries and frameworks
+Alternatively, if you prefer to manage dependencies locally or bundle KEML with
+your project, you can install it using npm:
 
-There's also nothing special that you need to do here.
+```bash
+npm install keml
+```
 
-KEML automatically observes all changes to the DOM.
+The compiled bundle `keml.js` will be available at the root of the installed
+package.
 
-That means that your custom code can simply create elements and update their
-attributes at any point, and they will continue to work with KEML exactly the
-same as if they were rendered on the server.
+## Using KEML with Other Libraries and Frameworks
+
+KEML automatically observes all DOM changes, so you don’t need to do anything
+special to integrate it.
+
+Whenever your application dynamically creates or updates elements, KEML will
+seamlessly handle them just like elements rendered on the server.
+
+This makes KEML compatible with virtually any frontend framework or custom
+JavaScript code without extra setup.

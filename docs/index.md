@@ -1,20 +1,30 @@
-<img src="img/logo192.png" style="float: left; margin-right: 25px">
+# KEML
 
-## What is KEML?
+**KEML — Actions over abstractions.**  
+*Enhance HTML with expressive, declarative attributes that connect your frontend
+directly to your server logic.*
 
-KEML is a lightweight flexible alternative to [HTMX](https://htmx.org/), built
-around the concept of actions.
+![Build Status](https://github.com/thealjey/keml/actions/workflows/pr-check.yml/badge.svg)
+![Package size](https://img.shields.io/packagephobia/minzip/keml?style=flat)
+![Latest Release](https://img.shields.io/npm/v/keml?style=flat)
+![License](https://img.shields.io/github/license/thealjey/keml?style=flat)
+![Open Issues](https://img.shields.io/github/issues/thealjey/keml?style=flat)
+![Open PRs](https://img.shields.io/github/issues-pr/thealjey/keml?style=flat)
+[![Docs](https://img.shields.io/badge/docs-online-blue)](https://thealjey.github.io/keml/)
 
-The ideas that HTMX has recently made popular are, frankly, the best that the
-web community collectively has ever had.
+KEML is a modern HTML extension that adds powerful, declarative attributes to
+standard markup. With KEML, you define behaviors like form submission,
+navigation, state transitions, and conditional rendering directly in your HTML
+— all handled by the server. There's no client-side JavaScript to write, manage,
+or debug. Just clean, maintainable, server-driven apps.
 
-However, like most great ideas, they are far more important than any actual
-specific implementation.
+KEML builds on the core idea that HTML can drive your application's behavior.
+Inspired by the elegance of HTMX (https://htmx.org), KEML takes that vision
+further — removing limitations, embracing composability, and keeping everything
+within your markup.
 
-Despite offering a multitude of conveniences over HTMX and much greater
-flexibility, KEML still manages to be absolutely tiny in comparison.  
-KEML v3 is ~4.5k minified and not gzipped and HTMX v2 is ~49.2k minified and not
-gzipped (~11x smaller).
+No selectors. No JavaScript. No surprises.  
+Just expressive, maintainable, declarative HTML.
 
 ## Motivation
 
@@ -69,7 +79,7 @@ All which, are meant to solve real tangible application needs, but in the
 process of doing that over-complicate things that do not need to be
 complicated.
 
-## How is KEML different?
+#### How is KEML different?
 
 Consider the following KEML code, that works with the same backend:
 
@@ -140,22 +150,3 @@ Consider the following KEML code, that works with the same backend:
 
 None of the problems that HTMX tries to solve with the complications listed
 above even exist in this paradigm!
-
-## Is KEML feature-complete?
-
-While nothing is ever truly complete, the current feature-set should be able to
-cover 99% of actually useful HTMX features.
-
-I'm not going to claim that it is completely bug free and supports every
-browser under the sun, because it still has a long way to go until that
-becomes a reality.
-
-Thus, all constructive feedback and criticism are very welcome!
-
-If a feature of HTMX is missing, that means one of the following:
-
-- it is made unnecessary by a more flexible API
-- it is downright evil and/or going against the spirit of
-  [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) (e.g JSON endpoints, local
-  templates and most forms of local state)
-- it wasn't implemented yet

@@ -9,16 +9,13 @@ requests.
 Relative endpoints are supported, so given a current URL of
 "https:/[]()/www[]().example.[]()com/some/path":
 
-- "list-todo" or "./list-todo" will both resolve to
-  "https:/[]()/www[]().example.[]()com/some/path/list-todo/"
-- "../list-todo" will resolve to
-  "https:/[]()/www[]().example.[]()com/some/list-todo/"
-- "/list-todo" will resolve to
-  "https:/[]()/www[]().example.[]()com/list-todo/"
-- "/file.html" will resolve to
-  "https:/[]()/www[]().example.[]()com/file.html" (a trailing slash is always
-  present for paths not ending with a file extension, and is never present for
-  ones that are)
+- "list-todo" or "./list-todo" → "https:/[]()/www[]().example.[]()com/some/path/list-todo/"
+- "../list-todo" → "https:/[]()/www[]().example.[]()com/some/list-todo/"
+- "/list-todo" → "https:/[]()/www[]().example.[]()com/list-todo/"
+- "/file.html" → "https:/[]()/www[]().example.[]()com/file.html"
+
+A trailing slash is always present for paths not ending with a file extension,
+and is never present for ones that are.
 
 Forms and form fields values are automatically serialized and sent to the
 server.

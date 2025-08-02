@@ -1,33 +1,50 @@
 {
-  "name": "keml",
-  "version": "3.1.0",
-  "description": "An HTMX alternative with a focus on performance, flexibility and, most of all, simplicity.",
-  "main": "keml.js",
-  "scripts": {
-    "install": "pip install -r requirements.txt",
-    "build": "npx esbuild keml.ts --minify --format=esm --mangle-props=_$ --outdir=.",
-    "docs:serve": "mkdocs serve",
-    "docs:deploy": "mkdocs gh-deploy --force",
-    "todo": "python -m examples.todo.server",
-    "realworld": "python -m examples.realworld.server"
+  "author": "Eugene Kuzmenko",
+  "bugs": {
+    "url": "https://github.com/thealjey/keml/issues"
   },
+  "description": "Enhance HTML with custom attributes for clean, server-driven interactivity.",
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "dependency-cruiser": "^17.0.0",
+    "esbuild": "^0.25.8",
+    "happy-dom": "^18.0.1",
+    "vitest": "^3.2.4"
+  },
+  "files": [
+    "keml.js",
+    "LICENSE",
+    "README.md"
+  ],
+  "homepage": "https://thealjey.github.io/keml/",
+  "keywords": [
+    "html",
+    "server-rendered",
+    "declarative",
+    "web framework",
+    "no javascript",
+    "interactive html",
+    "htmx alternative",
+    "progressive enhancement",
+    "keml"
+  ],
+  "license": "MIT",
+  "main": "keml.js",
+  "name": "keml",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thealjey/keml.git"
   },
-  "keywords": [
-    "htmx",
-    "alternative"
-  ],
-  "files": [
-    "LICENSE",
-    "README.md",
-    "keml.js"
-  ],
-  "author": "Eugene Kuzmenko",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/thealjey/keml/issues"
+  "scripts": {
+    "build": "node esbuild.config.mts",
+    "demo:realworld": "python -m examples.realworld.server",
+    "demo:todo": "python -m examples.todo.server",
+    "docs:deploy": "mkdocs gh-deploy --force",
+    "docs:serve": "mkdocs serve",
+    "pip:install": "pip install --upgrade markdown mkdocs mkdocs-material",
+    "prebuild": "depcruise 'src/*.mts'",
+    "test": "vitest run"
   },
-  "homepage": "https://thealjey.github.io/keml/"
+  "version": "3.2.0"
 }
