@@ -4,11 +4,11 @@
 *Enhance HTML with expressive, declarative attributes that connect your frontend
 directly to your server logic.*
 
-![Package size](https://img.shields.io/packagephobia/minzip/keml?style=flat)
-![Latest Release](https://img.shields.io/npm/v/keml?style=flat)
-![License](https://img.shields.io/github/license/thealjey/keml?style=flat)
-![Open Issues](https://img.shields.io/github/issues/thealjey/keml?style=flat)
-![Open PRs](https://img.shields.io/github/issues-pr/thealjey/keml?style=flat)
+![npm bundle size](https://img.shields.io/bundlephobia/min/keml)
+![Latest Release](https://img.shields.io/npm/v/keml)
+![License](https://img.shields.io/github/license/thealjey/keml)
+![Open Issues](https://img.shields.io/github/issues/thealjey/keml)
+![Open PRs](https://img.shields.io/github/issues-pr/thealjey/keml)
 [![Docs](https://img.shields.io/badge/docs-online-blue)](https://thealjey.github.io/keml/)
 
 KEML is a modern HTML extension that adds powerful, declarative attributes to
