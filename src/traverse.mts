@@ -1,63 +1,54 @@
 import { clean, visitor } from "./element.mts";
 
-const CHUNK_SIZE = import.meta.vitest ? 1 : 30000;
-
 /**
- * Traverses a tree of DOM nodes using a depth-first, stack-based approach.
+ * Traverses a list of DOM nodes and their descendants using a TreeWalker.
  *
- * This function avoids recursion to prevent call stack overflows when
- * processing large DOM trees. It operates in two modes:
+ * This function iterates through each node in the given list. For nodes that
+ * are Elements, it creates a TreeWalker that visits the element and all its
+ * descendant elements in document order.
  *
- * - When `added` is `true`, each element's attributes are passed to their
- *   corresponding attribute `Visitor` via `added_()`.
- * - When `added` is `false`, each element is passed to `clean()` for removal
- *   from internal tracking and observers.
+ * It supports two modes controlled by the `added` flag:
  *
- * Child nodes are processed in chunks when their count exceeds `CHUNK_SIZE`,
- * to avoid exceeding the maximum argument limit of `Array.prototype.push` in
- * some JavaScript environments.
+ * - When `added` is true, each element’s attributes are inspected, and
+ *   corresponding visitor methods are called via `added_()`.
+ * - When `added` is false, each element is passed to `clean()` for cleanup.
  *
- * @param nodes - A collection of DOM nodes to traverse.
- * @param added - If `true`, processes attributes via `Visitor`; if `false`,
- *                cleans up elements.
+ * Using a TreeWalker improves efficiency and readability over manual
+ * stack-based traversal, especially for deep DOM subtrees.
+ *
+ * @param nodes - A list or collection of DOM nodes to traverse.
+ * @param added - Boolean flag indicating the mode: if true, attributes are
+ *                processed with visitor callbacks; if false, elements are
+ *                cleaned.
  *
  * @example
- * // Process a list of newly added nodes
+ * // Process newly added nodes
  * traverse(mutation.addedNodes, true);
  *
- * // Clean up a list of removed nodes
+ * // Clean up removed nodes
  * traverse(mutation.removedNodes, false);
  */
 export const traverse = (nodes: ArrayLike<Node>, added: boolean) => {
-  const stack = Array.from(nodes);
-  let node, children, len, i, attrs, name;
+  const nodeLen = nodes.length;
 
-  while ((node = stack.pop())) {
+  for (let i = 0, j, walker, name, node, el, attrLen, attrs; i < nodeLen; ++i) {
+    node = nodes[i];
     if (node instanceof Element) {
-      if (added) {
-        attrs = node.attributes;
-        i = 0;
-        len = attrs.length;
-        for (; i < len; ++i) {
-          name = attrs[i]!.name;
-          visitor(name)?.added_(node, name);
+      walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT);
+      do {
+        el = walker.currentNode as Element;
+        if (added) {
+          j = 0;
+          attrs = el.attributes;
+          attrLen = attrs.length;
+          for (; j < attrLen; ++j) {
+            name = attrs[j]!.name;
+            visitor(name)?.added_(el, name);
+          }
+        } else {
+          clean(el);
         }
-      } else {
-        clean(node);
-      }
-      children = node.childNodes;
-      len = children.length;
-      if (len <= CHUNK_SIZE) {
-        stack.push.apply(stack, children as any);
-      } else {
-        i = 0;
-        while (i < len) {
-          stack.push.apply(
-            stack,
-            Array.prototype.slice.call(children, i, (i += CHUNK_SIZE))
-          );
-        }
-      }
+      } while (walker.nextNode());
     }
   }
 };
@@ -77,14 +68,6 @@ if (import.meta.vitest) {
       actionElements.delete(div);
       traverse([div], false);
       expect(actionElements.has(div)).toBe(false);
-    });
-
-    it("giant direct children collection", () => {
-      const div = document.createElement("div");
-      for (let i = 0, len = CHUNK_SIZE + 1; i < len; ++i) {
-        div.appendChild(document.createTextNode(i + ""));
-      }
-      traverse([div], false);
     });
   });
 }
