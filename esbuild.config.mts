@@ -1,7 +1,7 @@
 import { build } from "esbuild";
 import pkg from "./package.json" with { type: "json" };
 
-const { description, homepage, license, name, repository, version } = pkg;
+const { description, homepage, license, main, name, repository, version } = pkg;
 
 await build({
   entryPoints: ["src/index.mts"],
@@ -9,11 +9,11 @@ await build({
   minify: true,
   mangleProps: /_$/,
   define: { "import.meta.vitest": "false" },
-  outfile: "keml.js",
+  outfile: main,
   logLevel: "info",
   banner: {
     js: `/*!
- * keml v${version} - ${description}
+ * ${name} v${version} - ${description}
  *
  * Docs:  ${homepage}
  * Repo:  ${repository.url.slice(4, -4)}/
