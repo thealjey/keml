@@ -36,7 +36,7 @@ export const parse_actions = (input: string) => {
   let start = -1;
 
   for (; i < len; ++i) {
-    if (input[i] === " ") {
+    if (input.charCodeAt(i) === 32) {
       if (start !== -1) {
         result.push(input.slice(start, i));
         start = -1;

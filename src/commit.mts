@@ -138,15 +138,15 @@ export const commit = (el: Element) => {
     const arr = Array.from(pathname);
     i = arr.length;
     for (let found = false, char; i--; ) {
-      char = pathname[i];
-      if (char === "/") {
+      char = pathname.charCodeAt(i);
+      if (char === 47) {
         if (found) {
           arr.push("/");
           break;
         } else {
           arr.pop();
         }
-      } else if (char === ".") {
+      } else if (char === 46) {
         if (found) {
           break;
         } else {
