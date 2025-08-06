@@ -572,10 +572,12 @@ following:</p>
 <li>any attribute that starts with <code>on:</code> and contains a space separated list of
   actions to initiate</li>
 <li>any attribute that starts with <code>event:</code> and contains a comma separated list
-  of name and value pairs separated by <code>=</code>; the value part is optional and will
-  default to <code>true</code> if omitted; every key and value pair has to match the event
-  object, otherwise the event handling is skipped; can be used for associating
-  hotkeys with an element, for example</li>
+  of name and value pairs separated by <code>=</code><br />
+  The value part is optional and the key will only be checked for truthiness if
+  omitted.<br />
+  Every key and value pair has to match the event object, otherwise the event
+  handling is skipped.<br />
+  Can be used for associating hotkeys with an element, for example.</li>
 </ul>
 <h2 id="basic-example">Basic Example<a class="headerlink" href="#basic-example" title="Permanent link">&para;</a></h2>
 <ul>
