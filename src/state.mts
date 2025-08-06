@@ -43,7 +43,7 @@ const apply_state = (el: Element) => {
     attr = attrs[i]!;
     name = attr.name;
     value = attr.value;
-    baseName = name.substring(2);
+    baseName = name.slice(2);
     for (j = 0; j < len; ++j) {
       baseAttr = attrs[j]!;
       if (baseAttr.name === baseName) {
@@ -130,7 +130,7 @@ export const disable_state = (el: Element) => {
   }
 };
 
-/* c8 ignore next */
+/* v8 ignore start */
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
   const container = document.createElement("div");
@@ -173,3 +173,4 @@ if (import.meta.vitest) {
     });
   });
 }
+/* v8 ignore stop */

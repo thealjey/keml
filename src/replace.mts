@@ -169,7 +169,7 @@ export const replace_children = (el: Element, nodes: ChildNode[]) => {
   }
 };
 
-/* c8 ignore next */
+/* v8 ignore start */
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
   const container1 = document.createElement("div");
@@ -303,3 +303,4 @@ if (import.meta.vitest) {
     });
   });
 }
+/* v8 ignore stop */

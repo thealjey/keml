@@ -71,7 +71,8 @@ const apply_data_to_url = (data: FormData | undefined, url: URL) => {
  * - Cancels any active timeout associated with the element (`el.timeoutId_`)
  * - Resolves the appropriate request endpoint and method from attributes
  * - Serializes form-like data from the element if applicable
- * - Handles pathname normalization by trimming file-like segments
+ * - Handles pathname normalization by enforcing the correct number of trailing
+ *   slashes
  * - Dispatches render logic via a `queue_render` callback and flags application
  *   state with `queue_state`
  * - Tracks "once" interactions by pushing qualifying elements into a
@@ -92,13 +93,7 @@ const apply_data_to_url = (data: FormData | undefined, url: URL) => {
  * - Updates custom internal flags: `isError_`, `isLoading_`, `timeoutId_`, and
  *   `ownerElement_`
  *
- * Performance: While each part is optimized, operations like `FormData`
- * serialization and XHR send can be expensive on large forms or in rapid
- * succession. Debouncing or batching may be necessary in high-interaction
- * contexts.
- *
- * @param el - The DOM element representing the user's intent (e.g., a form,
- *             button, or input element).
+ * @param el - A network-capable element with an `on` attribute.
  */
 export const commit = (el: Element) => {
   clearTimeout(el.timeoutId_);
@@ -135,28 +130,31 @@ export const commit = (el: Element) => {
 
     const url = new URL(endpoint, el.baseURI);
     const pathname = url.pathname;
-    const arr = Array.from(pathname);
-    i = arr.length;
-    for (let found = false, char; i--; ) {
-      char = pathname.charCodeAt(i);
-      if (char === 47) {
-        if (found) {
-          arr.push("/");
+    let end, code, ext;
+    i = pathname.length;
+    while (i-- && pathname.charCodeAt(i) === 47) {}
+    if (i !== -1) {
+      end = i - pathname.length + 1;
+      while (i--) {
+        code = pathname.charCodeAt(i);
+        if (code === 47) {
           break;
-        } else {
-          arr.pop();
         }
-      } else if (char === 46) {
-        if (found) {
+        if (code === 46) {
+          ext = true;
           break;
-        } else {
-          arr.pop();
         }
-      } else {
-        found = true;
+      }
+      if (ext) {
+        if (end < 0) {
+          url.pathname = pathname.slice(0, end);
+        }
+      } else if (end === 0) {
+        url.pathname = pathname + "/";
+      } else if (end < -1) {
+        url.pathname = pathname.slice(0, end + 1);
       }
     }
-    url.pathname = arr.join("");
 
     let data;
     if (el instanceof HTMLFormElement) {
@@ -211,7 +209,7 @@ export const commit = (el: Element) => {
         attr = attrs[i]!;
         name = attr.name;
         if (name.startsWith("h-")) {
-          xhr.setRequestHeader(name.substring(2), attr.value);
+          xhr.setRequestHeader(name.slice(2), attr.value);
         }
       }
       el.isError_ = false;
@@ -222,7 +220,7 @@ export const commit = (el: Element) => {
   }
 };
 
-/* c8 ignore next */
+/* v8 ignore start */
 if (import.meta.vitest) {
   const {
     describe,
@@ -272,7 +270,7 @@ if (import.meta.vitest) {
       option.setAttribute("value", "bar2");
       option.setAttribute("selected", "");
       select.setAttribute("name", "foo");
-      select.setAttribute("post", "/foobar.txt./");
+      select.setAttribute("post", "/foobar.txt/");
       select.setAttribute("redirect", "pushState");
       select.append(option);
       commit(select);
@@ -288,6 +286,21 @@ if (import.meta.vitest) {
       const textarea = document.createElement("textarea");
       textarea.setAttribute("name", "foo");
       textarea.setAttribute("put", "/foobar/");
+      textarea.setAttribute("redirect", "replaceState");
+      textarea.textContent = "bar3";
+      commit(textarea);
+      const url = replaceState.mock.calls[0]![2] as URL;
+      expect(url.pathname).toBe("/foobar/");
+      expect(url.search).toBe("?foo=bar3");
+    });
+
+    it("multiple trailing slashes", () => {
+      const replaceState = spyOn(history, "replaceState").mockImplementation(
+        () => {}
+      );
+      const textarea = document.createElement("textarea");
+      textarea.setAttribute("name", "foo");
+      textarea.setAttribute("put", "/foobar//");
       textarea.setAttribute("redirect", "replaceState");
       textarea.textContent = "bar3";
       commit(textarea);
@@ -351,3 +364,4 @@ if (import.meta.vitest) {
     });
   });
 }
+/* v8 ignore stop */

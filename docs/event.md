@@ -25,10 +25,12 @@ All events bubble to the root of the DOM tree.
 - any attribute that starts with `on:` and contains a space separated list of
   actions to initiate
 - any attribute that starts with `event:` and contains a comma separated list
-  of name and value pairs separated by `=`; the value part is optional and will
-  default to `true` if omitted; every key and value pair has to match the event
-  object, otherwise the event handling is skipped; can be used for associating
-  hotkeys with an element, for example
+  of name and value pairs separated by `=`  
+  The value part is optional and the key will only be checked for truthiness if
+  omitted.  
+  Every key and value pair has to match the event object, otherwise the event
+  handling is skipped.  
+  Can be used for associating hotkeys with an element, for example.
 
 ## Basic Example
 

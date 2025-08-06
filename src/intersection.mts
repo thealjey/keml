@@ -64,7 +64,7 @@ export const revealObserver = new IntersectionObserver(on_reveal);
 export const concealObserver = new IntersectionObserver(on_conceal);
 export const intersectsObserver = new IntersectionObserver(queue_state);
 
-/* c8 ignore next */
+/* v8 ignore start */
 if (import.meta.vitest) {
   const {
     describe,
@@ -107,3 +107,4 @@ if (import.meta.vitest) {
     });
   });
 }
+/* v8 ignore stop */

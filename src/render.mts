@@ -238,7 +238,7 @@ export const render = () => {
   requestAnimationFrame(render);
 };
 
-/* c8 ignore next */
+/* v8 ignore start */
 if (import.meta.vitest) {
   const {
     describe,
@@ -417,3 +417,4 @@ if (import.meta.vitest) {
     });
   });
 }
+/* v8 ignore stop */

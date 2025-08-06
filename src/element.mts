@@ -80,7 +80,7 @@ const attr: AttrMap = {
       }
       if (!events.includes(name)) {
         events.push(name);
-        document.addEventListener(name.substring(3), on_event, true);
+        document.addEventListener(name.slice(3), on_event, true);
       }
     },
 
@@ -215,7 +215,7 @@ export const visitor = (name: string) =>
     ? attr.if_colon_
     : attr[name];
 
-/* c8 ignore next */
+/* v8 ignore start */
 if (import.meta.vitest) {
   const {
     describe,
@@ -379,3 +379,4 @@ if (import.meta.vitest) {
     });
   });
 }
+/* v8 ignore stop */

@@ -55,7 +55,7 @@ export const on_mutate = (records: MutationRecord[]) => {
   queue_state();
 };
 
-/* c8 ignore next */
+/* v8 ignore start */
 if (import.meta.vitest) {
   const { describe, it, expect } = import.meta.vitest;
   const { actionElements } = await import("./store.mts");
@@ -97,3 +97,4 @@ if (import.meta.vitest) {
     });
   });
 }
+/* v8 ignore stop */

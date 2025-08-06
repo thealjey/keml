@@ -38,7 +38,7 @@ export const on_load = () => {
   requestAnimationFrame(render);
 };
 
-/* c8 ignore next */
+/* v8 ignore start */
 if (import.meta.vitest) {
   const { describe, expect, it } = import.meta.vitest;
 
@@ -61,3 +61,4 @@ if (import.meta.vitest) {
     });
   });
 }
+/* v8 ignore stop */

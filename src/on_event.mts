@@ -68,14 +68,22 @@ export const on_event: EventListener = event => {
           const pairs = attr.value.split(",");
           const len = pairs.length;
 
-          for (let i = 0, pair; i < len; ++i) {
-            pair = pairs[i]!.split("=");
-            name = pair[0]?.trim();
-            if (
-              name &&
-              event[name as keyof Event] + "" !== (pair[1]?.trim() ?? "true")
-            ) {
-              return;
+          for (let i = 0, pair, pos; i < len; ++i) {
+            pair = pairs[i]!;
+            pos = pair.indexOf("=");
+            if (pos === -1) {
+              name = pair.trim();
+              if (name && !event[name as keyof Event]) {
+                return;
+              }
+            } else {
+              name = pair.slice(0, pos).trim();
+              if (
+                name &&
+                event[name as keyof Event] + "" !== pair.slice(pos + 1).trim()
+              ) {
+                return;
+              }
             }
           }
         }
@@ -105,7 +113,7 @@ export const on_event: EventListener = event => {
   }
 };
 
-/* c8 ignore next */
+/* v8 ignore start */
 if (import.meta.vitest) {
   const {
     describe,
@@ -121,6 +129,23 @@ if (import.meta.vitest) {
       const div = document.createElement("div");
       div.setAttribute("on:click", "handleClick");
       div.setAttribute("event:click", "charCode = 1, altKey");
+      div.append(target);
+      on_event({
+        target,
+        type: "click",
+        preventDefault,
+        altKey: false,
+        charCode: 1,
+      } as unknown as Event);
+      expect(preventDefault).not.toBeCalled();
+    });
+
+    it("stop on charCode mismatch", () => {
+      const preventDefault = fn();
+      const target = document.createElement("div");
+      const div = document.createElement("div");
+      div.setAttribute("on:click", "handleClick");
+      div.setAttribute("event:click", "charCode = 2, altKey");
       div.append(target);
       on_event({
         target,
@@ -172,3 +197,4 @@ if (import.meta.vitest) {
     });
   });
 }
+/* v8 ignore stop */

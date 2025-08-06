@@ -2,7 +2,7 @@ import { on_load } from "./on_load.mts";
 
 document.addEventListener("DOMContentLoaded", on_load, true);
 
-/* c8 ignore next */
+/* v8 ignore start */
 if (import.meta.vitest) {
   const { describe, it } = import.meta.vitest;
 
@@ -12,3 +12,4 @@ if (import.meta.vitest) {
     });
   });
 }
+/* v8 ignore stop */
