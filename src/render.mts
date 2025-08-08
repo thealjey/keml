@@ -13,6 +13,7 @@ const emptyArr: [] = [];
 const resultEvent = new Event("result");
 const renderQueue: XMLHttpRequest[] = [];
 let stateQueue = true;
+let focusEl: Element | undefined;
 
 /**
  * Queues an XMLHttpRequest for rendering based on a progress event.
@@ -82,6 +83,35 @@ export const queue_state = () => {
 };
 
 /**
+ * Queues a DOM element to receive focus at the end of the current render cycle.
+ *
+ * This function sets an internal reference (`focusEl`) to the specified
+ * element, which will be focused during the next `render` loop iteration. If
+ * another element is queued later in the same cycle, it will overwrite the
+ * previous one.
+ *
+ * This is useful for ensuring that focus is applied only after any DOM updates
+ * or insertions, preventing layout thrashing or selection issues.
+ *
+ * The actual focus action is deferred until the end of the render function,
+ * ensuring that it occurs only after all other updates (such as DOM mutations
+ * and state processing) have been completed.
+ *
+ * If the element supports placing a text cursor (such as typical form
+ * controls), an attempt will be made to move the caret to the end of the value.
+ *
+ * @param el - The DOM element to focus.
+ *
+ * @example
+ * // Queue a search input to receive focus after the UI updates.
+ * const input = document.getElementById('search');
+ * queue_focus(input);
+ */
+export const queue_focus = (el: Element) => {
+  focusEl = el;
+};
+
+/**
  * The main render loop executed approximately 60 times per second using
  * `requestAnimationFrame`.
  *
@@ -91,6 +121,7 @@ export const queue_state = () => {
  *   then updating matched render elements with new DOM nodes or state.
  * - Manages conditional state toggling on elements based on validity, value,
  *   intersection, loading, and error states.
+ * - Applies focus to any element queued via `queue_focus`.
  *
  * Performance considerations:
  * - Uses batching and cloning of DOM nodes efficiently to minimize reflows.
@@ -235,6 +266,14 @@ export const render = () => {
       }
     }
   }
+  if (focusEl) {
+    try {
+      len = (focusEl as HTMLInputElement).value.length;
+      (focusEl as HTMLInputElement).focus();
+      (focusEl as HTMLInputElement).setSelectionRange(len, len);
+    } catch {}
+    focusEl = undefined;
+  }
   requestAnimationFrame(render);
 };
 
@@ -244,10 +283,13 @@ if (import.meta.vitest) {
     describe,
     expect,
     it,
+    afterEach,
     vi: { fn, spyOn, restoreAllMocks },
   } = import.meta.vitest;
 
   describe("render", () => {
+    afterEach(restoreAllMocks);
+
     it("queue_render", () => {
       const target = "fake xhr";
       queue_render({ target } as unknown as ProgressEvent);
@@ -375,7 +417,6 @@ if (import.meta.vitest) {
         "<span></span>" +
         "<button></button>";
       expect(container2).toMatchHTML(container);
-      restoreAllMocks();
     });
 
     it("render state", () => {
@@ -414,6 +455,31 @@ if (import.meta.vitest) {
       stateElements.delete(se4);
       conditionElements.delete(ce1);
       conditionElements.delete(ce2);
+    });
+
+    it("autofocus", () => {
+      const focus = spyOn(
+        HTMLInputElement.prototype,
+        "focus"
+      ).mockImplementation(() => {});
+      const setSelectionRange = spyOn(
+        HTMLInputElement.prototype,
+        "setSelectionRange"
+      ).mockImplementation(() => {});
+      const el = focusEl;
+
+      expect(focus).not.toBeCalled();
+      expect(setSelectionRange).not.toBeCalled();
+      queue_focus(document.createElement("div"));
+      render();
+      expect(focus).not.toBeCalled();
+      expect(setSelectionRange).not.toBeCalled();
+      queue_focus(document.createElement("input"));
+      focusEl!.value = "foo";
+      render();
+      expect(focus).toBeCalled();
+      expect(setSelectionRange).toBeCalledWith(3, 3);
+      focusEl = el;
     });
   });
 }

@@ -131,10 +131,10 @@ export const commit = (el: Element) => {
     const url = new URL(endpoint, el.baseURI);
     const pathname = url.pathname;
     let end, code, ext;
-    i = pathname.length;
+    let len = (i = pathname.length);
     while (i-- && pathname.charCodeAt(i) === 47) {}
     if (i !== -1) {
-      end = i - pathname.length + 1;
+      end = i - len + 1;
       while (i--) {
         code = pathname.charCodeAt(i);
         if (code === 47) {
@@ -192,7 +192,6 @@ export const commit = (el: Element) => {
     } else {
       const xhr = new XMLHttpRequest();
       const attrs = el.attributes;
-      const len = attrs.length;
 
       if (method !== "POST") {
         apply_data_to_url(data, url);
@@ -205,6 +204,7 @@ export const commit = (el: Element) => {
       xhr.open(method, url);
       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
       i = 0;
+      len = attrs.length;
       for (; i < len; ++i) {
         attr = attrs[i]!;
         name = attr.name;

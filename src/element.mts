@@ -4,6 +4,7 @@ import {
   revealObserver,
 } from "./intersection.mts";
 import { on_event } from "./on_event.mts";
+import { queue_focus } from "./render.mts";
 import {
   actionElements,
   conditionElements,
@@ -15,16 +16,7 @@ import {
 
 /**
  * Interface for visiting DOM elements' attributes during traversal.
- *
- * The design deliberately avoids caching attribute values or storing derived
- * data, emphasizing simplicity and correctness:
- * - Attribute values are **not** cached or stored, even if it could improve
- *   performance.
- * - The element attributes themselves are the single source of truth at all
- *   times.
- * - This approach avoids expensive upfront caching, especially beneficial on
- *   large DOM trees, where computing attribute values on demand is more
- *   efficient and accurate.
+ * The design deliberately avoids passing attribute values.
  */
 interface Visitor {
   /**
@@ -65,8 +57,9 @@ const events: string[] = [];
  *   from `stateElements` and observing intersections for `"if:intersects"`.
  * - `on`, `if`, `reset`, `render`: Manage sets of elements linked to those
  *   attributes.
- * - `autofocus`: When added, tries to focus the element and set cursor at the
- *   end.
+ * - `autofocus`: defers focus to the element until the next render cycle by
+ *   calling `queue_focus`. The element will be focused after all DOM mutations
+ *   and state updates are applied, ensuring proper timing and cursor placement.
  */
 const attr: AttrMap = {
   on_colon_: {
@@ -152,13 +145,7 @@ const attr: AttrMap = {
   },
 
   autofocus: {
-    added_(el) {
-      try {
-        const size = (el as HTMLInputElement).value.length;
-        (el as HTMLInputElement).focus();
-        (el as HTMLInputElement).setSelectionRange(size, size);
-      } catch {}
-    },
+    added_: queue_focus,
 
     removed_() {},
   },
@@ -370,12 +357,6 @@ if (import.meta.vitest) {
       vis?.removed_(el, "autofocus");
       expect(focus).not.toBeCalled();
       expect(setSelectionRange).not.toBeCalled();
-      vis?.added_(document.createElement("div"), "autofocus");
-      expect(focus).not.toBeCalled();
-      expect(setSelectionRange).not.toBeCalled();
-      vis?.added_(el, "autofocus");
-      expect(focus).toBeCalled();
-      expect(setSelectionRange).toBeCalledWith(3, 3);
     });
   });
 }
