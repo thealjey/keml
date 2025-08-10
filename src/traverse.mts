@@ -1,20 +1,22 @@
 import { clean, visitor } from "./element.mts";
 
 /**
- * Traverses a list of DOM nodes and their descendants using a TreeWalker.
+ * Traverses a list of DOM nodes and their descendants using a NodeIterator.
  *
- * This function iterates through each node in the given list. For nodes that
- * are Elements, it creates a TreeWalker that visits the element and all its
- * descendant elements in document order.
+ * For each Element in the given node list, a NodeIterator visits that element
+ * and all of its descendant elements in document order.
  *
- * It supports two modes controlled by the `added` flag:
- *
- * - When `added` is true, each element’s attributes are inspected, and
+ * Supports two modes controlled by the `added` flag:
+ * - When `added` is true, each element’s attributes are inspected and
  *   corresponding visitor methods are called via `added_()`.
  * - When `added` is false, each element is passed to `clean()` for cleanup.
  *
- * Using a TreeWalker improves efficiency and readability over manual
- * stack-based traversal, especially for deep DOM subtrees.
+ * Why NodeIterator?
+ *  1. Recursion — simple but prone to stack overflows and high call overhead.
+ *  2. Manual stack — faster but still extra memory allocations.
+ *  3. TreeWalker — fast and memory-efficient, but slightly slower in benchmarks.
+ *  4. querySelectorAll("*") — acceptable speed but *very* high memory usage.
+ *  5. NodeIterator — **fastest** and equally memory-efficient as TreeWalker.
  *
  * @param nodes - A list or collection of DOM nodes to traverse.
  * @param added - Boolean flag indicating the mode: if true, attributes are
@@ -31,12 +33,11 @@ import { clean, visitor } from "./element.mts";
 export const traverse = (nodes: ArrayLike<Node>, added: boolean) => {
   const nodeLen = nodes.length;
 
-  for (let i = 0, j, walker, name, node, el, attrLen, attrs; i < nodeLen; ++i) {
-    node = nodes[i];
-    if (node instanceof Element) {
-      walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT);
+  for (let i = 0, j, el, it, attrLen, attrs, name; i < nodeLen; ++i) {
+    el = nodes[i];
+    if (el instanceof Element) {
+      it = document.createNodeIterator(el, NodeFilter.SHOW_ELEMENT);
       do {
-        el = walker.currentNode as Element;
         if (added) {
           j = 0;
           attrs = el.attributes;
@@ -48,7 +49,7 @@ export const traverse = (nodes: ArrayLike<Node>, added: boolean) => {
         } else {
           clean(el);
         }
-      } while (walker.nextNode());
+      } while ((el = it.nextNode() as Element));
     }
   }
 };
