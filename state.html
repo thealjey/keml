@@ -610,6 +610,9 @@ by default.</p>
 <li><code>if:intersects</code> is turned ON when the element intersects the viewport</li>
 <li><code>if</code> specified on any element, including the same one that issued a state
   action, and subscribes to a single state action</li>
+<li>any attribute starting with <code>x-</code> will be activated when a state action turns
+   ON — replacing any existing attribute of the same name — and restored to its
+   original value when the state action turns OFF</li>
 </ol>
 <h2 id="loading-state-example">Loading State Example<a class="headerlink" href="#loading-state-example" title="Permanent link">&para;</a></h2>
 <ul>
