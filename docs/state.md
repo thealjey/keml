@@ -26,6 +26,9 @@ by default.
 1. `if:intersects` is turned ON when the element intersects the viewport
 1. `if` specified on any element, including the same one that issued a state
   action, and subscribes to a single state action
+1. any attribute starting with `x-` will be activated when a state action turns
+   ON — replacing any existing attribute of the same name — and restored to its
+   original value when the state action turns OFF
 
 ## Loading State Example
 

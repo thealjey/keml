@@ -46,5 +46,5 @@
     "prebuild": "depcruise 'src/*.mts'",
     "test": "vitest run"
   },
-  "version": "3.2.6"
+  "version": "3.2.7"
 }
