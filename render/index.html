@@ -12,25 +12,25 @@
         <meta name="author" content="Eugene Kuzmenko">
       
       
-        <link rel="canonical" href="https://thealjey.github.io/keml/action.html">
+        <link rel="canonical" href="https://thealjey.github.io/keml/render/">
       
       
-        <link rel="prev" href="event.html">
+        <link rel="prev" href="../action/">
       
       
-        <link rel="next" href="render.html">
+        <link rel="next" href="../state/">
       
       
-      <link rel="icon" href="img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+      <link rel="icon" href="../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
     
     
       
-        <title>Action - keml</title>
+        <title>Render - keml</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.7e37652d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
       
       
 
@@ -49,7 +49,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#handling-actions" class="md-skip">
+        <a href="#rendering-responses" class="md-skip">
           Skip to content
         </a>
       
@@ -84,9 +84,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="index.html" title="keml" class="md-header__button md-logo" aria-label="keml" data-md-component="logo">
+    <a href=".." title="keml" class="md-header__button md-logo" aria-label="keml" data-md-component="logo">
       
-  <img src="img/logo192.png" alt="logo">
+  <img src="../img/logo192.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Action
+              Render
             
           </span>
         </div>
@@ -193,9 +193,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="index.html" title="keml" class="md-nav__button md-logo" aria-label="keml" data-md-component="logo">
+    <a href=".." title="keml" class="md-nav__button md-logo" aria-label="keml" data-md-component="logo">
       
-  <img src="img/logo192.png" alt="logo">
+  <img src="../img/logo192.png" alt="logo">
 
     </a>
     keml
@@ -222,7 +222,7 @@
   
   
     <li class="md-nav__item">
-      <a href="index.html" class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -244,7 +244,7 @@
   
   
     <li class="md-nav__item">
-      <a href="install.html" class="md-nav__link">
+      <a href="../install/" class="md-nav__link">
         
   
   
@@ -266,12 +266,34 @@
   
   
     <li class="md-nav__item">
-      <a href="event.html" class="md-nav__link">
+      <a href="../event/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     Event
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Action
     
   </span>
   
@@ -302,7 +324,7 @@
   
   
   <span class="md-ellipsis">
-    Action
+    Render
     
   </span>
   
@@ -310,12 +332,12 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="action.html" class="md-nav__link md-nav__link--active">
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
   <span class="md-ellipsis">
-    Action
+    Render
     
   </span>
   
@@ -347,27 +369,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#request-example" class="md-nav__link">
+  <a href="#basic-example" class="md-nav__link">
     <span class="md-ellipsis">
-      Request Example
+      Basic example
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#redirect-example" class="md-nav__link">
+  <a href="#key-based-optimization-example" class="md-nav__link">
     <span class="md-ellipsis">
-      Redirect Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reset-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reset Example
+      Key based optimization example
     </span>
   </a>
   
@@ -388,29 +401,7 @@
   
   
     <li class="md-nav__item">
-      <a href="render.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Render
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="state.html" class="md-nav__link">
+      <a href="../state/" class="md-nav__link">
         
   
   
@@ -432,7 +423,7 @@
   
   
     <li class="md-nav__item">
-      <a href="glossary.html" class="md-nav__link">
+      <a href="../glossary/" class="md-nav__link">
         
   
   
@@ -454,7 +445,7 @@
   
   
     <li class="md-nav__item">
-      <a href="news.html" class="md-nav__link">
+      <a href="../news/" class="md-nav__link">
         
   
   
@@ -505,27 +496,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#request-example" class="md-nav__link">
+  <a href="#basic-example" class="md-nav__link">
     <span class="md-ellipsis">
-      Request Example
+      Basic example
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#redirect-example" class="md-nav__link">
+  <a href="#key-based-optimization-example" class="md-nav__link">
     <span class="md-ellipsis">
-      Redirect Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reset-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reset Example
+      Key based optimization example
     </span>
   </a>
   
@@ -550,75 +532,53 @@
   
 
 
-<h1 id="handling-actions">Handling actions<a class="headerlink" href="#handling-actions" title="Permanent link">&para;</a></h1>
-<p>HTML elements can trigger server requests and redirects in response to an
-action.</p>
-<p>More than one element can handle the same action and can trigger different
-requests.</p>
-<p>Relative endpoints are supported, so given a current URL of
-"https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/some/path":</p>
-<ul>
-<li>"list-todo" or "./list-todo" → "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/some/path/list-todo/"</li>
-<li>"../list-todo" → "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/some/list-todo/"</li>
-<li>"/list-todo" → "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/list-todo/"</li>
-<li>"/file.html" → "https:/<a href=""></a>/www<a href=""></a>.example.<a href=""></a>com/file.html"</li>
-</ul>
-<p>A trailing slash is always present for paths not ending with a file extension,
-and is never present for ones that are.</p>
-<p>Forms and form fields values are automatically serialized and sent to the
-server.</p>
-<p>What's more is that ANY element that sends a request can also be made
-serializable by giving it the "name" and the "value" attributes.</p>
-<p>A request is only allowed if an element is considered valid (i.e. it either does
-not have a <code>checkValidity</code> method or it returns true).</p>
-<p>KEML makes the server aware of the AJAX nature of its requests by automatically
-including a special "X-Requested-With" header in each request.</p>
-<p>KEML makes the server aware of the browsers timezone for the server-side
-date formatting by setting a "tzo" cookie to the value produced by the
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset">getTimezoneOffset</a>
-function.</p>
+<h1 id="rendering-responses">Rendering responses<a class="headerlink" href="#rendering-responses" title="Permanent link">&para;</a></h1>
+<p>HTML elements that trigger requests can initiate multiple result actions after
+receiving a server response.</p>
+<p>Multiple elements can initiate the same result action, thus triggering the
+render different responses under the same action name.</p>
+<p>Multiple elements can subscribe to the same result action and render the same
+server response.</p>
+<p>KEML applies the minimum set of DOM mutations necessary to synchronize the
+document with the server response.</p>
+<p>If the server response is determined to be the same as what is currently
+rendered in the document, no changes are applied.</p>
 <h2 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
 <ol>
-<li><code>on</code> subscribes the element to a single action, initiated by any element,
-  including the current one</li>
-<li><code>reset</code> also subscribes the element to a single action, initiated by any
-element, including the current one, but is used specifically for resetting the
-current element (like a form or a form field, but really any element that has a
-<code>reset</code> method with the following signature: <code>() =&gt; void</code>); resets are immediate
-and are not affected by <code>debounce</code> and <code>throttle</code></li>
-<li><code>redirect</code> if specified on an element with an <code>on</code> attribute makes it issue
-redirects instead of requests; redirect URIs are resolved exactly the same way
-as the request URIs; can have one of four possible values:<ul>
-<li><code>pushState</code> will call the same method of the history api</li>
-<li><code>replaceState</code> will call the same method of the history api</li>
-<li><code>assign</code> the same as <code>pushState</code>, but will cause a full page reload</li>
-<li><code>replace</code> the same as <code>replaceState</code>, but will cause a full page reload</li>
+<li><code>result</code> specified on an element that performs a request and contains a
+   space separated list of render actions to initiate</li>
+<li><code>error</code> works exactly like <code>result</code> but for situations when the server
+   responds with an unsuccessful status code</li>
+<li><code>render</code> specified on any element, including the same one that triggered the
+   request and contains the render action name to subscribe to</li>
+<li><code>key</code> is used to uniquely identify an element among its DOM siblings
+   (same level nodes). It is used to improve the performance of the diffing
+   algorithm and is always advisable to be used on elements whose position can
+   change among their siblings - when elements are added, removed, or reordered</li>
+<li><code>position</code> controls the render strategy to apply to itself:<ul>
+<li><code>replaceChildren</code> (default) replaces all of the elements' children with
+  the server response</li>
+<li><code>replaceWith</code> replaces the element itself with the server response</li>
+<li><code>before</code> renders the server response directly before the current element</li>
+<li><code>after</code> renders the server response directly after the current element</li>
+<li><code>prepend</code> prepends the server response before the first child of the
+  current element</li>
+<li><code>append</code> appends the server response after the last child of the current
+  element</li>
 </ul>
 </li>
-<li><code>href</code>, <code>action</code>, <code>src</code>, <code>get</code>, <code>post</code>, <code>put</code> or <code>delete</code> are used to specify
-  an endpoint to call (the default endpoint is "")</li>
-<li><code>method</code>, <code>get</code>, <code>post</code>, <code>put</code> or <code>delete</code> are used to specify the HTTP
-  method to use in the request (the default method is "GET")</li>
-<li><code>name</code> and <code>value</code> can be used on any element, not just on form fields</li>
-<li><code>debounce</code> specifies a number of milliseconds by which to debounce a
-request/redirect</li>
-<li><code>throttle</code> specifies a number of milliseconds by which to throttle a
-request/redirect</li>
-<li>any attribute that starts with <code>h-</code> and contains a custom request header value</li>
-<li><code>credentials</code> with any value or none at all, sets the
-  <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials">XMLHttpRequest.withCredentials</a>
-  value to <code>true</code></li>
-<li><code>once</code> with any value or none at all, automatically removes the <code>on</code>
-attribute before starting a request/redirect</li>
 </ol>
-<h2 id="request-example">Request Example<a class="headerlink" href="#request-example" title="Permanent link">&para;</a></h2>
+<h2 id="basic-example">Basic example<a class="headerlink" href="#basic-example" title="Permanent link">&para;</a></h2>
 <ul>
-<li>clicking the button initiates the <code>doSomething</code> action</li>
-<li>the div subscribes to that action and sends a "GET" request to "/data"</li>
-<li>the checkbox subscribes to that action and sends a "POST" request to
-  "/toggle" with a multipart encoded body containing its value</li>
-<li>nothing else happens since neither of the elements specifies what to do with
-  their respective server responses</li>
+<li>clicking the button initiates the <code>getUserCount</code> action</li>
+<li>the button itself subscribes to that action using the <code>on</code> attribute</li>
+<li>the button sends a "GET" request to "/user-count"</li>
+<li>upon successfully receiving the response the button initiates the <code>userCount</code>
+  result action</li>
+<li>the div subscribes to the <code>userCount</code> action and renders the server response
+  into itself</li>
+<li>the span subscribes to the <code>userCount</code> action and replaces itself with the
+  server response</li>
 </ul>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -632,51 +592,82 @@ attribute before starting a request/redirect</li>
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;doSomething&quot;</span><span class="p">&gt;</span>click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-
-<span class="p">&lt;</span><span class="nt">div</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;doSomething&quot;</span>
-  <span class="na">get</span><span class="o">=</span><span class="s">&quot;/data&quot;</span>
-<span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-
-<span class="p">&lt;</span><span class="nt">input</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;doSomething&quot;</span>
-  <span class="na">post</span><span class="o">=</span><span class="s">&quot;/toggle&quot;</span>
-  <span class="na">type</span><span class="o">=</span><span class="s">&quot;checkbox&quot;</span>
-  <span class="na">name</span><span class="o">=</span><span class="s">&quot;agree&quot;</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;getUserCount&quot;</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">&quot;getUserCount&quot;</span>
+  <span class="na">get</span><span class="o">=</span><span class="s">&quot;/user-count&quot;</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">&quot;userCount&quot;</span>
 <span class="p">&gt;</span>
+  click me
+<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">render</span><span class="o">=</span><span class="s">&quot;userCount&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">span</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">&quot;userCount&quot;</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
+<span class="p">&gt;&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
-<h2 id="redirect-example">Redirect Example<a class="headerlink" href="#redirect-example" title="Permanent link">&para;</a></h2>
-<ul>
-<li>this is exactly like the example above, but, because of the <code>redirect</code>
-attribute, instead of sending a network request we perform a redirect using the
-history api; in this case specifying an http method does nothing as it is
-meaningless in a redirect</li>
-</ul>
+<h2 id="key-based-optimization-example">Key based optimization example<a class="headerlink" href="#key-based-optimization-example" title="Permanent link">&para;</a></h2>
+<p>Let's imagine that you server endpoint returns this html on the first request:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
+  <span class="cm">&lt;!-- heavy DOM with a lot of rows --&gt;</span>
+<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
+<p>And on the next request it returns:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
 <span class="normal">3</span>
 <span class="normal">4</span>
 <span class="normal">5</span>
 <span class="normal">6</span>
-<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;doSomething&quot;</span><span class="p">&gt;</span>click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;info&quot;</span><span class="p">&gt;</span>
+  Notification text
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 
-<span class="p">&lt;</span><span class="nt">div</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;doSomething&quot;</span>
-  <span class="na">redirect</span><span class="o">=</span><span class="s">&quot;pushState&quot;</span>
-  <span class="na">get</span><span class="o">=</span><span class="s">&quot;/data&quot;</span>
-<span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
+  <span class="cm">&lt;!-- heavy DOM with a lot of rows --&gt;</span>
+<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
-<h2 id="reset-example">Reset Example<a class="headerlink" href="#reset-example" title="Permanent link">&para;</a></h2>
-<ul>
-<li>clicking the button resets the form</li>
-</ul>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;resetForm&quot;</span><span class="p">&gt;</span>click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<p>The table used to be at position 0 amongst its siblings, and now it is at
+position 1.</p>
+<p>The renderer would have no way of knowing that that is the same table and would
+have to rerender everything from scratch.</p>
+<p>And since the tag names are not even the same in the same place they were
+before, we cannot take advantage of any diffing algorithm to help us.</p>
+<p>It would still work, but the performance would suffer greatly.</p>
+<p>Here is what your server should do:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span>
+  <span class="na">key</span><span class="o">=</span><span class="s">&quot;notification&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;info&quot;</span>
+<span class="p">&gt;</span>
+  Notification text
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 
-<span class="p">&lt;</span><span class="nt">form</span> <span class="na">reset</span><span class="o">=</span><span class="s">&quot;resetForm&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">table</span> <span class="na">key</span><span class="o">=</span><span class="s">&quot;table&quot;</span><span class="p">&gt;</span>
+  <span class="cm">&lt;!-- heavy DOM with a lot of rows --&gt;</span>
+<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
+<p>Now, both elements clearly introduce themselves to the renderer, and the
+performance is amazing once again.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Keys are not actions.</p>
+<p>They do not need to be globally unique, only across sibling DOM elements.</p>
+</div>
 
 
 
@@ -729,10 +720,10 @@ meaningless in a redirect</li>
     
     
       
-      <script id="__config" type="application/json">{"base": ".", "features": ["navigation.instant"], "search": "assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.50899def.min.js"></script>
+      <script src="../assets/javascripts/bundle.92b07e13.min.js"></script>
       
     
   </body>
