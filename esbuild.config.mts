@@ -21,13 +21,10 @@ await build({
   logLevel: "info",
   banner: {
     js: `/*!
- * ${name} v${version} - ${description}
- *
- * Docs:  ${homepage}
- * Repo:  ${repository.url.slice(4, -4)}/
- * NPM:   https://www.npmjs.com/package/${name}/
- *
- * Licensed under the ${license} License. See LICENSE file for details.
+ * ${name} ${version} ${description}
+ * Docs: ${homepage}
+ * Repo: ${repository.url.slice(4, -4)}/
+ * ${license} (see LICENSE)
  */`,
   },
 });
