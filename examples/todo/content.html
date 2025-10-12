@@ -1,65 +1,50 @@
-<yes value="{len(todos)}">
+<yes condition="{len(todos)}">
   <main class="main">
     <div class="toggle-all-container">
       <input
+        checked="{len(todos) == len(completedTodos)}"
+        class="toggle-all"
+        id="toggle-all"
+        name="completed"
+        on="toggleAll"
         on:change="toggleAll"
         on:result="updateTodos"
-        on="toggleAll"
         put="{url('home')}"
         type="checkbox"
-        id="toggle-all"
-        class="toggle-all"
-        name="completed"
-        checked="{len(todos) == len(completedTodos)}"
       >
-      <yes value="{active_route == 'home'}">
+      <yes condition="{active_route == 'home'}">
         <label
           class="toggle-all-label{'' if len(todos) else ' o-0'}"
           for="toggle-all"
-        >
-          Mark all as complete
-        </label>
+        >Mark all as complete</label>
       </yes>
-      <yes value="{active_route == 'active'}">
+      <yes condition="{active_route == 'active'}">
         <label
           class="toggle-all-label{'' if len(activeTodos) else ' o-0'}"
           for="toggle-all"
-        >
-          Mark all as complete
-        </label>
+        >Mark all as complete</label>
       </yes>
-      <yes value="{active_route == 'completed'}">
+      <yes condition="{active_route == 'completed'}">
         <label
           class="toggle-all-label{'' if len(completedTodos) else ' o-0'}"
           for="toggle-all"
-        >
-          Mark all as complete
-        </label>
+        >Mark all as complete</label>
       </yes>
     </div>
     <ul class="todo-list">
-      <yes value="{active_route == 'home'}">
-        <for value="todos">
-          <include
-            value="item"
-            action="edit"
-          >
+      <yes condition="{active_route == 'home'}">
+        <for collection="todos">
+          <include state="view" tpl="item">
         </for>
       </yes>
-      <yes value="{active_route == 'active'}">
-        <for value="activeTodos">
-          <include
-            value="item"
-            action="edit"
-          >
+      <yes condition="{active_route == 'active'}">
+        <for collection="activeTodos">
+          <include state="view" tpl="item">
         </for>
       </yes>
-      <yes value="{active_route == 'completed'}">
-        <for value="completedTodos">
-          <include
-            value="item"
-            action="edit"
-          >
+      <yes condition="{active_route == 'completed'}">
+        <for collection="completedTodos">
+          <include state="view" tpl="item">
         </for>
       </yes>
     </ul>
@@ -71,46 +56,38 @@
     <ul class="filters">
       <li>
         <a
-          on:click="filter-all"
-          on="filter-all"
-          redirect="pushState"
-          href="{url('home')}"
           class="{'selected' if active_route == 'home' else None}"
-        >
-          All
-        </a>
+          href="{url('home')}"
+          on="filter-all"
+          on:click="filter-all"
+          redirect="pushState"
+        >All</a>
       </li>
       <li>
         <a
-          on:click="filter-active"
-          on="filter-active"
-          redirect="pushState"
-          href="{url('active')}"
           class="{'selected' if active_route == 'active' else None}"
-        >
-          Active
-        </a>
+          href="{url('active')}"
+          on="filter-active"
+          on:click="filter-active"
+          redirect="pushState"
+        >Active</a>
       </li>
       <li>
         <a
-          on:click="filter-completed"
-          on="filter-completed"
-          redirect="pushState"
-          href="{url('completed')}"
           class="{'selected' if active_route == 'completed' else None}"
-        >
-          Completed
-        </a>
+          href="{url('completed')}"
+          on="filter-completed"
+          on:click="filter-completed"
+          redirect="pushState"
+        >Completed</a>
       </li>
     </ul>
     <button
+      class="clear-completed"
+      delete="{url('home')}"
+      on="clearCompleted"
       on:click="clearCompleted"
       on:result="updateTodos"
-      on="clearCompleted"
-      delete="{url('home')}"
-      class="clear-completed"
-    >
-      Clear completed
-    </button>
+    >Clear completed</button>
   </footer>
 </yes>

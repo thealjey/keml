@@ -1,45 +1,44 @@
 # State actions
 
 HTML elements can configure any number of attributes in response to state
-`actions` by prepending their names with `x-`.
+actions by prefixing their names with `x-`.
 
-Multiple elements can handle the same action and configure their attributes
+Multiple elements can handle the same action while configuring their attributes
 differently.
 
-A state can essentially be viewed as a boolean flag that is always set to false
-by default.
+A state can be viewed as a boolean flag that is set to `false` by default.
 
 ## Attributes
 
-1. `if:loading` specified on an element that launches a request, contains a
-  space separated list of state actions to turn ON immediately before starting
-  a request and to turn OFF immediately after a request completes
-1. `if:error` specified on an element that launches a request, contains a space
-  separated list of state actions to turn OFF immediately before starting a
-  request and to turn ON immediately after a request fails
-1. `if:invalid` specified on a form or a form field, contains a space separated
-  list of state actions to turn ON when the element becomes invalid and to turn
-  OFF when the element becomes valid (invalid forms and fields do not trigger
-  server requests)
-1. `if:value` inputs, selects, text areas and checkboxes can be considered to
-  have a value when they are not empty
-1. `if:intersects` is turned ON when the element intersects the viewport
-1. `if` specified on any element, including the same one that issued a state
-  action, and subscribes to a single state action
-1. any attribute starting with `x-` will be activated when a state action turns
-   ON — replacing any existing attribute of the same name — and restored to its
-   original value when the state action turns OFF
+1. `if:loading`, specified on an element that launches a request, contains a 
+   space-separated list of state actions to turn ON immediately before a 
+   request starts and turn OFF immediately after it completes.
+1. `if:error`, specified on an element that launches a request, contains a 
+   space-separated list of state actions to turn OFF immediately before a 
+   request starts and turn ON immediately after it fails.
+1. `if:invalid`, specified on a form or form field, contains a space-separated
+   list of state actions to turn ON when the element becomes invalid and to turn
+   OFF when it becomes valid. Invalid forms and fields do not trigger server
+   requests.
+1. `if:value` — Inputs, selects, text areas, and checkboxes are considered to
+   have a value when they are not empty.
+1. `if:intersects` turns ON when the element intersects the viewport.
+1. `if`, specified on any element — including the one that issued a state
+   action — subscribes to a single state action.
+1. Any attribute starting with `x-` activates when a state action turns ON —
+   replacing any existing attribute of the same name — and is restored to its
+   original value when the state action turns OFF.
 
 ## Loading State Example
 
 - the first div is initially visible and the second div is initially hidden
-- clicking the button:
+- Clicking the button:
     - initiates the `loadData` action
-    - turns ON the `isLoadingData` state action, thus the first div becomes
-    invisible and the second visible
+    - turns ON the `isLoadingData` state action, making the first div
+      invisible and the second visible
     - sends a "GET" request to "/data"
-    - after completion of the request turns OFF the `isLoadingData` state
-    action, thus the first div becomes visible and the second invisible again
+    - after the request completes, turns OFF the `isLoadingData` state
+      action, making the first div visible and the second invisible again
 
 ```html
 <button
@@ -69,7 +68,7 @@ by default.
 
 ## Error State Example
 
-- the first div is initially visible and the second div is initially hidden
+- The first div is initially visible, and the second div is initially hidden.
 - clicking the button
     - initiates the `loadWrong` action
     - turns OFF the `isError` state action, which does not change the visibility

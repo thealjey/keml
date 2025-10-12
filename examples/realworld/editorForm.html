@@ -1,13 +1,13 @@
 <form
-  on:submit="createArticle"
-  on:result="redirect-{increment(True)}"
-  if:invalid="formInvalid"
-  on="createArticle"
   error="submitErrors"
-  result="updatedForm"
-  render="updatedForm"
-  position="replaceWith"
+  if:invalid="formInvalid"
   method="post"
+  on="createArticle"
+  on:result="redirect-{increment(True)}"
+  on:submit="createArticle"
+  position="replaceWith"
+  render="updatedForm"
+  result="updatedForm"
 >
   <fieldset
     on="redirect-{increment()}"
@@ -16,50 +16,45 @@
   >
     <fieldset class="form-group">
       <input
-        if:invalid="titleInvalid"
-        type="text"
         class="form-control form-control-lg"
-        placeholder="Article Title"
+        if:invalid="titleInvalid"
         name="article_title"
+        placeholder="Article Title"
         required
+        type="text"
         value="{article_title}"
       >
     </fieldset>
     <fieldset class="form-group">
       <input
-        type="text"
         class="form-control"
-        placeholder="What's this article about?"
         name="short"
-        value="{short}"
+        placeholder="What's this article about?"
         title="Leaving this field blank will default it to a truncated version of the main article text."
+        type="text"
+        value="{short}"
       >
     </fieldset>
     <fieldset class="form-group">
       <textarea
-        if:invalid="longInvalid"
         class="form-control"
-        rows="8"
-        placeholder="Write your article (in markdown)"
+        if:invalid="longInvalid"
         name="long"
+        placeholder="Write your article (in markdown)"
         required
-      >
-        {long}
-      </textarea>
+        rows="8"
+      >{long}</textarea>
     </fieldset>
-    <fieldset
-      render="articleTags"
-      class="form-group"
-    >
-      <include value="articleTags" />
+    <fieldset class="form-group" render="articleTags">
+      <include tpl="articleTags">
     </fieldset>
     <button
+      class="btn btn-lg btn-primary pull-xs-right"
       if="formInvalid"
       x-disabled
-      class="btn btn-lg pull-xs-right btn-primary"
     >
-      <yes value="article_slug">Save Article</yes>
-      <no value="article_slug">Publish Article</no>
+      <yes condition="article_slug">Save Article</yes>
+      <no condition="article_slug">Publish Article</no>
     </button>
   </fieldset>
 </form>

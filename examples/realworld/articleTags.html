@@ -1,22 +1,19 @@
 <input
-  on:input="tagChange"
-  on:result=""
-  if:invalid="tagsInvalid"
-  on="tagChange"
-  debounce="1000"
-  post="{url('split_chips')}"
-  result="tagChips"
-  name="tags"
-  type="text"
   class="form-control"
+  debounce="1000"
+  if:invalid="tagsInvalid"
+  name="tags"
+  on="tagChange"
+  on:input="tagChange"
+  on:result
   placeholder="Enter tags"
-  title="Comma separated list."
+  post="{url('split_chips')}"
   required
+  result="tagChips"
+  title="Comma separated list."
+  type="text"
   value="{', '.join(tags)}"
 >
-<div
-  render="tagChips"
-  class="tag-list"
->
-  <include value="chips" />
+<div class="tag-list" render="tagChips">
+  <include tpl="chips">
 </div>

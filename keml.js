@@ -1,5 +1,5 @@
 /*!
- * keml 3.2.8 Enhance HTML with custom attributes for clean, server-driven interactivity.
+ * keml 3.2.9 Enhance HTML with custom attributes for clean, server-driven interactivity.
  * Docs: https://thealjey.github.io/keml/
  * Repo: https://github.com/thealjey/keml/
  * MIT (see LICENSE)

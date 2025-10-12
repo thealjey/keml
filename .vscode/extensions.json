@@ -1,0 +1,12 @@
+{
+  // See http://go.microsoft.com/fwlink/?LinkId=827846
+  // for the documentation about the extensions.json format
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "eugene-kuzmenko.keml-vscode",
+    "jkillian.custom-local-formatters",
+    "ms-python.black-formatter",
+    "ms-python.python",
+    "streetsidesoftware.code-spell-checker"
+  ]
+}

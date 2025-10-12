@@ -5,39 +5,39 @@ number of events.
 
 More than one element can initiate the same action.
 
-An action signals that something happened, but by itself does nothing.
+An action signals that something has happened, but does nothing by itself.
 
-All event types supported by the document object can be used, plus the
-following:
+All event types supported by the `document` object can be used, along with
+the following custom ones:
 
-1. `reveal` - triggered when an element becomes visible in the viewport, on
-   initial page load or after a scroll
-1. `conceal` - triggered when an element leaves the viewport after a scroll
-1. `navigate` - triggered by the history api
-1. `result` - triggered after a successful request and render of a response (you
-   can already rely on new attributes being present and working when this event
-   is triggered)
+1. `reveal` — triggered when an element becomes visible in the viewport, either
+on initial page load or after scrolling
+1. `conceal` — triggered when an element leaves the viewport after scrolling
+1. `navigate` — triggered by the History API
+1. `result` — triggered after a successful request and rendering of a response
+(you can rely on new attributes being present and working when this event is
+triggered)
 
-All events bubble to the root of the DOM tree.
+All events bubble up to the root of the DOM tree.
 
 ## Attributes
 
-- any attribute that starts with `on:` and contains a space separated list of
+- Any attribute that starts with `on:` and contains a space-separated list of
   actions to initiate
-- any attribute that starts with `event:` and contains a comma separated list
-  of name and value pairs separated by `=`  
-  The value part is optional and the key will only be checked for truthiness if
+- Any attribute that starts with `event:` and contains a comma-separated list of
+  name-value pairs separated by `=`  
+  The value part is optional, and the key will be checked only for truthiness if
   omitted.  
-  Every key and value pair has to match the event object, otherwise the event
+  Each key and value pair must match the event object; otherwise, the event 
   handling is skipped.  
-  Can be used for associating hotkeys with an element, for example.
+  Can be used, for example, to associate hotkeys with an element.
 
 ## Basic Example
 
-- moving the mouse cursor into the button initiates the `doSomething` action
-- clicking the button initiates two actions: `loadData` and `updateCounter`
-- nothing happens as a result, since none of the elements subscribe to any
-  of these actions
+- Moving the mouse cursor into the button initiates the `doSomething` action
+- Clicking the button initiates two actions: `loadData` and `updateCounter`
+- Nothing happens as a result, since none of the elements subscribe to any of
+  these actions
 
 ```html
 <button
@@ -62,9 +62,9 @@ All events bubble to the root of the DOM tree.
 
 ## Bubbling Example
 
-- when you click on the image the `handleClick` action of a button is initiated,
-  because it is the first matching `on:<event name>` of a parent element
-- this will work with any number of nesting levels (e.g. global hotkeys on the
+- When you click the image, the button’s `handleClick` action is initiated 
+  because it is the first matching `on:<event name>` on a parent element.
+- This works with any number of nesting levels (e.g., global hotkeys on the 
   body element)
 
 ```html
@@ -76,12 +76,11 @@ All events bubble to the root of the DOM tree.
 --------------------------------------------------------------------------------
 
 !!! warning "Warning"
-    Please be mindful that all actions are, by design, global for a page that
+    Please be mindful that all actions are, by design, global within the page
     they are used on.
 
-    It is your responsibility to generate unique action names if you want to be
-    certain that no other parts of the application will be affected by the
-    actions that you trigger.
+    It is your responsibility to generate unique action names to ensure that no
+    other parts of the application are affected by the actions you trigger.
 
 Example of a potential pitfall:
 
@@ -102,11 +101,11 @@ Example of a potential pitfall:
 </button>
 ```
 
-In the example above we can imagine that it was the same button component,
+In the example above, we can imagine that it is the same button component,
 simply rendered twice.
 
 But, they are two distinct elements on the page that trigger and subscribe to
 the same action `loadData`.
 
-Thus, when you click either one of them, 2 (!) network requests will be sent to
-the server.
+Thus, when you click either of them, two network requests will be sent to the
+server.

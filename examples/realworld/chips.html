@@ -1,14 +1,13 @@
-<for value="tags">
+<for collection="tags">
   <span class="tag-default tag-pill">
     <i
-      on:click="removeTag-{i}"
-      on:result="refreshTags"
-      on="removeTag-{i}"
-      name="chip"
-      value="{','.join(x for x in tags if x != item)}"
-      result="articleTags"
-      delete="{url('split_chips')}"
       class="ion-close-round"
+      delete="{url('split_chips')}"
+      name="chip"
+      on="removeTag-{i}"
+      on:click="removeTag-{i}"
+      result="articleTags"
+      value="{','.join(x for x in tags if x != item)}"
     ></i>
     {item}
   </span>

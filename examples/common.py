@@ -15,7 +15,7 @@ from os.path import basename, dirname, getmtime, join, realpath
 from re import MULTILINE, split, sub
 from sys import exit
 from traceback import format_exc
-from typing import Any, Callable, Iterable, Iterator, TypeVar
+from typing import Any, Callable, Iterable, Literal, TypeVar
 from unicodedata import normalize
 from urllib.parse import parse_qs, urlencode, urlparse, quote
 from xml.dom.minidom import Node
@@ -273,10 +273,16 @@ self_closing = [
 
 class SimpleNode:
 
-    def __init__(self, tagName: str):
-        self.tagName = tagName
-        self.nodeType = Node.ELEMENT_NODE
-        self.nodeValue = ""
+    def __init__(
+        self,
+        nodeType: Literal[1, 3, 8, 9],
+        *,
+        tagName: str = "",
+        nodeValue: str = "",
+    ):
+        self.tagName = tagName.lower()
+        self.nodeType = nodeType
+        self.nodeValue = nodeValue
         self.parentNode: SimpleNode | None = None
         self.firstChild: SimpleNode | None = None
         self.lastChild: SimpleNode | None = None
@@ -300,50 +306,123 @@ class SimpleNode:
         self.lastChild = node
         self.firstChild = self.childNodes[0]
 
-    def createTextNode(self, text: str) -> "SimpleNode":
-        node = SimpleNode("text")
-        node.nodeType = Node.TEXT_NODE
-        node.nodeValue = text
-        return node
-
-    def textContent(self) -> str:
-        text = (
-            self.nodeValue
-            if self.parentNode
-            and self.parentNode.tagName in ["textarea", "pre"]
-            else sub(r"\s+", " ", self.nodeValue, flags=MULTILINE)
-        )
-        if not self.previousSibling:
-            text = text.lstrip()
-        if not self.nextSibling:
-            text = text.rstrip()
-        return "" if text.isspace() else text
-
-    def innerHTML(self) -> str:
-        it: Iterator[str] = (x.outerHTML() for x in self.childNodes)
-        return (
-            self.textContent()
-            if self.nodeType == Node.TEXT_NODE
-            else "".join(it)
-        )
-
-    def outerHTML(self) -> str:
-        return (
-            self.textContent()
-            if self.nodeType == Node.TEXT_NODE
-            else f"{
-            "<!DOCTYPE html>" if self.tagName == "html" else ""}<{self.tagName}{
-            "".join(f" {attr}{f'="{value.strip()}"' if value and len(
-                value.strip()) else ""}" for attr, value in self.attrs.items())}>{
-            "" if self.tagName in self_closing else f"{self.innerHTML()}</{self.tagName}>"}"
-        )
+    def print(self, *, docType: bool = False, pretty: bool = False) -> str:
+        if self.nodeType == Node.TEXT_NODE:
+            text = (
+                self.nodeValue
+                if self.parentNode
+                and self.parentNode.tagName in ["textarea", "pre"]
+                else sub(r"\s+", " ", self.nodeValue, flags=MULTILINE)
+            )
+            if not self.previousSibling:
+                text = text.lstrip()
+            if not self.nextSibling:
+                text = text.rstrip()
+            return "" if text.isspace() else text
+        if self.nodeType == Node.COMMENT_NODE:
+            return f"<!-- {self.nodeValue.strip()} -->" if pretty else ""
+        depth = 0
+        cur = self
+        lines: list[str] = []
+        while cur.parentNode and cur.parentNode.nodeType != Node.DOCUMENT_NODE:
+            depth += 1
+            cur = cur.parentNode
+        if docType and self.tagName == "html":
+            lines.append("<!DOCTYPE html>")
+        if self.parentNode:
+            sorted_attrs = dict(sorted(self.attrs.items()))
+            attrs: list[str] = []
+            for name, value in sorted_attrs.items():
+                value = value.strip() if value else None
+                if value:
+                    if (
+                        name
+                        in [
+                            "class",
+                            "error",
+                            "result",
+                            "x-class",
+                            "x-error",
+                            "x-result",
+                        ]
+                        or name.startswith("on:")
+                        or name.startswith("if:")
+                        or name.startswith("x-on:")
+                        or name.startswith("x-if:")
+                    ):
+                        new_token = True
+                        tokens: list[str] = []
+                        for inside, content in parse_segments(value):
+                            if not inside:
+                                new_token = content[-1].isspace()
+                                chunks = content.split()
+                                if len(chunks):
+                                    first, *other = chunks
+                                    if not len(tokens) or content[0].isspace():
+                                        tokens.append(first)
+                                    else:
+                                        tokens[-1] += first
+                                    tokens += other
+                            elif new_token:
+                                tokens.append("{" + content + "}")
+                            else:
+                                tokens[-1] += "{" + content + "}"
+                        tokens.sort()
+                        value = " ".join(tokens)
+                    attrs.append(f'{name}="{value}"')
+                else:
+                    attrs.append(name)
+            line = (
+                f"<{self.tagName}{" " if len(attrs) else ""}{" ".join(attrs)}>"
+            )
+            if pretty and len(line) + depth * 2 > 80:
+                lines.append(f"<{self.tagName}")
+                for attr in attrs:
+                    lines.append("  " + attr)
+                lines.append(">")
+            else:
+                lines.append(line)
+        if self.tagName not in self_closing:
+            children: list[str] = []
+            count = 0
+            is_text = False
+            for node in self.childNodes:
+                child = node.print(docType=docType, pretty=pretty)
+                if child.strip():
+                    count += 1
+                    is_text = node.nodeType == Node.TEXT_NODE
+                    children.append(child)
+            wrapped = False
+            if count == 1 and is_text:
+                prev = lines.pop()
+                line = f"{prev}{children[0]}"
+                if pretty and len(line) + (depth + 2) * 2 > 80:
+                    wrapped = True
+                    lines.append(prev)
+                    lines.append("  " + children[0].lstrip())
+                else:
+                    lines.append(line)
+            else:
+                lines += [
+                    (
+                        f"  {child.lstrip()}"
+                        if pretty and self.parentNode
+                        else child
+                    )
+                    for child in children
+                ]
+            if self.parentNode:
+                lines.append(
+                    f"{lines.pop() if not wrapped and (not count or count == 1 and is_text) else ""}</{self.tagName}>"
+                )
+        return ("\n" + ("  " * depth) if pretty else "").join(lines)
 
 
 class Parser(HTMLParser):
 
     def __init__(self):
-        super().__init__()
-        self.document = SimpleNode("document")
+        super().__init__(convert_charrefs=False)
+        self.document = SimpleNode(Node.DOCUMENT_NODE)
         self.current = self.document
 
     def parse(self, data: str):
@@ -352,7 +431,7 @@ class Parser(HTMLParser):
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]):
         if self.current:
-            element = SimpleNode(tag)
+            element = SimpleNode(Node.ELEMENT_NODE, tagName=tag)
             for attr, value in attrs:
                 element.setAttribute(attr, value)
             self.current.appendChild(element)
@@ -365,14 +444,32 @@ class Parser(HTMLParser):
 
     def handle_data(self, data: str):
         if self.current:
-            self.current.appendChild(self.document.createTextNode(data))
+            last = self.current.lastChild
+            if last and last.nodeType == Node.TEXT_NODE:
+                last.nodeValue += data
+            else:
+                self.current.appendChild(
+                    SimpleNode(Node.TEXT_NODE, nodeValue=data)
+                )
+
+    def handle_entityref(self, name: str):
+        self.handle_data(f"&{name};")
+
+    def handle_charref(self, name: str):
+        self.handle_data(f"&#{name};")
+
+    def handle_comment(self, data: str):
+        if self.current:
+            self.current.appendChild(
+                SimpleNode(Node.COMMENT_NODE, nodeValue=data)
+            )
 
 
 def tree(path: str, left: SimpleNode, right: SimpleNode, **kwargs: Any):
     for node in right.childNodes:
         if node.nodeType == Node.ELEMENT_NODE:
             if node.tagName == "yes":
-                value = node.getAttribute("value")
+                value = node.getAttribute("condition")
                 if value:
                     value = fstr(value, **kwargs)
                     if isinstance(value, str):
@@ -380,7 +477,7 @@ def tree(path: str, left: SimpleNode, right: SimpleNode, **kwargs: Any):
                 if value:
                     tree(path, left, node, **kwargs)
             elif node.tagName == "no":
-                value = node.getAttribute("value")
+                value = node.getAttribute("condition")
                 if value:
                     value = fstr(value, **kwargs)
                     if isinstance(value, str):
@@ -388,7 +485,7 @@ def tree(path: str, left: SimpleNode, right: SimpleNode, **kwargs: Any):
                 if not value:
                     tree(path, left, node, **kwargs)
             elif node.tagName == "for":
-                value = node.getAttribute("value")
+                value = node.getAttribute("collection")
                 if value:
                     value = fstr(value, **kwargs)
                     if isinstance(value, str):
@@ -409,21 +506,21 @@ def tree(path: str, left: SimpleNode, right: SimpleNode, **kwargs: Any):
                             },
                         )
             elif node.tagName == "include":
-                value = node.getAttribute("value")
+                value = node.getAttribute("tpl")
                 if value:
                     value = fstr(value, **kwargs)
                 if isinstance(value, str):
                     real, xml = parse_html(path, value)
                     ctx: dict[str, Any] = {}
                     for attr, value in node.attrs.items():
-                        if attr == "value":
+                        if attr == "tpl":
                             continue
                         if value:
                             value = fstr(value, **kwargs)
                         ctx[attr] = value
                     tree(real, left, xml, **{**kwargs, **ctx})
             else:
-                element = SimpleNode(node.tagName)
+                element = SimpleNode(Node.ELEMENT_NODE, tagName=node.tagName)
                 for attr, value in node.attrs.items():
                     if value:
                         value = fstr(value, **kwargs)
@@ -443,7 +540,9 @@ def tree(path: str, left: SimpleNode, right: SimpleNode, **kwargs: Any):
                 if last and last.nodeType == Node.TEXT_NODE:
                     last.nodeValue += value
                 else:
-                    left.appendChild(left.createTextNode(value))
+                    left.appendChild(
+                        SimpleNode(Node.TEXT_NODE, nodeValue=value)
+                    )
 
 
 docs: dict[str, tuple[int, SimpleNode]] = {}
@@ -616,7 +715,7 @@ class BaseHandler(BaseHTTPRequestHandler):
         return increment
 
     def tpl(self, name: str, **kwargs: Any) -> str:
-        doc = SimpleNode("document")
+        doc = SimpleNode(Node.DOCUMENT_NODE)
         real, xml = parse_html(resolve_filename(), name)
         tree(
             real,
@@ -637,7 +736,7 @@ class BaseHandler(BaseHTTPRequestHandler):
                 **kwargs,
             },
         )
-        return doc.innerHTML()
+        return doc.print(docType=True)
 
     def parse_multipart(self, content_type: str):
         clh = self.headers.get("Content-Length")

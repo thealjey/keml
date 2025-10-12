@@ -2,27 +2,21 @@
   <div class="user-info">
     <div class="container">
       <div class="row">
-        <div class="col-xs-12 col-md-10 offset-md-1">
-          <img
-            src="{author.avatar}"
-            class="user-img"
-          />
+        <div class="col-md-10 col-xs-12 offset-md-1">
+          <img class="user-img" src="{author.avatar}">
           <h4>{author.username}</h4>
           <div>{markdown(author.bio)}</div>
-          <yes value="{user and user.user_id != author.user_id}">
-            <include value="followRequest" />
-            <span
-              render="followButton-{author.user_id}"
-              class="ml2 fr"
-            >
-              <include value="followButton" />
+          <yes condition="{user and user.user_id != author.user_id}">
+            <include tpl="followRequest">
+            <span class="fr ml2" render="followButton-{author.user_id}">
+              <include tpl="followButton">
             </span>
           </yes>
-          <yes value="{user and user.user_id == author.user_id}">
+          <yes condition="{user and user.user_id == author.user_id}">
             <a
-              on:click="replaceSettings"
+              class="action-btn btn btn-outline-secondary btn-sm"
               href="{url('settings')}"
-              class="btn btn-sm btn-outline-secondary action-btn"
+              on:click="replaceSettings"
             >
               <i class="ion-gear-a"></i>
               Edit Profile Settings
@@ -34,71 +28,65 @@
   </div>
   <div class="container">
     <div class="row">
-      <div class="col-xs-12 col-md-10 offset-md-1">
+      <div class="col-md-10 col-xs-12 offset-md-1">
         <div class="articles-toggle">
           <ul class="nav nav-pills outline-active">
             <li class="nav-item">
-              <yes value="{active_route in ['profile', 'profile_pages']}">
-                <a
-                  inert
-                  class="nav-link active"
-                >My Articles</a>
+              <yes condition="{active_route in ['profile', 'profile_pages']}">
+                <a class="active nav-link" inert>My Articles</a>
               </yes>
-              <no value="{active_route in ['profile', 'profile_pages']}">
+              <no condition="{active_route in ['profile', 'profile_pages']}">
                 <a
-                  on:click="redirect-{increment(True)}"
-                  on="redirect-{increment()}"
-                  redirect="pushState"
-                  href="{url('profile', slug=author.user_slug)}"
                   class="nav-link"
-                >
-                  My Articles
-                </a>
+                  href="{url('profile', slug=author.user_slug)}"
+                  on="redirect-{increment()}"
+                  on:click="redirect-{increment(True)}"
+                  redirect="pushState"
+                >My Articles</a>
               </no>
             </li>
             <li class="nav-item">
-              <yes value="{active_route in ['favorites', 'favorites_pages']}">
-                <a
-                  inert
-                  class="nav-link active"
-                >Favorited Articles</a>
+              <yes
+                condition="{active_route in ['favorites', 'favorites_pages']}"
+              >
+                <a class="active nav-link" inert>Favorited Articles</a>
               </yes>
-              <no value="{active_route in ['favorites', 'favorites_pages']}">
+              <no
+                condition="{active_route in ['favorites', 'favorites_pages']}"
+              >
                 <a
-                  on:click="redirect-{increment(True)}"
-                  on="redirect-{increment()}"
-                  redirect="pushState"
-                  href="{url('favorites', slug=author.user_slug)}"
                   class="nav-link"
-                >
-                  Favorited Articles
-                </a>
+                  href="{url('favorites', slug=author.user_slug)}"
+                  on="redirect-{increment()}"
+                  on:click="redirect-{increment(True)}"
+                  redirect="pushState"
+                >Favorited Articles</a>
               </no>
             </li>
           </ul>
         </div>
-        <yes value="{active_route in ['profile', 'profile_pages']}">
+        <yes condition="{active_route in ['profile', 'profile_pages']}">
           <include
-            value="articles"
             articles="{author_articles}"
-            total="{author_article_count}"
-            route="profile"
             params="{{'slug': author.user_slug}}"
-          />
-          <no value="author_article_count">
+            route="profile"
+            total="{author_article_count}"
+            tpl="articles"
+          >
+          <no condition="author_article_count">
             <h2 class="mt4">Nothing to show here yet.</h2>
             <p>Post your first article, to see it here.</p>
           </no>
         </yes>
-        <yes value="{active_route in ['favorites', 'favorites_pages']}">
+        <yes condition="{active_route in ['favorites', 'favorites_pages']}">
           <include
-            value="articles"
             articles="{liked_articles}"
-            total="{liked_article_count}"
-            route="favorites"
             params="{{'slug': author.user_slug}}"
-          />
-          <no value="liked_article_count">
+            route="favorites"
+            total="{liked_article_count}"
+            tpl="articles"
+          >
+          <no condition="liked_article_count">
             <h2 class="mt4">Nothing to show here yet.</h2>
             <p>Add some articles to favorites, to see them here.</p>
           </no>

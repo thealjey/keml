@@ -1,83 +1,79 @@
 <form
-  on:submit="saveSettings"
-  on:result="redirect-{increment(True)}"
-  if:invalid="formInvalid"
-  on="saveSettings"
   error="submitErrors"
-  result="updatedForm"
-  render="updatedForm"
-  position="replaceWith"
+  if:invalid="formInvalid"
   method="post"
+  on="saveSettings"
+  on:result="redirect-{increment(True)}"
+  on:submit="saveSettings"
+  position="replaceWith"
+  render="updatedForm"
+  result="updatedForm"
 >
   <fieldset
     on="redirect-{increment()}"
-    src="{url('profile', slug=user.user_slug)}"
     redirect="replaceState"
+    src="{url('profile', slug=user.user_slug)}"
   >
     <fieldset class="form-group">
       <input
-        if:invalid="urlInvalid"
-        class="form-control"
-        type="url"
-        placeholder="URL of profile picture"
         autocomplete="url"
-        title="Leaving this field blank will generate a gravatar url based on your email address."
-        value="{user.avatar}"
+        class="form-control"
+        if:invalid="urlInvalid"
         name="avatar"
+        placeholder="URL of profile picture"
+        title="Leaving this field blank will generate a gravatar url based on your email address."
+        type="url"
+        value="{user.avatar}"
       >
     </fieldset>
     <fieldset class="form-group">
       <input
-        class="form-control form-control-lg"
-        type="text"
-        placeholder="Your Name"
         autocomplete="name"
-        title="Leaving this field blank will keep your current username unchanged."
-        value="{user.username}"
+        class="form-control form-control-lg"
         name="username"
+        placeholder="Your Name"
+        title="Leaving this field blank will keep your current username unchanged."
+        type="text"
+        value="{user.username}"
       >
     </fieldset>
     <fieldset class="form-group">
       <textarea
         class="form-control form-control-lg"
-        rows="8"
-        placeholder="Short bio about you"
-        title="Leaving this field blank will erase your bio."
         name="bio"
-      >
-        {user.bio}
-      </textarea>
+        placeholder="Short bio about you"
+        rows="8"
+        title="Leaving this field blank will erase your bio."
+      >{user.bio}</textarea>
     </fieldset>
     <fieldset class="form-group">
       <input
-        if:invalid="emailInvalid"
-        class="form-control form-control-lg"
-        type="email"
-        placeholder="Email"
         autocomplete="email"
-        title="Leaving this field blank will keep your current email unchanged."
-        value="{user.email}"
+        class="form-control form-control-lg"
+        if:invalid="emailInvalid"
         name="email"
+        placeholder="Email"
+        title="Leaving this field blank will keep your current email unchanged."
+        type="email"
+        value="{user.email}"
       >
     </fieldset>
     <fieldset class="form-group">
       <input
-        if:invalid="passwordInvalid"
-        class="form-control form-control-lg"
-        type="password"
-        minlength="5"
-        placeholder="New Password"
         autocomplete="new-password"
-        title="Leaving this field blank will keep your current password unchanged."
+        class="form-control form-control-lg"
+        if:invalid="passwordInvalid"
+        minlength="5"
         name="password"
+        placeholder="New Password"
+        title="Leaving this field blank will keep your current password unchanged."
+        type="password"
       >
     </fieldset>
     <button
+      class="btn btn-lg btn-primary pull-xs-right"
       if="formInvalid"
       x-disabled
-      class="btn btn-lg btn-primary pull-xs-right"
-    >
-      Update Settings
-    </button>
+    >Update Settings</button>
   </fieldset>
 </form>

@@ -1,54 +1,51 @@
 <li
-  on="{action}-{id}"
-  get="{url('todo', id=id, action='edit' if action == 'todo' else 'todo')}"
-  result="todoResult-{id}"
-  render="todoResult-{id}"
+  class="{'completed' if completed else ''} {'editing' if state == 'edit' else ''}"
+  get="{url('todo', id=id, state='edit' if state == 'view' else 'view')}"
+  on="{'edit' if state == 'view' else 'view'}-{id}"
   position="replaceWith"
-  class="{'completed' if completed else ''} {'editing' if action == 'todo' else ''}"
+  render="todoResult-{id}"
+  result="todoResult-{id}"
 >
   <div class="view">
     <input
-      on:change="toggleCompleted-{id}"
-      on:result="updateTodos"
-      on="toggleCompleted-{id}"
-      put="{url('todo', id=id)}"
-      type="checkbox"
+      checked="{completed}"
       class="toggle"
       name="completed"
-      checked="{completed}"
+      on="toggleCompleted-{id}"
+      on:change="toggleCompleted-{id}"
+      on:result="updateTodos"
+      put="{url('todo', id=id)}"
+      type="checkbox"
     >
-    <label
-      on:dblclick="edit-{id}"
-      render="rename-{id}"
-    >{title}</label>
+    <label on:dblclick="edit-{id}" render="rename-{id}">{title}</label>
     <button
+      class="destroy"
+      delete="{url('todo', id=id)}"
+      on="remove-{id}"
       on:click="remove-{id}"
       on:result="updateTodos"
-      on="remove-{id}"
-      delete="{url('todo', id=id)}"
-      class="destroy"
     ></button>
   </div>
-  <yes value="{action == 'todo'}">
+  <yes condition="{state == 'edit'}">
     <form
-      on:submit="rename-{id}"
-      on:result="todo-{id}"
-      on="rename-{id}"
       action="{url('todo', id=id)}"
-      method="post"
-      result="rename-{id}"
       class="input-container"
+      method="post"
+      on="rename-{id}"
+      on:result="view-{id}"
+      on:submit="rename-{id}"
+      result="rename-{id}"
     >
       <input
-        on:blur="todo-{id}"
-        on:keyup="todo-{id}"
+        autofocus
+        class="edit"
         event:keyup="code=Escape"
         id="edit-todo-input"
-        class="edit"
         name="todo"
-        value="{title}"
+        on:blur="view-{id}"
+        on:keyup="view-{id}"
         required
-        autofocus
+        value="{title}"
       >
     </form>
   </yes>

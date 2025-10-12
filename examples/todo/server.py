@@ -61,9 +61,9 @@ class Handler(BaseHandler):
 
     def get_todo(self):
         todo = self.find_todo()
-        action = self.single_parsed_query("action")
-        if todo and action:
-            self.send_tpl("item", action=action, **asdict(todo))
+        state = self.single_parsed_query("state")
+        if todo and state:
+            self.send_tpl("item", state=state, **asdict(todo))
 
     def post_home(self):
         if title := self.single_parsed_data("todo"):

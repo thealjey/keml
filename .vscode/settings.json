@@ -1,6 +1,6 @@
 {
   "[html]": {
-    "editor.defaultFormatter": "vscode.html-language-features"
+    "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[markdown]": {
     "editor.formatOnSave": false,
@@ -9,15 +9,13 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "black-formatter.args": [
-    "--line-length=80"
-  ],
-  "cSpell.words": [
-    "depcruise",
-    "htmx",
-    "keml",
-    "Kuzmenko",
-    "mkdocs"
+  "black-formatter.args": ["--line-length=80"],
+  "cSpell.words": ["depcruise", "htmx", "keml", "Kuzmenko", "mkdocs"],
+  "customLocalFormatters.formatters": [
+    {
+      "command": "python -X utf8 -m examples.format_html",
+      "languages": ["html"]
+    }
   ],
   "editor.codeActionsOnSave": {
     "source.addMissingImports": "always",
@@ -33,22 +31,19 @@
   "editor.dragAndDrop": false,
   "editor.emptySelectionClipboard": false,
   "editor.formatOnSave": true,
-  "editor.rulers": [
-    80
-  ],
+  "editor.rulers": [80],
+  "editor.stickyScroll.enabled": false,
   "editor.tabSize": 2,
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
-  "html.customData": [
-    ".vscode/html.html-data.json"
-  ],
-  "html.format.wrapAttributes": "force-expand-multiline",
   "prettier.arrowParens": "avoid",
   "prettier.experimentalTernaries": true,
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": true,
   "python.analysis.completeFunctionParens": true,
-  "python.analysis.typeCheckingMode": "strict"
+  "python.analysis.typeCheckingMode": "strict",
+  "terminal.integrated.stickyScroll.enabled": false,
+  "workbench.tree.enableStickyScroll": false
 }
