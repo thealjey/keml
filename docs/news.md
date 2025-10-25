@@ -4,6 +4,30 @@
 
 --------------------------------------------------------------------------------
 
+## Official VS Code Extension
+
+I’m excited to announce the [**official KEML extension for VS Code**](https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode)!  
+
+With this extension, writing KEML in your HTML files feels like working in a
+full programming language.  
+It provides **autocomplete, hover tooltips, Go to Definition/References**, and
+**inline diagnostics** that catch mistakes before they happen.  
+
+Beyond just helping with action names, the diagnostics
+**point out missing or misused attributes, explain what’s wrong, and guide you toward correct usage**.  
+In other words, the extension acts as **interactive documentation**, letting you
+learn and write KEML safely while staying productive.  
+
+The KEML runtime remains separate, so your existing projects keep working as
+before — now you can enjoy the benefits of **full Intellisense** without
+touching your codebase.  
+
+Writing KEML has never been faster, safer, or more fun!  
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+
 ## v3.2
 
 This release changes both everything and nothing at the same time.

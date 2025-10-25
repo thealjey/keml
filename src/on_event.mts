@@ -158,13 +158,20 @@ if (import.meta.vitest) {
     });
 
     it("other", () => {
+      spyOn(XMLHttpRequest.prototype, "setRequestHeader").mockImplementation(
+        () => {}
+      );
+      spyOn(XMLHttpRequest.prototype, "open").mockImplementation(() => {});
+      spyOn(XMLHttpRequest.prototype, "send").mockImplementation(() => {});
       const preventDefault = fn();
       const push = spyOn(resetQueue, "push").mockImplementation(() => 0);
       const target = document.createElement("div");
       const i1 = document.createElement("input");
       const i2 = document.createElement("input");
       const i3 = document.createElement("input");
-      const div = document.createElement("div");
+      const i4 = document.createElement("input");
+      const div1 = document.createElement("div");
+      const div2 = document.createElement("div");
       i1.setAttribute("required", "");
       i2.setAttribute("required", "");
       i3.setAttribute("required", "");
@@ -173,13 +180,15 @@ if (import.meta.vitest) {
       i3.setAttribute("on", "handleClick");
       i1.setAttribute("throttle", "1000");
       i2.setAttribute("debounce", "2000");
-      div.setAttribute("reset", "resetAction");
+      div1.setAttribute("reset", "resetAction");
       target.setAttribute("on:click", "handleClick resetAction");
       target.setAttribute("event:click", "charCode = 1, altKey");
       actionElements.add(i1);
       actionElements.add(i2);
       actionElements.add(i3);
-      resetElements.add(div);
+      actionElements.add(i4);
+      resetElements.add(div1);
+      resetElements.add(div2);
       on_event({
         target,
         type: "click",
@@ -190,9 +199,86 @@ if (import.meta.vitest) {
       actionElements.delete(i1);
       actionElements.delete(i2);
       actionElements.delete(i3);
-      resetElements.delete(div);
+      actionElements.delete(i4);
+      resetElements.delete(div1);
+      resetElements.delete(div2);
       expect(preventDefault).toBeCalled();
-      expect(push).toHaveBeenCalledWith(div);
+      expect(push).toHaveBeenCalledWith(div1);
+      restoreAllMocks();
+    });
+
+    it("does nothing when target is not an Element (null)", () => {
+      const preventDefault = fn();
+
+      on_event({
+        target: null,
+        type: "click",
+        preventDefault,
+      } as unknown as Event);
+
+      expect(preventDefault).not.toBeCalled();
+    });
+
+    it("does nothing if no on:<event.type> attribute is found", () => {
+      const preventDefault = fn();
+
+      const target = document.createElement("div");
+      const parent = document.createElement("div");
+      parent.appendChild(target);
+
+      // Neither target nor parent has on:click
+      on_event({
+        target,
+        type: "click",
+        preventDefault,
+      } as unknown as Event);
+
+      // nothing should happen
+      expect(preventDefault).not.toBeCalled();
+    });
+
+    it("does nothing when parse_actions returns an empty array", () => {
+      const preventDefault = fn();
+
+      const target = document.createElement("div");
+      target.setAttribute("on:click", ""); // empty → actions.length === 0
+
+      on_event({
+        target,
+        type: "click",
+        preventDefault,
+      } as unknown as Event);
+
+      // nothing should happen
+      expect(preventDefault).not.toBeCalled();
+    });
+
+    it("skips event property checks if event:<event.type> attribute is missing", () => {
+      spyOn(XMLHttpRequest.prototype, "setRequestHeader").mockImplementation(
+        () => {}
+      );
+      spyOn(XMLHttpRequest.prototype, "open").mockImplementation(() => {});
+      spyOn(XMLHttpRequest.prototype, "send").mockImplementation(() => {});
+      const preventDefault = fn();
+
+      const target = document.createElement("div");
+      target.setAttribute("on:click", "handleClick"); // present
+      // no event:click attribute → triggers else branch
+
+      // add a dummy action element to avoid errors in the actionElements loop
+      const actionEl = document.createElement("div");
+      actionEl.setAttribute("on", "handleClick");
+      actionElements.add(actionEl);
+
+      on_event({
+        target,
+        type: "click",
+        preventDefault,
+      } as unknown as Event);
+
+      expect(preventDefault).toBeCalled();
+
+      actionElements.delete(actionEl);
       restoreAllMocks();
     });
   });

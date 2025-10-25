@@ -12,7 +12,7 @@ directly to your server logic.*
 ![Open Issues](https://img.shields.io/github/issues/thealjey/keml)
 ![Open PRs](https://img.shields.io/github/issues-pr/thealjey/keml)
 [![Docs](https://img.shields.io/badge/docs-online-blue)](https://thealjey.github.io/keml/)
-[![VSCode Extension](https://img.shields.io/badge/VSCode%20Extension-online-blue)](https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode)
+[![VS Code Extension](https://img.shields.io/badge/VS%20Code%20Extension-online-blue)](https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode)
 
 KEML is a modern HTML extension that adds powerful, declarative attributes to
 standard markup. With KEML, you define behaviors such as form submission,
@@ -64,9 +64,9 @@ KEML is what happens when you fully embrace that idea — and remove all frictio
 
 ## 📦 Installation
 
-### VSCode Extension
+### VS Code Extension
 
-The official KEML VSCode extension improves your workflow with:
+The official KEML VS Code extension improves your workflow with:
 
 - 📖 Documentation for all attributes and values
 - ⚡ Autocompletion

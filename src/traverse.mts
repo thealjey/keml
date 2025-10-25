@@ -64,7 +64,7 @@ if (import.meta.vitest) {
       const div = document.createElement("div");
       div.setAttribute("42never-likely-to-exist", "43");
       div.setAttribute("on", "foo");
-      traverse([div], true);
+      traverse([div, document.createTextNode("hello")], true);
       expect(actionElements.has(div)).toBe(true);
       actionElements.delete(div);
       traverse([div], false);

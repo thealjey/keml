@@ -233,7 +233,7 @@ if (import.meta.vitest) {
   describe("commit", () => {
     afterEach(restoreAllMocks);
 
-    it("custom", () => {
+    it("submit custom", () => {
       const setRequestHeader = spyOn(
         XMLHttpRequest.prototype,
         "setRequestHeader"
@@ -259,6 +259,34 @@ if (import.meta.vitest) {
       expect(url.pathname).toBe("/foobar/");
       expect(url.search).toBe("?foo=bar1");
       expect(send).toBeCalledWith(undefined);
+    });
+
+    it("submit post", () => {
+      const setRequestHeader = spyOn(
+        XMLHttpRequest.prototype,
+        "setRequestHeader"
+      ).mockImplementation(() => {});
+      const open = spyOn(XMLHttpRequest.prototype, "open").mockImplementation(
+        () => {}
+      );
+      const send = spyOn(XMLHttpRequest.prototype, "send").mockImplementation(
+        () => {}
+      );
+      const input = document.createElement("input");
+      input.setAttribute("name", "foo");
+      input.setAttribute("once", "");
+      input.setAttribute("get", "/foobar");
+      input.setAttribute("h-test", "header");
+      input.setAttribute("method", "post");
+      input.value = "bar1";
+      commit(input);
+      expect(onceQueue[onceQueue.length - 1]).toBe(input);
+      expect(setRequestHeader).toBeCalledWith("test", "header");
+      const [method, url] = open.mock.calls[0] as unknown as [string, URL];
+      expect(method).toBe("POST");
+      expect(url.pathname).toBe("/foobar/");
+      expect(url.search).toBe("");
+      expect(send).toBeCalledWith(expect.any(FormData));
     });
 
     it("post", () => {
@@ -354,13 +382,60 @@ if (import.meta.vitest) {
       const replace = spyOn(location, "replace").mockImplementation(() => {});
       const img = document.createElement("img");
       img.setAttribute("name", "foo");
-      img.setAttribute("value", "bar7");
       img.setAttribute("src", "/foobar");
       img.setAttribute("redirect", "replace");
       commit(img);
       const url = replace.mock.calls[0]![0] as URL;
       expect(url.pathname).toBe("/foobar/");
-      expect(url.search).toBe("?foo=bar7");
+      expect(url.search).toBe("");
+    });
+
+    it("default", () => {
+      const replace = spyOn(location, "replace").mockImplementation(() => {});
+      const img = document.createElement("a");
+      img.setAttribute("value", "bar8");
+      img.setAttribute("redirect", "replace");
+      commit(img);
+      const url = replace.mock.calls[0]![0] as URL;
+      expect(url.pathname).toBe("/");
+      expect(url.search).toBe("");
+    });
+
+    it("does nothing when data is undefined", () => {
+      const url = new URL("https://example.com/");
+      apply_data_to_url(undefined, url);
+      expect(url.search).toBe("");
+    });
+
+    it("ignores non-string FormData entries", () => {
+      const url = new URL("https://example.com/");
+      const data = new FormData();
+      data.set(
+        "file",
+        new Blob(["content"], { type: "text/plain" }),
+        "test.txt"
+      );
+      apply_data_to_url(data, url);
+      expect(url.search).toBe("");
+    });
+
+    it("does nothing when checkValidity returns false", () => {
+      const open = spyOn(XMLHttpRequest.prototype, "open").mockImplementation(
+        () => {}
+      );
+      const send = spyOn(XMLHttpRequest.prototype, "send").mockImplementation(
+        () => {}
+      );
+
+      const input = document.createElement("input");
+      input.setAttribute("get", "/foobar");
+
+      input.checkValidity = () => false;
+
+      commit(input);
+
+      expect(open).not.toHaveBeenCalled();
+      expect(send).not.toHaveBeenCalled();
     });
   });
 }

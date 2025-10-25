@@ -59,6 +59,15 @@ if (import.meta.vitest) {
 
   describe("parse_actions", () => {
     it("duh", () => {
+      expect(parse_actions("   foo   bar baz    lol")).toEqual([
+        "foo",
+        "bar",
+        "baz",
+        "lol",
+      ]);
+    });
+
+    it("ends with space", () => {
       expect(parse_actions("   foo   bar baz    ")).toEqual([
         "foo",
         "bar",

@@ -3,12 +3,9 @@
     "allowImportingTsExtensions": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "checkJs": true,
     "exactOptionalPropertyTypes": true,
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "noEmit": true,
@@ -21,11 +18,7 @@
     "noUnusedParameters": true,
     "strict": true,
     "target": "esnext",
-    "types": [
-      "vitest/importMeta"
-    ]
+    "types": ["vitest/importMeta"]
   },
-  "include": [
-    "src/*"
-  ]
+  "include": ["src/*", ".dependency-cruiser.mjs", "vitest.config.mts"]
 }

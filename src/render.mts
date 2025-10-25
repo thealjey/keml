@@ -332,6 +332,8 @@ if (import.meta.vitest) {
       container.innerHTML = "<span></span>" + "<button></button>";
       const el1 = document.createElement("div");
       const el2 = document.createElement("div");
+      const el3 = document.createElement("div");
+      const el4 = document.createElement("div");
       const rl1 = document.createElement("div");
       const rl2 = document.createElement("div");
       const rl3 = document.createElement("div");
@@ -354,11 +356,24 @@ if (import.meta.vitest) {
         status: 200,
         ownerElement_: el2,
       } as unknown as XMLHttpRequest;
-      renderQueue.push(xhr1, xhr2);
+      const xhr3 = {
+        status: 400,
+        ownerElement_: el3,
+      } as unknown as XMLHttpRequest;
+      const xhr4 = {
+        responseXML,
+        status: 200,
+        ownerElement_: el4,
+      } as unknown as XMLHttpRequest;
+      renderQueue.push(xhr1, xhr2, xhr3, xhr4);
       el1.isLoading_ = true;
       el2.isLoading_ = true;
+      el3.isLoading_ = true;
+      el4.isLoading_ = true;
       el1.isError_ = false;
       el2.isError_ = false;
+      el3.isError_ = false;
+      el4.isError_ = false;
       el1.setAttribute("error", "error-action");
       el2.setAttribute("result", "error-action result-action");
       rl1.setAttribute("render", "error-action");
@@ -391,9 +406,14 @@ if (import.meta.vitest) {
       renderElements.delete(rl7);
       expect(el1.isLoading_).toBe(false);
       expect(el2.isLoading_).toBe(false);
+      expect(el3.isLoading_).toBe(false);
+      expect(el4.isLoading_).toBe(false);
       expect(el1.isError_).toBe(true);
       expect(el2.isError_).toBe(false);
-      expect(dispatchEvent).toHaveBeenCalledExactlyOnceWith(resultEvent);
+      expect(el3.isError_).toBe(true);
+      expect(el4.isError_).toBe(false);
+      expect(dispatchEvent).toBeCalledTimes(2);
+      expect(dispatchEvent).toHaveBeenCalledWith(resultEvent);
       container.innerHTML =
         '<div position="replaceChildren" render="error-action"></div>' +
         '<div render="result-action">' +
@@ -480,6 +500,30 @@ if (import.meta.vitest) {
       expect(focus).toBeCalled();
       expect(setSelectionRange).toBeCalledWith(3, 3);
       focusEl = el;
+    });
+
+    it("does nothing if element with if:intersects is outside viewport", () => {
+      const el = document.createElement("div");
+      el.setAttribute("if:intersects", "outsideAction");
+      stateElements.add(el);
+
+      // Off-screen rectangle
+      el.getBoundingClientRect = () => ({
+        top: window.innerHeight + 10, // below viewport
+        bottom: window.innerHeight + 20,
+        left: 0,
+        right: 100,
+        width: 100,
+        height: 10,
+        x: 0,
+        y: 0,
+        toJSON: () => {},
+      });
+
+      stateQueue = true;
+      render(); // else branch runs automatically
+
+      stateElements.delete(el);
     });
   });
 }

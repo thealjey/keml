@@ -77,6 +77,17 @@ if (import.meta.vitest) {
           previousSibling: null,
           type: "attributes",
         },
+        {
+          attributeName: null,
+          target: document.createTextNode("foo"),
+          removedNodes: [] as unknown as NodeList,
+          addedNodes: [] as unknown as NodeList,
+          oldValue: null,
+          attributeNamespace: null,
+          nextSibling: null,
+          previousSibling: null,
+          type: "characterData",
+        },
       ]);
       expect(actionElements.has(target)).toBe(true);
       target.removeAttribute("on");
@@ -94,6 +105,77 @@ if (import.meta.vitest) {
         },
       ]);
       expect(actionElements.has(target)).toBe(false);
+    });
+
+    it("does nothing if visitor returns falsy", () => {
+      const target = document.createElement("div");
+      target.setAttribute("data-foo", "bar"); // some attribute with no visitor
+
+      // Pass a mutation record for it
+      on_mutate([
+        {
+          attributeName: "data-foo",
+          target,
+          removedNodes: [] as unknown as NodeList,
+          addedNodes: [] as unknown as NodeList,
+          oldValue: null,
+          attributeNamespace: null,
+          nextSibling: null,
+          previousSibling: null,
+          type: "attributes",
+        },
+      ]);
+
+      // Nothing happens — no errors, nothing added/removed
+      expect(target.hasAttribute("data-foo")).toBe(true); // unchanged
+    });
+
+    it("does nothing if attribute already exists (oldValue != null)", () => {
+      const target = document.createElement("div");
+      target.setAttribute("on", "foo"); // attribute exists
+      expect(target.hasAttribute("on")).toBe(true);
+
+      // mutation: attribute present, oldValue != null
+      on_mutate([
+        {
+          attributeName: "on",
+          target,
+          removedNodes: [] as unknown as NodeList,
+          addedNodes: [] as unknown as NodeList,
+          oldValue: "foo", // not null → else branch
+          attributeNamespace: null,
+          nextSibling: null,
+          previousSibling: null,
+          type: "attributes",
+        },
+      ]);
+
+      // nothing should have changed
+      expect(target.hasAttribute("on")).toBe(true);
+    });
+
+    it("does nothing if attribute missing and oldValue is null", () => {
+      const target = document.createElement("div");
+      // no attribute set
+      expect(target.hasAttribute("on")).toBe(false);
+
+      // mutation record simulates attribute missing, oldValue null
+      on_mutate([
+        {
+          attributeName: "on",
+          target,
+          removedNodes: [] as unknown as NodeList,
+          addedNodes: [] as unknown as NodeList,
+          oldValue: null, // attribute did not exist before
+          attributeNamespace: null,
+          nextSibling: null,
+          previousSibling: null,
+          type: "attributes",
+        },
+      ]);
+
+      // nothing happens, just cover the else branch
+      expect(target.hasAttribute("on")).toBe(false);
     });
   });
 }

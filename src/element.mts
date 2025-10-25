@@ -284,7 +284,13 @@ if (import.meta.vitest) {
       const el = document.createElement("input");
       el.value = "foo";
 
-      let vis = visitor("on: navigate");
+      let vis = visitor("on:foo");
+      events.push("on:foo");
+      vis?.added_(el, "on:foo");
+      vis?.removed_(el, "on:foo");
+      expect(addEventListener).not.toBeCalled();
+
+      vis = visitor("on: navigate");
       expect(navigateElements.has(el)).toBe(false);
       expect(events.includes("on:navigate")).toBe(false);
       vis?.added_(el, "on:navigate");
@@ -311,6 +317,17 @@ if (import.meta.vitest) {
       expect(unobserveConceal).not.toBeCalled();
       vis?.removed_(el, "on:conceal");
       expect(unobserveConceal).toBeCalledWith(el);
+
+      vis = visitor("if:foo");
+      expect(stateElements.has(el)).toBe(false);
+      expect(observeIntersects).not.toBeCalled();
+      vis?.added_(el, "if:foo");
+      expect(stateElements.has(el)).toBe(true);
+      expect(observeIntersects).not.toBeCalled();
+      expect(unobserveIntersects).not.toBeCalled();
+      vis?.removed_(el, "if:foo");
+      expect(stateElements.has(el)).toBe(false);
+      expect(unobserveIntersects).not.toBeCalled();
 
       vis = visitor("if:intersects");
       expect(stateElements.has(el)).toBe(false);

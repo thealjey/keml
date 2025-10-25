@@ -156,8 +156,8 @@ if (import.meta.vitest) {
 
     it("disable_state", () => {
       container.innerHTML =
-        '<div state="" value="bar" x-value="foo" foo="bar" d-foo=""></div>' +
-        '<div state="" value="bar" x-value="foo" foo="bar" d-foo=""></div>' +
+        '<div state="" value="bar" x-value="foo" foo="bar" d-foo="" d-bar=""></div>' +
+        '<div state="" value="bar" x-value="foo" foo="bar" d-foo="" d-bar=""></div>' +
         '<div value="foo" x-value="bar" x-foo="bar"></div>';
       const [left, right, state] = container.childNodes as unknown as [
         Element,

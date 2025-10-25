@@ -210,6 +210,17 @@ if (import.meta.vitest) {
       expect(container1.childNodes[1]).toMatchHTML(span);
     });
 
+    it("replace_with not matching key - same length", () => {
+      container1.innerHTML = '<div value="foo"></div>';
+      container2.innerHTML = '<div key="key1" name="foo"></div>';
+      const [left] = container1.childNodes as unknown as [Element];
+      const [right] = container2.childNodes as unknown as [Element];
+      expect(left).not.toMatchHTML(right);
+      replace_with(left, [right]);
+      expect(left).toMatchHTML(right);
+      expect(container1.childNodes.length).toBe(1);
+    });
+
     it("replace_with matching key", () => {
       container1.innerHTML =
         "<textarea></textarea>" + '<div key="key1" value="foo"></div>';
