@@ -40,10 +40,7 @@ All events bubble up to the root of the DOM tree.
   these actions
 
 ```html
-<button
-  on:mouseenter="doSomething"
-  on:click="loadData updateCounter"
->
+<button on:click="loadData updateCounter" on:mouseenter="doSomething">
   click me
 </button>
 ```
@@ -54,10 +51,7 @@ All events bubble up to the root of the DOM tree.
   `hotkeysAreCool` action
 
 ```html
-<input
-  on:keyup="hotkeysAreCool"
-  event:keyup="code=Escape, altKey"
->
+<input event:keyup="code=Escape, altKey" on:keyup="hotkeysAreCool">
 ```
 
 ## Bubbling Example
@@ -85,20 +79,8 @@ All events bubble up to the root of the DOM tree.
 Example of a potential pitfall:
 
 ```html
-<button
-  on:click="loadData"
-  on="loadData"
-  get="/data.html"
->
-  click me
-</button>
-<button
-  on:click="loadData"
-  on="loadData"
-  get="/data.html"
->
-  click me
-</button>
+<button get="/data.html" on="loadData" on:click="loadData">click me</button>
+<button get="/data.html" on="loadData" on:click="loadData">click me</button>
 ```
 
 In the example above, we can imagine that it is the same button component,

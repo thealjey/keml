@@ -1,6 +1,12 @@
 import { commit } from "./commit.mts";
 import { parse_actions } from "./parse_actions.mts";
-import { actionElements, resetElements, resetQueue } from "./store.mts";
+import {
+  actionElements,
+  resetElements,
+  resetQueue,
+  scrollElements,
+  scrollQueue,
+} from "./store.mts";
 
 /**
  * Generic event listener that processes declarative event actions on elements.
@@ -65,6 +71,9 @@ export const on_event: EventListener = event => {
 
       if (actions.length) {
         if ((attr = el.getAttributeNode(`event:${name}`))) {
+          if (el.hasAttribute("log")) {
+            console.log(event);
+          }
           const pairs = attr.value.split(",");
           const len = pairs.length;
 
@@ -108,6 +117,12 @@ export const on_event: EventListener = event => {
             resetQueue.push(el);
           }
         }
+
+        for (el of scrollElements) {
+          if (actions.includes(el.getAttribute("scroll")!)) {
+            scrollQueue.push(el);
+          }
+        }
       }
     }
   }
@@ -137,29 +152,34 @@ if (import.meta.vitest) {
         altKey: false,
         charCode: 1,
       } as unknown as Event);
-      expect(preventDefault).not.toBeCalled();
+      expect(preventDefault).not.toHaveBeenCalled();
     });
 
     it("stop on charCode mismatch", () => {
+      spyOn(console, "log").mockImplementation(() => {});
       const preventDefault = fn();
       const target = document.createElement("div");
       const div = document.createElement("div");
-      div.setAttribute("on:click", "handleClick");
-      div.setAttribute("event:click", "charCode = 2, altKey");
-      div.append(target);
-      on_event({
+      const event = {
         target,
         type: "click",
         preventDefault,
         altKey: false,
         charCode: 1,
-      } as unknown as Event);
-      expect(preventDefault).not.toBeCalled();
+      } as unknown as Event;
+      div.setAttribute("on:click", "handleClick");
+      div.setAttribute("event:click", "charCode = 2, altKey");
+      div.setAttribute("log", "");
+      div.append(target);
+      on_event(event);
+      expect(preventDefault).not.toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalledWith(event);
+      restoreAllMocks();
     });
 
     it("other", () => {
       spyOn(XMLHttpRequest.prototype, "setRequestHeader").mockImplementation(
-        () => {}
+        () => {},
       );
       spyOn(XMLHttpRequest.prototype, "open").mockImplementation(() => {});
       spyOn(XMLHttpRequest.prototype, "send").mockImplementation(() => {});
@@ -181,7 +201,8 @@ if (import.meta.vitest) {
       i1.setAttribute("throttle", "1000");
       i2.setAttribute("debounce", "2000");
       div1.setAttribute("reset", "resetAction");
-      target.setAttribute("on:click", "handleClick resetAction");
+      div1.setAttribute("scroll", "scrollAction");
+      target.setAttribute("on:click", "handleClick resetAction scrollAction");
       target.setAttribute("event:click", "charCode = 1, altKey");
       actionElements.add(i1);
       actionElements.add(i2);
@@ -189,6 +210,8 @@ if (import.meta.vitest) {
       actionElements.add(i4);
       resetElements.add(div1);
       resetElements.add(div2);
+      scrollElements.add(div1);
+      scrollElements.add(div2);
       on_event({
         target,
         type: "click",
@@ -202,7 +225,9 @@ if (import.meta.vitest) {
       actionElements.delete(i4);
       resetElements.delete(div1);
       resetElements.delete(div2);
-      expect(preventDefault).toBeCalled();
+      scrollElements.delete(div1);
+      scrollElements.delete(div2);
+      expect(preventDefault).toHaveBeenCalled();
       expect(push).toHaveBeenCalledWith(div1);
       restoreAllMocks();
     });
@@ -216,7 +241,7 @@ if (import.meta.vitest) {
         preventDefault,
       } as unknown as Event);
 
-      expect(preventDefault).not.toBeCalled();
+      expect(preventDefault).not.toHaveBeenCalled();
     });
 
     it("does nothing if no on:<event.type> attribute is found", () => {
@@ -234,7 +259,7 @@ if (import.meta.vitest) {
       } as unknown as Event);
 
       // nothing should happen
-      expect(preventDefault).not.toBeCalled();
+      expect(preventDefault).not.toHaveBeenCalled();
     });
 
     it("does nothing when parse_actions returns an empty array", () => {
@@ -250,12 +275,12 @@ if (import.meta.vitest) {
       } as unknown as Event);
 
       // nothing should happen
-      expect(preventDefault).not.toBeCalled();
+      expect(preventDefault).not.toHaveBeenCalled();
     });
 
     it("skips event property checks if event:<event.type> attribute is missing", () => {
       spyOn(XMLHttpRequest.prototype, "setRequestHeader").mockImplementation(
-        () => {}
+        () => {},
       );
       spyOn(XMLHttpRequest.prototype, "open").mockImplementation(() => {});
       spyOn(XMLHttpRequest.prototype, "send").mockImplementation(() => {});
@@ -276,7 +301,7 @@ if (import.meta.vitest) {
         preventDefault,
       } as unknown as Event);
 
-      expect(preventDefault).toBeCalled();
+      expect(preventDefault).toHaveBeenCalled();
 
       actionElements.delete(actionEl);
       restoreAllMocks();

@@ -47,8 +47,8 @@ if (import.meta.vitest) {
       on_navigate();
       navigateElements.delete(el1);
       navigateElements.delete(el2);
-      expect(dispatchEvent).toBeCalledTimes(2);
-      expect(dispatchEvent).toBeCalledWith(navigateEvent);
+      expect(dispatchEvent).toHaveBeenCalledTimes(2);
+      expect(dispatchEvent).toHaveBeenCalledWith(navigateEvent);
     });
   });
 }

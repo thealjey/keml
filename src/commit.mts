@@ -1,5 +1,6 @@
 import { on_navigate } from "./on_navigate.mts";
 import { queue_render, queue_state } from "./render.mts";
+import { resolve_url } from "./resolve_url.mts";
 import { onceQueue } from "./store.mts";
 
 const internalForm = document.createElement("form");
@@ -103,60 +104,9 @@ export const commit = (el: Element) => {
       onceQueue.push(el);
     }
 
-    let attr, i, name;
-    let endpoint = "";
-    let method = "GET";
-    if ((attr = el.getAttributeNode("get"))) {
-      endpoint = attr.value;
-    } else if ((attr = el.getAttributeNode("post"))) {
-      endpoint = attr.value;
-      method = "POST";
-    } else if ((attr = el.getAttributeNode("put"))) {
-      endpoint = attr.value;
-      method = "PUT";
-    } else if ((attr = el.getAttributeNode("delete"))) {
-      endpoint = attr.value;
-      method = "DELETE";
-    } else if ((attr = el.getAttributeNode("href"))) {
-      endpoint = attr.value;
-    } else if ((attr = el.getAttributeNode("action"))) {
-      endpoint = attr.value;
-    } else if ((attr = el.getAttributeNode("src"))) {
-      endpoint = attr.value;
-    }
-    if ((attr = el.getAttributeNode("method"))) {
-      method = attr.value.toUpperCase();
-    }
+    let attr, name, data;
+    const [url, method, withCredentials] = resolve_url(el);
 
-    const url = new URL(endpoint, el.baseURI);
-    const pathname = url.pathname;
-    let end, code, ext;
-    let len = (i = pathname.length);
-    while (i-- && pathname.charCodeAt(i) === 47) {}
-    if (i !== -1) {
-      end = i - len + 1;
-      while (i--) {
-        code = pathname.charCodeAt(i);
-        if (code === 47) {
-          break;
-        }
-        if (code === 46) {
-          ext = true;
-          break;
-        }
-      }
-      if (ext) {
-        if (end < 0) {
-          url.pathname = pathname.slice(0, end);
-        }
-      } else if (end === 0) {
-        url.pathname = pathname + "/";
-      } else if (end < -1) {
-        url.pathname = pathname.slice(0, end + 1);
-      }
-    }
-
-    let data;
     if (el instanceof HTMLFormElement) {
       data = new FormData(el);
     } else if (
@@ -192,19 +142,20 @@ export const commit = (el: Element) => {
     } else {
       const xhr = new XMLHttpRequest();
       const attrs = el.attributes;
+      const len = attrs.length;
+      let i = 0;
 
-      if (method !== "POST") {
+      if (method === "GET") {
         apply_data_to_url(data, url);
         data = undefined;
       }
       xhr.responseType = "document";
-      xhr.withCredentials = el.hasAttribute("credentials");
+      xhr.withCredentials = withCredentials;
       xhr.ownerElement_ = el;
-      xhr.onloadend = queue_render;
+      xhr.onloadend = queue_render as any; // because, shut up typescript
       xhr.open(method, url);
       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-      i = 0;
-      len = attrs.length;
+
       for (; i < len; ++i) {
         attr = attrs[i]!;
         name = attr.name;
@@ -233,44 +184,69 @@ if (import.meta.vitest) {
   describe("commit", () => {
     afterEach(restoreAllMocks);
 
-    it("submit custom", () => {
+    it("apply_data_to_url", () => {
+      const formData = new FormData();
+      formData.append("search", "test");
+      formData.append("page", "1");
+      formData.append("file", new File([], "example.txt")); // Ignored
+
+      const url = new URL("https://example.com");
+      apply_data_to_url(formData, url);
+
+      expect(url.toString()).toBe("https://example.com/?search=test&page=1");
+    });
+
+    it("action", () => {
+      const replace = spyOn(location, "replace").mockImplementation(() => {});
+      const form = document.createElement("form");
+      const input = document.createElement("input");
+      input.setAttribute("name", "foo");
+      input.value = "bar5";
+      form.append(input);
+      form.setAttribute("action", "/foobar");
+      form.setAttribute("redirect", "replace");
+      commit(form);
+      const url = replace.mock.calls[0]![0] as URL;
+      expect(url.pathname).toBe("/foobar/");
+      expect(url.search).toBe("?foo=bar5");
+    });
+
+    it("submit get", () => {
       const setRequestHeader = spyOn(
         XMLHttpRequest.prototype,
-        "setRequestHeader"
+        "setRequestHeader",
       ).mockImplementation(() => {});
       const open = spyOn(XMLHttpRequest.prototype, "open").mockImplementation(
-        () => {}
+        () => {},
       );
       const send = spyOn(XMLHttpRequest.prototype, "send").mockImplementation(
-        () => {}
+        () => {},
       );
       const input = document.createElement("input");
       input.setAttribute("name", "foo");
       input.setAttribute("once", "");
       input.setAttribute("get", "/foobar");
       input.setAttribute("h-test", "header");
-      input.setAttribute("method", "lol");
       input.value = "bar1";
       commit(input);
       expect(onceQueue[onceQueue.length - 1]).toBe(input);
-      expect(setRequestHeader).toBeCalledWith("test", "header");
-      const [method, url] = open.mock.calls[0] as unknown as [string, URL];
-      expect(method).toBe("LOL");
+      expect(setRequestHeader).toHaveBeenCalledWith("test", "header");
+      const [, url] = open.mock.calls[0] as unknown as [string, URL];
       expect(url.pathname).toBe("/foobar/");
       expect(url.search).toBe("?foo=bar1");
-      expect(send).toBeCalledWith(undefined);
+      expect(send).toHaveBeenCalledWith(undefined);
     });
 
     it("submit post", () => {
       const setRequestHeader = spyOn(
         XMLHttpRequest.prototype,
-        "setRequestHeader"
+        "setRequestHeader",
       ).mockImplementation(() => {});
       const open = spyOn(XMLHttpRequest.prototype, "open").mockImplementation(
-        () => {}
+        () => {},
       );
       const send = spyOn(XMLHttpRequest.prototype, "send").mockImplementation(
-        () => {}
+        () => {},
       );
       const input = document.createElement("input");
       input.setAttribute("name", "foo");
@@ -281,17 +257,17 @@ if (import.meta.vitest) {
       input.value = "bar1";
       commit(input);
       expect(onceQueue[onceQueue.length - 1]).toBe(input);
-      expect(setRequestHeader).toBeCalledWith("test", "header");
+      expect(setRequestHeader).toHaveBeenCalledWith("test", "header");
       const [method, url] = open.mock.calls[0] as unknown as [string, URL];
       expect(method).toBe("POST");
       expect(url.pathname).toBe("/foobar/");
       expect(url.search).toBe("");
-      expect(send).toBeCalledWith(expect.any(FormData));
+      expect(send).toHaveBeenCalledWith(expect.any(FormData));
     });
 
     it("post", () => {
       const pushState = spyOn(history, "pushState").mockImplementation(
-        () => {}
+        () => {},
       );
       const select = document.createElement("select");
       const option = document.createElement("option");
@@ -309,7 +285,7 @@ if (import.meta.vitest) {
 
     it("put", () => {
       const replaceState = spyOn(history, "replaceState").mockImplementation(
-        () => {}
+        () => {},
       );
       const textarea = document.createElement("textarea");
       textarea.setAttribute("name", "foo");
@@ -324,7 +300,7 @@ if (import.meta.vitest) {
 
     it("multiple trailing slashes", () => {
       const replaceState = spyOn(history, "replaceState").mockImplementation(
-        () => {}
+        () => {},
       );
       const textarea = document.createElement("textarea");
       textarea.setAttribute("name", "foo");
@@ -348,21 +324,6 @@ if (import.meta.vitest) {
       const url = assign.mock.calls[0]![0] as URL;
       expect(url.pathname).toBe("/foobar.txt");
       expect(url.search).toBe("?foo=bar4");
-    });
-
-    it("action", () => {
-      const replace = spyOn(location, "replace").mockImplementation(() => {});
-      const form = document.createElement("form");
-      const input = document.createElement("input");
-      input.setAttribute("name", "foo");
-      input.value = "bar5";
-      form.append(input);
-      form.setAttribute("action", "/foobar");
-      form.setAttribute("redirect", "replace");
-      commit(form);
-      const url = replace.mock.calls[0]![0] as URL;
-      expect(url.pathname).toBe("/foobar/");
-      expect(url.search).toBe("?foo=bar5");
     });
 
     it("href", () => {
@@ -413,7 +374,7 @@ if (import.meta.vitest) {
       data.set(
         "file",
         new Blob(["content"], { type: "text/plain" }),
-        "test.txt"
+        "test.txt",
       );
       apply_data_to_url(data, url);
       expect(url.search).toBe("");
@@ -421,10 +382,10 @@ if (import.meta.vitest) {
 
     it("does nothing when checkValidity returns false", () => {
       const open = spyOn(XMLHttpRequest.prototype, "open").mockImplementation(
-        () => {}
+        () => {},
       );
       const send = spyOn(XMLHttpRequest.prototype, "send").mockImplementation(
-        () => {}
+        () => {},
       );
 
       const input = document.createElement("input");

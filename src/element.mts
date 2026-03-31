@@ -5,12 +5,15 @@ import {
 } from "./intersection.mts";
 import { on_event } from "./on_event.mts";
 import { queue_focus } from "./render.mts";
+import { sse } from "./sse.mts";
 import {
   actionElements,
   conditionElements,
   navigateElements,
   renderElements,
   resetElements,
+  scrollElements,
+  sseElements,
   stateElements,
 } from "./store.mts";
 
@@ -40,6 +43,7 @@ interface Visitor {
 interface AttrMap {
   on_colon_: Visitor;
   if_colon_: Visitor;
+  sse: Visitor;
   [K: string]: Visitor;
 }
 
@@ -61,7 +65,7 @@ const events: string[] = [];
  *   calling `queue_focus`. The element will be focused after all DOM mutations
  *   and state updates are applied, ensuring proper timing and cursor placement.
  */
-const attr: AttrMap = {
+export const attr: AttrMap = {
   on_colon_: {
     added_(el, name) {
       if (name === "on:navigate") {
@@ -101,6 +105,28 @@ const attr: AttrMap = {
       if (name === "if:intersects") {
         intersectsObserver.unobserve(el);
       }
+    },
+  },
+
+  sse: {
+    added_(el) {
+      sseElements.add(el);
+      sse();
+    },
+
+    removed_(el) {
+      sseElements.delete(el);
+      sse();
+    },
+  },
+
+  scroll: {
+    added_(el) {
+      scrollElements.add(el);
+    },
+
+    removed_(el) {
+      scrollElements.delete(el);
     },
   },
 
@@ -179,9 +205,13 @@ export const clean = (el: Element) => {
   renderElements.delete(el);
   resetElements.delete(el);
   stateElements.delete(el);
+  scrollElements.delete(el);
   concealObserver.unobserve(el);
   intersectsObserver.unobserve(el);
   revealObserver.unobserve(el);
+  if (sseElements.has(el)) {
+    attr.sse.removed_(el, "sse");
+  }
 };
 
 /**
@@ -196,11 +226,9 @@ export const clean = (el: Element) => {
  * @returns The corresponding `Visitor` object if found; otherwise, `undefined`.
  */
 export const visitor = (name: string) =>
-  name.startsWith("on:")
-    ? attr.on_colon_
-    : name.startsWith("if:")
-    ? attr.if_colon_
-    : attr[name];
+  name.startsWith("on:") ? attr.on_colon_
+  : name.startsWith("if:") ? attr.if_colon_
+  : attr[name];
 
 /* v8 ignore start */
 if (import.meta.vitest) {
@@ -217,14 +245,14 @@ if (import.meta.vitest) {
 
     it("clean", () => {
       const unobserve1 = spyOn(concealObserver, "unobserve").mockImplementation(
-        () => {}
+        () => {},
       );
       const unobserve2 = spyOn(
         intersectsObserver,
-        "unobserve"
+        "unobserve",
       ).mockImplementation(() => {});
       const unobserve3 = spyOn(revealObserver, "unobserve").mockImplementation(
-        () => {}
+        () => {},
       );
       const el = document.createElement("div");
       actionElements.add(el);
@@ -233,6 +261,8 @@ if (import.meta.vitest) {
       renderElements.add(el);
       resetElements.add(el);
       stateElements.add(el);
+      sseElements.add(el);
+      scrollElements.add(el);
       clean(el);
       expect(actionElements.has(el)).toBe(false);
       expect(conditionElements.has(el)).toBe(false);
@@ -240,46 +270,48 @@ if (import.meta.vitest) {
       expect(renderElements.has(el)).toBe(false);
       expect(resetElements.has(el)).toBe(false);
       expect(stateElements.has(el)).toBe(false);
-      expect(unobserve1).toBeCalledWith(el);
-      expect(unobserve2).toBeCalledWith(el);
-      expect(unobserve3).toBeCalledWith(el);
+      expect(sseElements.has(el)).toBe(false);
+      expect(scrollElements.has(el)).toBe(false);
+      expect(unobserve1).toHaveBeenCalledWith(el);
+      expect(unobserve2).toHaveBeenCalledWith(el);
+      expect(unobserve3).toHaveBeenCalledWith(el);
     });
 
     it("visitor", () => {
       const observeConceal = spyOn(
         concealObserver,
-        "observe"
+        "observe",
       ).mockImplementation(() => {});
       const observeIntersects = spyOn(
         intersectsObserver,
-        "observe"
+        "observe",
       ).mockImplementation(() => {});
       const observeReveal = spyOn(revealObserver, "observe").mockImplementation(
-        () => {}
+        () => {},
       );
       const unobserveConceal = spyOn(
         concealObserver,
-        "unobserve"
+        "unobserve",
       ).mockImplementation(() => {});
       const unobserveIntersects = spyOn(
         intersectsObserver,
-        "unobserve"
+        "unobserve",
       ).mockImplementation(() => {});
       const unobserveReveal = spyOn(
         revealObserver,
-        "unobserve"
+        "unobserve",
       ).mockImplementation(() => {});
       const addEventListener = spyOn(
         document,
-        "addEventListener"
+        "addEventListener",
       ).mockImplementation(() => {});
       const focus = spyOn(
         HTMLInputElement.prototype,
-        "focus"
+        "focus",
       ).mockImplementation(() => {});
       const setSelectionRange = spyOn(
         HTMLInputElement.prototype,
-        "setSelectionRange"
+        "setSelectionRange",
       ).mockImplementation(() => {});
       const el = document.createElement("input");
       el.value = "foo";
@@ -288,7 +320,7 @@ if (import.meta.vitest) {
       events.push("on:foo");
       vis?.added_(el, "on:foo");
       vis?.removed_(el, "on:foo");
-      expect(addEventListener).not.toBeCalled();
+      expect(addEventListener).not.toHaveBeenCalled();
 
       vis = visitor("on: navigate");
       expect(navigateElements.has(el)).toBe(false);
@@ -296,49 +328,49 @@ if (import.meta.vitest) {
       vis?.added_(el, "on:navigate");
       expect(navigateElements.has(el)).toBe(true);
       expect(events.pop()).toBe("on:navigate");
-      expect(addEventListener).toBeCalledWith("navigate", on_event, true);
+      expect(addEventListener).toHaveBeenCalledWith("navigate", on_event, true);
       vis?.removed_(el, "on:navigate");
       expect(navigateElements.has(el)).toBe(false);
 
       vis = visitor("on:reveal");
-      expect(observeReveal).not.toBeCalled();
+      expect(observeReveal).not.toHaveBeenCalled();
       vis?.added_(el, "on:reveal");
-      expect(observeReveal).toBeCalledWith(el);
+      expect(observeReveal).toHaveBeenCalledWith(el);
       expect(events.pop()).toBe("on:reveal");
-      expect(unobserveReveal).not.toBeCalled();
+      expect(unobserveReveal).not.toHaveBeenCalled();
       vis?.removed_(el, "on:reveal");
-      expect(unobserveReveal).toBeCalledWith(el);
+      expect(unobserveReveal).toHaveBeenCalledWith(el);
 
       vis = visitor("on:conceal");
-      expect(observeConceal).not.toBeCalled();
+      expect(observeConceal).not.toHaveBeenCalled();
       vis?.added_(el, "on:conceal");
-      expect(observeConceal).toBeCalledWith(el);
+      expect(observeConceal).toHaveBeenCalledWith(el);
       expect(events.pop()).toBe("on:conceal");
-      expect(unobserveConceal).not.toBeCalled();
+      expect(unobserveConceal).not.toHaveBeenCalled();
       vis?.removed_(el, "on:conceal");
-      expect(unobserveConceal).toBeCalledWith(el);
+      expect(unobserveConceal).toHaveBeenCalledWith(el);
 
       vis = visitor("if:foo");
       expect(stateElements.has(el)).toBe(false);
-      expect(observeIntersects).not.toBeCalled();
+      expect(observeIntersects).not.toHaveBeenCalled();
       vis?.added_(el, "if:foo");
       expect(stateElements.has(el)).toBe(true);
-      expect(observeIntersects).not.toBeCalled();
-      expect(unobserveIntersects).not.toBeCalled();
+      expect(observeIntersects).not.toHaveBeenCalled();
+      expect(unobserveIntersects).not.toHaveBeenCalled();
       vis?.removed_(el, "if:foo");
       expect(stateElements.has(el)).toBe(false);
-      expect(unobserveIntersects).not.toBeCalled();
+      expect(unobserveIntersects).not.toHaveBeenCalled();
 
       vis = visitor("if:intersects");
       expect(stateElements.has(el)).toBe(false);
-      expect(observeIntersects).not.toBeCalled();
+      expect(observeIntersects).not.toHaveBeenCalled();
       vis?.added_(el, "if:intersects");
       expect(stateElements.has(el)).toBe(true);
-      expect(observeIntersects).toBeCalledWith(el);
-      expect(unobserveIntersects).not.toBeCalled();
+      expect(observeIntersects).toHaveBeenCalledWith(el);
+      expect(unobserveIntersects).not.toHaveBeenCalled();
       vis?.removed_(el, "if:intersects");
       expect(stateElements.has(el)).toBe(false);
-      expect(unobserveIntersects).toBeCalledWith(el);
+      expect(unobserveIntersects).toHaveBeenCalledWith(el);
 
       vis = visitor("on");
       expect(actionElements.has(el)).toBe(false);
@@ -368,12 +400,23 @@ if (import.meta.vitest) {
       vis?.removed_(el, "render");
       expect(renderElements.has(el)).toBe(false);
 
+      vis = visitor("scroll");
+      expect(scrollElements.has(el)).toBe(false);
+      vis?.added_(el, "scroll");
+      expect(scrollElements.has(el)).toBe(true);
+      vis?.removed_(el, "scroll");
+      expect(scrollElements.has(el)).toBe(false);
+
       vis = visitor("autofocus");
-      expect(focus).not.toBeCalled();
-      expect(setSelectionRange).not.toBeCalled();
+      expect(focus).not.toHaveBeenCalled();
+      expect(setSelectionRange).not.toHaveBeenCalled();
       vis?.removed_(el, "autofocus");
-      expect(focus).not.toBeCalled();
-      expect(setSelectionRange).not.toBeCalled();
+      expect(focus).not.toHaveBeenCalled();
+      expect(setSelectionRange).not.toHaveBeenCalled();
+
+      expect(sseElements.has(el)).toBe(false);
+      attr.sse.added_(el, "");
+      expect(sseElements.has(el)).toBe(true);
     });
   });
 }

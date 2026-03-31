@@ -1,0 +1,59 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>SSE Demo</title>
+    <link href="data:" rel="icon">
+    <link
+      href="https://unpkg.com/tachyons@4.12.0/css/tachyons.css"
+      rel="stylesheet"
+    >
+    <link href="{url('css')}" rel="stylesheet">
+    <script src="{url('js')}"></script>
+  </head>
+  <body class="bg-light-gray dark-gray sans-serif">
+    <main class="center min-vh-100 mw7 pa4 w-100">
+      <header class="mb4">
+        <h1 class="f2 fw6 mb1">Live Updates Demo</h1>
+        <p class="f6 gray lh-copy mt0">
+          Send a message and watch it appear below. The server can also push updates at any time.
+        </p>
+      </header>
+      <form
+        action="/echo"
+        autocomplete="off"
+        class="flex items-center mb4"
+        method="post"
+        on="send"
+        on:submit="clear send"
+        reset="clear"
+      >
+        <input
+          class="b--black-20 ba br2 flex-auto input-reset pa2"
+          name="message"
+          placeholder="Type a message and press Enter..."
+          type="text"
+        >
+        <button
+          class="bg-blue bn br2 dim ml2 pointer pv2 px3 white"
+          type="submit"
+        >Send</button>
+      </form>
+      <section>
+        <h2 class="f6 gray mb2 tracked ttu">Messages</h2>
+        <div
+          class="b--black-10 ba bg-white br2 empty i mxh5 overflow-auto pa3 shadow-1"
+          data-before="No messages yet. Send one to get started."
+          on:result="doScroll"
+          position="append"
+          render="response"
+          result="response"
+          scroll="doScroll"
+          src="/events.sse"
+          sse="echo"
+          top="end"
+        ></div>
+      </section>
+    </main>
+  </body>
+</html>

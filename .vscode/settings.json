@@ -3,18 +3,30 @@
     "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[markdown]": {
-    "editor.formatOnSave": false,
+    "editor.defaultFormatter": "jkillian.custom-local-formatters",
     "files.trimTrailingWhitespace": false
   },
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "black-formatter.args": ["--line-length=80"],
-  "cSpell.words": ["depcruise", "htmx", "keml", "Kuzmenko", "mkdocs"],
+  "cSpell.words": [
+    "depcruise",
+    "frontends",
+    "htmx",
+    "keml",
+    "Kuzmenko",
+    "mkdocs",
+    "Renderable"
+  ],
   "customLocalFormatters.formatters": [
     {
       "command": "python -X utf8 -m examples.format_html",
       "languages": ["html"]
+    },
+    {
+      "command": "python -X utf8 -m examples.format_html -l md",
+      "languages": ["markdown"]
     }
   ],
   "editor.codeActionsOnSave": {

@@ -4,6 +4,78 @@
 
 --------------------------------------------------------------------------------
 
+## v3.3
+
+KEML v3.3 introduces **server-driven events** using SSE (Server-Sent Events).
+
+This allows events to flow **from the server to the client** directly, without
+requiring a user interaction to trigger them. Everything else — rendering and
+reactive updates — works just like before.
+
+Also, in this release, is automatic scrolling support with the help of the new
+[scroll](action.md#attributes) attribute and logging support with the new
+[log](logging.md) attribute.
+
+### What is SSE?
+
+SSE is a standard web technology that lets the server
+**push messages to the browser** over a persistent HTTP connection. It’s simple,
+efficient, and perfect for real-time updates such as chat messages,
+notifications, or live dashboards.
+
+For more information, see
+[Server-Sent Events – on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events).
+
+!!! info "Info"
+    Just like XHR responses,
+    **SSE server data must always contain HTML strings**.
+
+### Event Flow Comparison
+
+**XHR example:**
+
+```html
+<button href="/hello" on="hello" on:click="hello" result="response">
+  click me
+</button>
+```
+
+Steps:
+
+1. User clicks the button
+1. The click triggers a `hello` event action
+1. The button subscribes to the `hello` event action
+1. Upon observing the action, the button sends a GET request to `"/hello"`
+1. When the server response is received, a `response` result action is triggered
+
+Flow: **click → request → response**
+
+--------------------------------------------------------------------------------
+
+**SSE example:**
+
+```html
+<button href="/hello" result="response" sse="hello">click me</button>
+```
+
+Steps:
+
+1. The button listens for `"hello"` events from the server
+1. The server decides when to trigger the event and sends a response directly
+   embedded into the event, with no interaction from the user necessary, which
+   triggers the `response` result action
+
+Flow: **~~click → request →~~ response**  
+The **click** and **request** steps are no longer needed; the response arrives
+automatically.
+
+This makes it trivial to move from **user-driven actions** to
+**server-driven updates**, without changing any of your rendering logic.
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+
 ## Official VS Code Extension
 
 I’m excited to announce the [**official KEML extension for VS Code**](https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode)!  
@@ -100,10 +172,7 @@ nested image does not "steal" the click events for itself:
 
 ```html
 <button on:click="handleClick">
-  <img
-    inert
-    src="bat-cat.jpg"
-  >
+  <img inert src="bat-cat.jpg">
 </button>
 ```
 
@@ -188,20 +257,17 @@ The only breaking change is the absence of "special" actions.
 So, this:
 
 ```html
-<a
-  on:click="pushState"
-  href="/something"
-></a>
+<a href="/something" on:click="pushState"></a>
 ```
 
 Has to turn into this (the same with `replaceState`):
 
 ```html
 <a
-  on:click="someUniqueName"
-  on="someUniqueName"
-  redirect="pushState"
   href="/something"
+  on="someUniqueName"
+  on:click="someUniqueName"
+  redirect="pushState"
 ></a>
 ```
 
@@ -216,10 +282,7 @@ And this:
 Has to turn into this:
 
 ```html
-<form
-  on:submit="doSubmit resetThisForm"
-  reset="resetThisForm"
-></form>
+<form on:submit="doSubmit resetThisForm" reset="resetThisForm"></form>
 ```
 
 It looks more verbose, but offers infinitely more flexibility.

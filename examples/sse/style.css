@@ -1,0 +1,6 @@
+.empty[data-before]:empty::before {
+  content: attr(data-before);
+}
+.mxh5 {
+  max-height: 16rem;
+}

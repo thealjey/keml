@@ -1,0 +1,9 @@
+<div
+  class="br2 flex justify-between mb2 pa2 shadow-1 {'bg-light-blue' if source == 'user' else 'bg-light-yellow'}"
+>
+  <span>
+    <yes condition="{source == 'server'}">🖥️</yes>
+    {text}
+  </span>
+  <span class="f7 gray">{ftime(time(), "%I:%M %p").lstrip("0")}</span>
+</div>

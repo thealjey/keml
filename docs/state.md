@@ -42,28 +42,13 @@ A state can be viewed as a boolean flag that is set to `false` by default.
 
 ```html
 <button
-  on:click="loadData"
-  on="loadData"
   get="/data"
   if:loading="isLoadingData"
->
-  click me
-</button>
-
-<div
-  if="isLoadingData"
-  x-style="display: none"
->
-  not loading
-</div>
-
-<div
-  if="isLoadingData"
-  style="display: none"
-  x-style
->
-  loading
-</div>
+  on="loadData"
+  on:click="loadData"
+>click me</button>
+<div if="isLoadingData" x-style="display: none">not loading</div>
+<div if="isLoadingData" style="display: none" x-style>loading</div>
 ```
 
 ## Error State Example
@@ -80,28 +65,13 @@ A state can be viewed as a boolean flag that is set to `false` by default.
 
 ```html
 <button
-  on:click="loadWrong"
-  on="loadWrong"
   get="/non-existent"
   if:error="isError"
->
-  click me
-</button>
-
-<div
-  if="isError"
-  x-style="display: none"
->
-  no error
-</div>
-
-<div
-  if="isError"
-  style="display: none"
-  x-style
->
-  error
-</div>
+  on="loadWrong"
+  on:click="loadWrong"
+>click me</button>
+<div if="isError" x-style="display: none">no error</div>
+<div if="isError" style="display: none" x-style>error</div>
 ```
 
 ## Invalid State Example
@@ -112,25 +82,9 @@ A state can be viewed as a boolean flag that is set to `false` by default.
   email
 
 ```html
-<input
-  if:invalid="invalidEmail"
-  type="email"
->
-
-<div
-  if="invalidEmail"
-  x-style="display: none"
->
-  valid
-</div>
-
-<div
-  if="invalidEmail"
-  style="display: none"
-  x-style
->
-  invalid
-</div>
+<input if:invalid="invalidEmail" type="email">
+<div if="invalidEmail" x-style="display: none">valid</div>
+<div if="invalidEmail" style="display: none" x-style>invalid</div>
 ```
 
 ## Value State Example
@@ -139,25 +93,9 @@ A state can be viewed as a boolean flag that is set to `false` by default.
 - the second div will be visible when the user enters something into the input
 
 ```html
-<input
-  if:value="isNotEmpty"
-  type="text"
->
-
-<div
-  if="isNotEmpty"
-  x-style="display: none"
->
-  empty
-</div>
-
-<div
-  if="isNotEmpty"
-  style="display: none"
-  x-style
->
-  not empty
-</div>
+<input if:value="isNotEmpty" type="text">
+<div if="isNotEmpty" x-style="display: none">empty</div>
+<div if="isNotEmpty" style="display: none" x-style>not empty</div>
 ```
 
 ## Intersects State Example
@@ -169,23 +107,9 @@ viewport
 
 ```html
 <p if:intersects="canSee"></p>
-
 <br>
 <br>
 <br>
-
-<div
-  if="canSee"
-  x-style="display: none"
->
-  out of viewport
-</div>
-
-<div
-  if="canSee"
-  style="display: none"
-  x-style
->
-  in the viewport
-</div>
+<div if="canSee" x-style="display: none">out of viewport</div>
+<div if="canSee" style="display: none" x-style>in the viewport</div>
 ```

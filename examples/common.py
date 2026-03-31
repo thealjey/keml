@@ -1,11 +1,12 @@
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from datetime import datetime, timedelta, timezone
-from email import message_from_string
+from email import message_from_bytes
+from enum import Enum
 from hashlib import sha256
 from hmac import new
 from html.parser import HTMLParser
 from http.cookies import SimpleCookie
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from inspect import stack
 from json import dumps, loads
 from markdown import markdown
@@ -14,12 +15,13 @@ from os import urandom
 from os.path import basename, dirname, getmtime, join, realpath
 from re import MULTILINE, split, sub
 from sys import exit
+from threading import Lock, Thread
+from time import sleep, time
 from traceback import format_exc
 from typing import Any, Callable, Iterable, Literal, TypeVar
 from unicodedata import normalize
 from urllib.parse import parse_qs, urlencode, urlparse, quote
 from xml.dom.minidom import Node
-from enum import Enum
 
 
 class Encode(Enum):
@@ -236,7 +238,7 @@ def strip_path(path: str):
     return stripped if len(stripped) else "/"
 
 
-class Server(HTTPServer):
+class Server(ThreadingHTTPServer):
 
     def start(self, fn: Callable[[], Any] | None = None):
         print(
@@ -396,7 +398,10 @@ class SimpleNode:
             if count == 1 and is_text:
                 prev = lines.pop()
                 line = f"{prev}{children[0]}"
-                if pretty and len(line) + (depth + 2) * 2 > 80:
+                if (
+                    pretty
+                    and len(line) + depth * 2 + len(self.tagName) + 3 > 80
+                ):
                     wrapped = True
                     lines.append(prev)
                     lines.append("  " + children[0].lstrip())
@@ -558,6 +563,8 @@ def parse_html(path: str, name: str) -> tuple[str, SimpleNode]:
 
 
 increment = 0
+clients: dict[str, list[BaseHandler]] = {}
+clients_lock = Lock()
 
 
 class BaseHandler(BaseHTTPRequestHandler):
@@ -608,16 +615,43 @@ class BaseHandler(BaseHTTPRequestHandler):
                         else (
                             "image/x-icon"
                             if self.parsed_path.endswith(".ico")
-                            else "text/html"
+                            else (
+                                "text/event-stream"
+                                if self.parsed_path.endswith(".sse")
+                                else "text/html"
+                            )
                         )
                     )
                 ),
             )
         )
+        if self.parsed_path.endswith(".sse"):
+            self.response_headers.append(("Cache-Control", "no-cache"))
+            self.response_headers.append(("Connection", "keep-alive"))
         return parent
 
     def set_user(self, user_id: int):
         self.user = None
+
+    def handle_sse(self):
+        with clients_lock:
+            clients.setdefault(self.parsed_path, []).append(self)
+        try:
+            self.wfile.write(b": connected\n\n")
+            self.wfile.flush()
+            while True:
+                self.wfile.write(b": ping\n\n")
+                self.wfile.flush()
+                sleep(15)
+        except (BrokenPipeError, ConnectionResetError, OSError) as e:
+            if e.winerror != 10038:
+                print("Unexpected SSE error:", format_exc())
+        except Exception:
+            print("Unexpected SSE error:", format_exc())
+        finally:
+            with clients_lock:
+                if self in clients.setdefault(self.parsed_path, []):
+                    clients[self.parsed_path].remove(self)
 
     def send_status(self, status: int = 200):
         self.send_response(status)
@@ -630,6 +664,16 @@ class BaseHandler(BaseHTTPRequestHandler):
         self.send_status(status)
         self.wfile.write(data)
 
+    def send_sse_string(self, path: str, event: str, data: str | None):
+        with clients_lock:
+            for client in clients.setdefault(path, [])[:]:
+                try:
+                    client.wfile.write(f"event: {event}\n".encode())
+                    client.wfile.write(f"data: {data}\n\n".encode())
+                    client.wfile.flush()
+                except Exception:
+                    clients[path].remove(client)
+
     def send_string(self, data: str, status: int = 200):
         self.send_bytes(data.encode(), status)
 
@@ -640,6 +684,9 @@ class BaseHandler(BaseHTTPRequestHandler):
 
     def send_tpl(self, name: str, status: int = 200, **kwargs: Any):
         self.send_string(self.tpl(name, **kwargs), status)
+
+    def send_sse_tpl(self, path: str, event: str, name: str, **kwargs: Any):
+        self.send_sse_string(path, event, self.tpl(name, **kwargs))
 
     def send_file(self, name: str):
         real = realpath(join(dirname(resolve_filename()), name))
@@ -670,6 +717,8 @@ class BaseHandler(BaseHTTPRequestHandler):
                 attr()
                 if not self.status_sent:
                     self.send_status(status)
+                if self.parsed_path.endswith(".sse"):
+                    Thread(target=self.handle_sse, daemon=True).start()
                 return True
             self.method_msg.append(f"{method}(missing)")
         return False
@@ -726,6 +775,7 @@ class BaseHandler(BaseHTTPRequestHandler):
                 "markdown": markdown,
                 "url": self.url,
                 "ftime": self.ftime,
+                "time": lambda: int(time()),
                 "user": self.user,
                 "active_route": self.active_route,
                 **dict(
@@ -743,8 +793,10 @@ class BaseHandler(BaseHTTPRequestHandler):
         if not clh:
             return
         content_length = int(clh)
-        data = self.rfile.read(content_length).decode(errors="ignore")
-        msg = message_from_string(f"Content-Type: {content_type}\n{data}")
+        data = self.rfile.read(content_length)
+        msg = message_from_bytes(
+            b"Content-Type: " + content_type.encode() + b"\n" + data
+        )
         for part in msg.walk():
             name = part.get_param("name", header="Content-Disposition")
             if isinstance(name, str):

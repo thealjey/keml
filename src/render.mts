@@ -6,12 +6,18 @@ import {
   onceQueue,
   renderElements,
   resetQueue,
+  scrollQueue,
   stateElements,
 } from "./store.mts";
 
+type Renderable = Pick<
+  XMLHttpRequest,
+  "responseXML" | "ownerElement_" | "status"
+>;
+
 const emptyArr: [] = [];
 const resultEvent = new Event("result");
-const renderQueue: XMLHttpRequest[] = [];
+const renderQueue: Renderable[] = [];
 let stateQueue = true;
 let focusEl: Element | undefined;
 
@@ -46,8 +52,8 @@ let focusEl: Element | undefined;
  *   renderResponse(req.responseText);
  * }
  */
-export const queue_render = (event: ProgressEvent) =>
-  renderQueue.push(event.target as XMLHttpRequest);
+export const queue_render = (event: { target: Renderable }) =>
+  renderQueue.push(event.target);
 
 /**
  * Flags that a state update has been requested by setting `stateQueue` to
@@ -112,6 +118,54 @@ export const queue_focus = (el: Element) => {
 };
 
 /**
+ * Resolves a scroll offset from an element attribute and applies it to the
+ * provided scroll options object.
+ *
+ * The attribute name is determined by `field` (`"top"` or `"left"`).
+ * If present, its value may be either:
+ * - A numeric value (interpreted as a pixel offset), or
+ * - A keyword: `"start"`, `"center"`, or `"end"`, representing the beginning,
+ *   middle, or end of the scrollable range.
+ *
+ * If the attribute is missing or empty, no changes are made.
+ *
+ * @param el - The element from which to read the scroll attribute.
+ * @param options - The scroll options object to mutate.
+ * @param field - The scroll axis to update (`"top"` or `"left"`).
+ */
+const set_scroll_values = (
+  el: Element,
+  options: ScrollToOptions,
+  field: "top" | "left",
+) => {
+  const value = el.getAttribute(field);
+
+  if (value) {
+    if (isNaN(+value)) {
+      const pos =
+        field === "top" ?
+          el.scrollHeight - el.clientHeight
+        : el.scrollWidth - el.clientWidth;
+
+      switch (value) {
+        case "start":
+          options[field] = 0;
+          break;
+
+        case "end":
+          options[field] = pos;
+          break;
+
+        case "center":
+          options[field] = (pos / 2) | 0;
+      }
+    } else {
+      options[field] = +value;
+    }
+  }
+};
+
+/**
  * The main render loop executed approximately 60 times per second using
  * `requestAnimationFrame`.
  *
@@ -149,7 +203,9 @@ export const render = () => {
     clone,
     position,
     rect,
-    batch;
+    batch,
+    options: ScrollToOptions,
+    behavior;
   while ((el = resetQueue.pop())) {
     el.reset?.();
   }
@@ -169,9 +225,8 @@ export const render = () => {
     }
     if (actions) {
       clone = false;
-      childNodes = responseXML
-        ? Array.from(responseXML.body.childNodes)
-        : emptyArr;
+      childNodes =
+        responseXML ? Array.from(responseXML.body.childNodes) : emptyArr;
       batch = [];
       for (renderEl of renderElements) {
         if (actions.includes(renderEl.getAttribute("render")!)) {
@@ -229,13 +284,13 @@ export const render = () => {
         actions.push.apply(actions, parse_actions(attr.value));
       }
       if (
-        (el instanceof HTMLInputElement
-          ? el.type === "checkbox"
-            ? el.checked
-            : el.value
-          : (el instanceof HTMLSelectElement ||
-              el instanceof HTMLTextAreaElement) &&
-            el.value) &&
+        (el instanceof HTMLInputElement ?
+          el.type === "checkbox" ?
+            el.checked
+          : el.value
+        : (el instanceof HTMLSelectElement ||
+            el instanceof HTMLTextAreaElement) &&
+          el.value) &&
         (attr = el.getAttributeNode("if:value"))
       ) {
         actions.push.apply(actions, parse_actions(attr.value));
@@ -266,6 +321,23 @@ export const render = () => {
       }
     }
   }
+  while ((el = scrollQueue.pop())) {
+    options = {};
+    behavior = el.getAttribute("behavior");
+    options.behavior =
+      behavior === "auto" || behavior === "instant" || behavior === "smooth" ?
+        behavior
+      : "auto";
+    set_scroll_values(el, options, "top");
+    set_scroll_values(el, options, "left");
+    if ("top" in options || "left" in options) {
+      if (el.hasAttribute("relative")) {
+        el.scrollBy(options);
+      } else {
+        el.scroll(options);
+      }
+    }
+  }
   if (focusEl) {
     try {
       len = (focusEl as HTMLInputElement).value.length;
@@ -292,7 +364,7 @@ if (import.meta.vitest) {
 
     it("queue_render", () => {
       const target = "fake xhr";
-      queue_render({ target } as unknown as ProgressEvent);
+      queue_render({ target } as any);
       expect(renderQueue[renderQueue.length - 1]).toBe(target);
       renderQueue.pop();
     });
@@ -321,8 +393,8 @@ if (import.meta.vitest) {
       const el2 = { removeAttribute } as unknown as Element;
       onceQueue.push(el1, el2);
       render();
-      expect(removeAttribute).toBeCalledTimes(2);
-      expect(removeAttribute).toBeCalledWith("on");
+      expect(removeAttribute).toHaveBeenCalledTimes(2);
+      expect(removeAttribute).toHaveBeenCalledWith("on");
       expect(onceQueue.length).toBe(0);
     });
 
@@ -345,7 +417,7 @@ if (import.meta.vitest) {
       const responseXML = { body: container };
       const dispatchEvent = spyOn(
         Element.prototype,
-        "dispatchEvent"
+        "dispatchEvent",
       ).mockImplementation(() => true);
       const xhr1 = {
         status: 400,
@@ -412,7 +484,7 @@ if (import.meta.vitest) {
       expect(el2.isError_).toBe(false);
       expect(el3.isError_).toBe(true);
       expect(el4.isError_).toBe(false);
-      expect(dispatchEvent).toBeCalledTimes(2);
+      expect(dispatchEvent).toHaveBeenCalledTimes(2);
       expect(dispatchEvent).toHaveBeenCalledWith(resultEvent);
       container.innerHTML =
         '<div position="replaceChildren" render="error-action"></div>' +
@@ -477,28 +549,115 @@ if (import.meta.vitest) {
       conditionElements.delete(ce2);
     });
 
+    it("scroll", () => {
+      const el1 = document.createElement("div");
+      const el2 = document.createElement("div");
+      const el3 = document.createElement("div");
+      const el4 = document.createElement("div");
+      const el5 = document.createElement("div");
+      const el6 = document.createElement("div");
+      el1.setAttribute("behavior", "auto");
+      el1.setAttribute("top", "start");
+      el1.setAttribute("left", "start");
+      el1.setAttribute("relative", "");
+      el2.setAttribute("behavior", "instant");
+      el2.setAttribute("top", "end");
+      el2.setAttribute("left", "end");
+      el3.setAttribute("behavior", "smooth");
+      el3.setAttribute("top", "center");
+      el3.setAttribute("left", "center");
+      el4.setAttribute("behavior", "invalid");
+      el4.setAttribute("top", "42");
+      el4.setAttribute("left", "invalid");
+      el5.setAttribute("top", "invalid");
+      el5.setAttribute("left", "41");
+      Object.defineProperty(el1, "scrollHeight", { value: 240 });
+      Object.defineProperty(el1, "clientHeight", { value: 230 });
+      Object.defineProperty(el1, "scrollWidth", { value: 220 });
+      Object.defineProperty(el1, "clientWidth", { value: 210 });
+      Object.defineProperty(el2, "scrollHeight", { value: 200 });
+      Object.defineProperty(el2, "clientHeight", { value: 190 });
+      Object.defineProperty(el2, "scrollWidth", { value: 180 });
+      Object.defineProperty(el2, "clientWidth", { value: 170 });
+      Object.defineProperty(el3, "scrollHeight", { value: 160 });
+      Object.defineProperty(el3, "clientHeight", { value: 150 });
+      Object.defineProperty(el3, "scrollWidth", { value: 140 });
+      Object.defineProperty(el3, "clientWidth", { value: 130 });
+      Object.defineProperty(el4, "scrollHeight", { value: 120 });
+      Object.defineProperty(el4, "clientHeight", { value: 110 });
+      Object.defineProperty(el4, "scrollWidth", { value: 100 });
+      Object.defineProperty(el4, "clientWidth", { value: 90 });
+      Object.defineProperty(el5, "scrollHeight", { value: 80 });
+      Object.defineProperty(el5, "clientHeight", { value: 70 });
+      Object.defineProperty(el5, "scrollWidth", { value: 60 });
+      Object.defineProperty(el5, "clientWidth", { value: 50 });
+      Object.defineProperty(el6, "scrollHeight", { value: 40 });
+      Object.defineProperty(el6, "clientHeight", { value: 30 });
+      Object.defineProperty(el6, "scrollWidth", { value: 20 });
+      Object.defineProperty(el6, "clientWidth", { value: 10 });
+      scrollQueue.push(el1, el2, el3, el4, el5, el6);
+      spyOn(el1, "scrollBy").mockImplementation(() => {});
+      spyOn(el1, "scroll").mockImplementation(() => {});
+      spyOn(el2, "scrollBy").mockImplementation(() => {});
+      spyOn(el2, "scroll").mockImplementation(() => {});
+      spyOn(el3, "scrollBy").mockImplementation(() => {});
+      spyOn(el3, "scroll").mockImplementation(() => {});
+      spyOn(el4, "scrollBy").mockImplementation(() => {});
+      spyOn(el4, "scroll").mockImplementation(() => {});
+      spyOn(el5, "scrollBy").mockImplementation(() => {});
+      spyOn(el5, "scroll").mockImplementation(() => {});
+      spyOn(el6, "scrollBy").mockImplementation(() => {});
+      spyOn(el6, "scroll").mockImplementation(() => {});
+      render();
+      expect(el1.scrollBy).toHaveBeenCalledWith({
+        behavior: "auto",
+        top: 0,
+        left: 0,
+      });
+      expect(el1.scroll).not.toHaveBeenCalled();
+      expect(el2.scrollBy).not.toHaveBeenCalled();
+      expect(el2.scroll).toHaveBeenCalledWith({
+        behavior: "instant",
+        top: 10,
+        left: 10,
+      });
+      expect(el3.scrollBy).not.toHaveBeenCalled();
+      expect(el3.scroll).toHaveBeenCalledWith({
+        behavior: "smooth",
+        top: 5,
+        left: 5,
+      });
+      expect(el4.scrollBy).not.toHaveBeenCalled();
+      expect(el4.scroll).toHaveBeenCalledWith({ behavior: "auto", top: 42 });
+      expect(el5.scrollBy).not.toHaveBeenCalled();
+      expect(el5.scroll).toHaveBeenCalledWith({ behavior: "auto", left: 41 });
+      expect(el6.scrollBy).not.toHaveBeenCalled();
+      expect(el6.scroll).not.toHaveBeenCalled();
+      expect(scrollQueue.length).toBe(0);
+    });
+
     it("autofocus", () => {
       const focus = spyOn(
         HTMLInputElement.prototype,
-        "focus"
+        "focus",
       ).mockImplementation(() => {});
       const setSelectionRange = spyOn(
         HTMLInputElement.prototype,
-        "setSelectionRange"
+        "setSelectionRange",
       ).mockImplementation(() => {});
       const el = focusEl;
 
-      expect(focus).not.toBeCalled();
-      expect(setSelectionRange).not.toBeCalled();
+      expect(focus).not.toHaveBeenCalled();
+      expect(setSelectionRange).not.toHaveBeenCalled();
       queue_focus(document.createElement("div"));
       render();
-      expect(focus).not.toBeCalled();
-      expect(setSelectionRange).not.toBeCalled();
+      expect(focus).not.toHaveBeenCalled();
+      expect(setSelectionRange).not.toHaveBeenCalled();
       queue_focus(document.createElement("input"));
       focusEl!.value = "foo";
       render();
-      expect(focus).toBeCalled();
-      expect(setSelectionRange).toBeCalledWith(3, 3);
+      expect(focus).toHaveBeenCalled();
+      expect(setSelectionRange).toHaveBeenCalledWith(3, 3);
       focusEl = el;
     });
 

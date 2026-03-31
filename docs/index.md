@@ -4,7 +4,7 @@
 *Enhance HTML with expressive, declarative attributes that connect your frontend
 directly to your server logic.*
 
-![min+gzip](https://img.shields.io/badge/min%2Bgzip-3.3kb-brightgreen)
+![min+gzip](https://img.shields.io/badge/min%2Bgzip-4.1kb-brightgreen)
 ![Latest Release](https://img.shields.io/npm/v/keml)
 ![License](https://img.shields.io/github/license/thealjey/keml)
 ![Open Issues](https://img.shields.io/github/issues/thealjey/keml)
@@ -12,19 +12,34 @@ directly to your server logic.*
 [![Docs](https://img.shields.io/badge/docs-online-blue)](https://thealjey.github.io/keml/)
 [![VS Code Extension](https://img.shields.io/badge/VS%20Code%20Extension-online-blue)](https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode)
 
-KEML is a modern HTML extension that adds powerful, declarative attributes to
-standard markup. With KEML, you define behaviors such as form submission,
-navigation, state transitions, and conditional rendering directly in your HTML
-— all handled by the server. There's no client-side JavaScript to write, manage,
-or debug. Just clean, maintainable, server-driven apps.
+Behavior such as form submission, navigation, and rendering is defined entirely
+in markup and handled by the server.
 
-KEML builds on the core idea that HTML can drive your application's behavior.
-Inspired by the elegance of HTMX (https://htmx.org), KEML takes that vision
-further — removing limitations, embracing composability, and keeping everything 
-within your markup.
+No client-side JavaScript, state, or virtual DOM is required — the browser
+simply renders server responses.  
+No selectors. No surprises. Just expressive, maintainable, declarative HTML.
 
-No selectors. No JavaScript. No surprises.  
-Just expressive, maintainable, declarative HTML.
+Simple systems are easy to maintain. Large ones are not.
+
+As applications grow, complexity accumulates. Logic spreads across layers, state
+has to be coordinated, and small changes become harder to reason about.
+
+At some point, many projects reach a level of complexity where rewriting feels
+like the only viable option. The rewrite works — briefly — because the system is
+small again. Then it grows, and the same repeats.
+
+I’ve been through this cycle more times than I would care to admit.
+
+KEML is built to avoid this on the frontend. It removes the sources of
+complexity instead of managing them — frontend complexity does not exist,
+because the frontend itself doesn't.
+
+The server can still be complex, but its model is inherently constrained: each
+request starts from nothing, produces a response, and terminates — every
+interaction is finite.
+
+SPAs without a frontend — that’s KEML. Dynamic, responsive apps entirely
+declarative in HTML, without writing any JavaScript.
 
 ## Motivation
 
@@ -41,13 +56,10 @@ Consider the following "idiomatic" HTMX code:
 ```html
 <button
   hx-post="/clicked"
-  hx-trigger="click"
-  hx-target="#result"
   hx-swap="innerHTML"
->
-  Click Me!
-</button>
-
+  hx-target="#result"
+  hx-trigger="click"
+>Click Me!</button>
 <div id="result"></div>
 ```
 
@@ -84,47 +96,26 @@ Consider the following KEML code that works with the same backend:
 
 ```html
 <html>
-
-<head>
-  <title render="result"></title>
-</head>
-
-<body>
-  <button
-    on:click="handleClick doSomethingElse"
-    on:dblclick="handleDoubleClick"
-  >
-    Click Me!
-  </button>
-
-  <button on:click="handleClick">Click Me, maybe?!</button>
-
-  <input
-    on="handleClick"
-    post="/clicked"
-    type="text"
-    name="input1"
-    result="result"
-  >
-
-  <input
-    on="handleClick"
-    put="/notification"
-    type="text"
-    name="input2"
-  >
-
-  <div
-    render="result"
-    position="replaceWith"
-  ></div>
-
-  <p
-    render="result"
-    position="append"
-  ></p>
-</body>
-
+  <head>
+    <title render="result"></title>
+  </head>
+  <body>
+    <button
+      on:click="doSomethingElse handleClick"
+      on:dblclick="handleDoubleClick"
+    >Click Me!</button>
+    <button on:click="handleClick">Click Me, maybe?!</button>
+    <input
+      name="input1"
+      on="handleClick"
+      post="/clicked"
+      result="result"
+      type="text"
+    >
+    <input name="input2" on="handleClick" put="/notification" type="text">
+    <div position="replaceWith" render="result"></div>
+    <p position="append" render="result"></p>
+  </body>
 </html>
 ```
 

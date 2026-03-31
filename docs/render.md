@@ -1,7 +1,7 @@
 # Rendering responses
 
-HTML elements that trigger requests can initiate multiple result actions, all of 
-which refer to the same response after receiving a server response.
+HTML elements that trigger requests or subscribe to SSE events can initiate
+multiple result actions, all of which refer to the same server response.
 
 Multiple elements can initiate the same result action, thus triggering the
 rendering of different responses under the same action name.
@@ -53,20 +53,13 @@ document, no changes are applied.
 
 ```html
 <button
-  on:click="getUserCount"
-  on="getUserCount"
   get="/user-count"
+  on="getUserCount"
+  on:click="getUserCount"
   result="userCount"
->
-  click me
-</button>
-
+>click me</button>
 <div render="userCount"></div>
-
-<span
-  render="userCount"
-  position="replaceWith"
-></span>
+<span position="replaceWith" render="userCount"></span>
 ```
 
 ## Key based optimization example
@@ -82,10 +75,7 @@ Imagine that your server endpoint returns this HTML on the first request:
 And on the next request it returns:
 
 ```html
-<div class="info">
-  Notification text
-</div>
-
+<div class="info">Notification text</div>
 <table>
   <!-- heavy DOM with a lot of rows -->
 </table>
@@ -105,13 +95,7 @@ It would still work, but performance would suffer significantly.
 Here is what your server should do:
 
 ```html
-<div
-  key="notification"
-  class="info"
->
-  Notification text
-</div>
-
+<div class="info" key="notification">Notification text</div>
 <table key="table">
   <!-- heavy DOM with a lot of rows -->
 </table>

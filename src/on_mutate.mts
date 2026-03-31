@@ -1,5 +1,6 @@
-import { visitor } from "./element.mts";
+import { attr, visitor } from "./element.mts";
 import { queue_state } from "./render.mts";
+import { affects_endpoint } from "./resolve_url.mts";
 import { traverse } from "./traverse.mts";
 
 /**
@@ -50,6 +51,12 @@ export const on_mutate = (records: MutationRecord[]) => {
           vis.removed_(node, name);
         }
       }
+      if (
+        node.hasAttribute("sse") &&
+        (name === "sse" || affects_endpoint.includes(name))
+      ) {
+        attr.sse.added_(node, "sse");
+      }
     }
   }
   queue_state();
@@ -57,7 +64,12 @@ export const on_mutate = (records: MutationRecord[]) => {
 
 /* v8 ignore start */
 if (import.meta.vitest) {
-  const { describe, it, expect } = import.meta.vitest;
+  const {
+    describe,
+    it,
+    expect,
+    vi: { spyOn, resetAllMocks },
+  } = import.meta.vitest;
   const { actionElements } = await import("./store.mts");
 
   describe("on_mutate", () => {
@@ -176,6 +188,31 @@ if (import.meta.vitest) {
 
       // nothing happens, just cover the else branch
       expect(target.hasAttribute("on")).toBe(false);
+    });
+
+    it("triggers sse visitor when sse attribute is present and endpoint attribute changes", () => {
+      const target = document.createElement("div");
+      target.setAttribute("sse", "/stream");
+      target.setAttribute("get", "/foo");
+
+      const added = spyOn(attr.sse, "added_").mockImplementation(() => {});
+
+      on_mutate([
+        {
+          attributeName: "get",
+          target,
+          removedNodes: [] as unknown as NodeList,
+          addedNodes: [] as unknown as NodeList,
+          oldValue: null,
+          attributeNamespace: null,
+          nextSibling: null,
+          previousSibling: null,
+          type: "attributes",
+        },
+      ]);
+
+      expect(added).toHaveBeenCalledWith(target, "sse");
+      resetAllMocks();
     });
   });
 }

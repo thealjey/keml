@@ -16,7 +16,7 @@ const attrToStr = ({ name, value }: Attr) => `${name}="${value}"`;
  * @returns A function that takes a Node and returns its string representation.
  */
 const nodeToStr = (indent: string) => (child: Node) =>
-  child instanceof Element ? normalize(child, indent) : child.nodeValue ?? "";
+  child instanceof Element ? normalize(child, indent) : (child.nodeValue ?? "");
 
 /**
  * Returns a standardized error message for the custom HTML matcher.
@@ -37,20 +37,39 @@ const message = () => "Normalized outerHTML of two elements does not match.";
  */
 function normalize(
   { tagName, attributes, childNodes }: Element,
-  indent = ""
+  indent = "",
 ): string {
   const tag = tagName.toLowerCase();
-  const attrs = attributes.length
-    ? ` ${Array.from(attributes).map(attrToStr).sort().join(" ")}`
+  const attrs =
+    attributes.length ?
+      ` ${Array.from(attributes).map(attrToStr).sort().join(" ")}`
     : "";
-  const children = childNodes.length
-    ? `\n${indent}  ${Array.from(childNodes)
+  const children =
+    childNodes.length ?
+      `\n${indent}  ${Array.from(childNodes)
         .map(nodeToStr(indent + "  "))
         .join(`\n${indent}  `)}\n${indent}`
     : "";
 
   return `<${tag}${attrs}>${children}</${tag}>`;
 }
+
+globalThis.EventSource = class EventSource {
+  static OPEN = 1;
+  static CLOSED = 2;
+  withCredentials: boolean;
+  readyState = 1;
+
+  constructor(
+    public url: string,
+    options: { withCredentials?: boolean } = {},
+  ) {
+    this.withCredentials = !!options.withCredentials;
+  }
+
+  addEventListener() {}
+  close() {}
+} as any;
 
 expect.extend({
   /**

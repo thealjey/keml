@@ -25,7 +25,7 @@ if (import.meta.vitest) {
       const cb = fn();
       const addEventListener = spyOn(
         document,
-        "addEventListener"
+        "addEventListener",
       ).mockImplementation(() => {});
       Object.defineProperty(document, "readyState", {
         value: "loading",
@@ -33,15 +33,19 @@ if (import.meta.vitest) {
       });
 
       main(cb);
-      expect(addEventListener).toBeCalledWith("DOMContentLoaded", cb, true);
-      expect(cb).not.toBeCalled();
+      expect(addEventListener).toHaveBeenCalledWith(
+        "DOMContentLoaded",
+        cb,
+        true,
+      );
+      expect(cb).not.toHaveBeenCalled();
     });
 
     it("anything else", () => {
       const cb = fn();
       const addEventListener = spyOn(
         document,
-        "addEventListener"
+        "addEventListener",
       ).mockImplementation(() => {});
       Object.defineProperty(document, "readyState", {
         value: "something irrelevant lol",
@@ -49,8 +53,8 @@ if (import.meta.vitest) {
       });
 
       main(cb);
-      expect(addEventListener).not.toBeCalled();
-      expect(cb).toBeCalled();
+      expect(addEventListener).not.toHaveBeenCalled();
+      expect(cb).toHaveBeenCalled();
     });
   });
 } else {

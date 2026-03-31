@@ -10,18 +10,24 @@
 | `on:<event name>`                | *                 | initiate event actions                                                                      |
 | `event:<event name>`             | `on:<event name>` | cancel the event handling if the event object does not match the specified shape            |
 | `on`                             | *                 | subscribe to an action to perform a network request or a redirect                           |
+| `sse`                            | *                 | subscribe to a Server-Sent Event                                                            |
 | `reset`                          | *                 | subscribe to an action to call a `reset` method on self                                     |
+| `scroll`                         | *                 | subscribe to an action to call either a `scroll` or a `scrollBy` method on self             |
+| `relative`                       | `scroll`          | switches from using the default `scroll` method to using `scrollBy` instead                 |
+| `behavior`                       | `scroll`          | passed to `scroll` / `scrollBy` as an option                                                |
+| `top`                            | `scroll`          | passed to `scroll` / `scrollBy` as an option. Can also be `start`, `center` or `end`.       |
+| `left`                           | `scroll`          | passed to `scroll` / `scrollBy` as an option. Can also be `start`, `center` or `end`.       |
 | `debounce`                       | `on`              | debounce network requests and redirects                                                     |
 | `throttle`                       | `on`              | throttle network requests and redirects                                                     |
-| `get`, `href`, `action` or `src` | `on`              | specify a server endpoint for a GET request                                                 |
-| `post`                           | `on`              | specify a server endpoint for a POST request                                                |
-| `put`                            | `on`              | specify a server endpoint for a PUT request                                                 |
-| `delete`                         | `on`              | specify a server endpoint for a DELETE request                                              |
+| `get`, `href`, `action` or `src` | `on` / `sse`      | specify a server endpoint for a GET request                                                 |
+| `post`                           | `on` / `sse`      | specify a server endpoint for a POST request                                                |
+| `put`                            | `on` / `sse`      | specify a server endpoint for a PUT request                                                 |
+| `delete`                         | `on` / `sse`      | specify a server endpoint for a DELETE request                                              |
 | `method`                         | `on`              | specify an HTTP method, overriding any otherwise inferred                                   |
 | `name` + `value`                 | `on`              | make any element serializable for the server request                                        |
-| `credentials`                    | `on`              | set the `XMLHttpRequest.withCredentials` flag to `true` for this request                    |
+| `credentials`                    | `on` / `sse`      | set the `XMLHttpRequest.withCredentials` flag to `true` for this request                    |
 | `h-<header name>`                | `on`              | specify any additional request headers                                                      |
-| `result`                         | `on`              | initiate render actions after a successful response                                         |
+| `result`                         | `on` / `sse`      | initiate render actions after a successful response                                         |
 | `error`                          | `on`              | initiate render actions after an unsuccessful response                                      |
 | `redirect`                       | `on`              | disregard any request configuration except for the URL resolution and do a redirect instead |
 | `once`                           | `on`              | remove the `on` attribute before the first request or redirect                              |
@@ -35,3 +41,4 @@
 | `if:intersects`                  | *                 | initiate intersects state actions when the element intersects the viewport                  |
 | `if`                             | *                 | react to a single state action                                                              |
 | `x-<attribute name>`             | `if`              | turn an `x-` attribute into a real one when a state action activates                        |
+| `log`                            | *                 | enable logging                                                                              |

@@ -6,7 +6,7 @@
 *Enhance HTML with expressive, declarative attributes that connect your frontend
 directly to your server logic.*
 
-![min+gzip](https://img.shields.io/badge/min%2Bgzip-3.3kb-brightgreen)
+![min+gzip](https://img.shields.io/badge/min%2Bgzip-4.1kb-brightgreen)
 ![Latest Release](https://img.shields.io/npm/v/keml)
 ![License](https://img.shields.io/github/license/thealjey/keml)
 ![Open Issues](https://img.shields.io/github/issues/thealjey/keml)
@@ -14,37 +14,34 @@ directly to your server logic.*
 [![Docs](https://img.shields.io/badge/docs-online-blue)](https://thealjey.github.io/keml/)
 [![VS Code Extension](https://img.shields.io/badge/VS%20Code%20Extension-online-blue)](https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode)
 
-KEML is a modern HTML extension that adds powerful, declarative attributes to
-standard markup. With KEML, you define behaviors such as form submission,
-navigation, state transitions, and conditional rendering directly in your HTML
-— all handled by the server. There's no client-side JavaScript to write, manage, 
-or debug. Just clean, maintainable, server-driven apps.
+Behavior such as form submission, navigation, and rendering is defined entirely
+in markup and handled by the server.
 
-KEML builds on the core idea that HTML can drive your application's behavior.
-Inspired by the elegance of HTMX (https://htmx.org), KEML takes that vision
-further — removing limitations, embracing composability, and keeping everything 
-within your markup.
+No client-side JavaScript, state, or virtual DOM is required — the browser
+simply renders server responses.  
+No selectors. No surprises. Just expressive, maintainable, declarative HTML.
 
-No selectors. No JavaScript. No surprises.  
-Just expressive, maintainable, declarative HTML.
+Simple systems are easy to maintain. Large ones are not.
 
-After years of building large-scale enterprise apps with various JavaScript
-frameworks, I grew frustrated.  
-These tools, while powerful, come with overwhelming infrastructure demands and
-duplicated logic across server and client.  
-They inevitably slow down as the app grows — no matter how much you
-optimize.  
-Projects reach a point where rewriting feels like the only way forward, again
-and again.
+As applications grow, complexity accumulates. Logic spreads across layers, state
+has to be coordinated, and small changes become harder to reason about.
 
-I built KEML to break this cycle.  
-It lets you build dynamic, responsive frontends without ever writing JavaScript.  
-The server remains the single source of truth. The frontend becomes fully 
-declarative. Complexity vanishes, and frontend performance can never, even in 
-theory, degrade over time.
+At some point, many projects reach a level of complexity where rewriting feels
+like the only viable option. The rewrite works — briefly — because the system is
+small again. Then it grows, and the same repeats.
 
-It’s not a framework. It’s not magic. It’s just a better way to structure the
-relationship between your HTML and your backend.
+I’ve been through this cycle more times than I would care to admit.
+
+KEML is built to avoid this on the frontend. It removes the sources of
+complexity instead of managing them — frontend complexity does not exist,
+because the frontend itself doesn't.
+
+The server can still be complex, but its model is inherently constrained: each
+request starts from nothing, produces a response, and terminates — every
+interaction is finite.
+
+SPAs without a frontend — that’s KEML. Dynamic, responsive apps entirely
+declarative in HTML, without writing any JavaScript.
 
 ---
 
@@ -96,15 +93,14 @@ That’s it. No build tools, configs, or JavaScript required.
 KEML replaces complex selector wiring with clear, modular declarations:
 ```html
 <!-- Button triggers multiple actions -->
-<button on:click="submit notify">Submit</button>
-
+<button on:click="notify submit">Submit</button>
 <!-- Input posts data and labels the response -->
-<input on="submit" post="/api" name="email" result="response">
-
+<input name="email" on="submit" post="/api" result="response">
 <!-- Render response in different positions -->
-<div render="response" position="replaceWith"></div>
-<p render="response" position="append"></p>
+<div position="replaceWith" render="response"></div>
+<p position="append" render="response"></p>
 ```
+
 In this example:
 
 - Multiple actions (submit, notify) can be triggered by a single event
@@ -145,8 +141,8 @@ This makes your code simpler, reduces repetition, and scales easily.
 - 🧪 Dive into real examples — every demo in the
   [/examples](https://github.com/thealjey/keml/tree/main/examples) folder is
   built with **pure framework-less Python**, and **zero JavaScript**.
-- ⚙️ KEML powers fully interactive apps using just HTML — no client-side logic,
-  no build steps, no complexity.
+- ⚙️ KEML powers fully interactive apps using just HTML — requires only a
+  running HTTP server.
 - 📖 Curious how it works? [Read the full docs](https://thealjey.github.io/keml)
   and see how KEML keeps your frontend declarative and your backend in control.
 
