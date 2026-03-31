@@ -12,13 +12,13 @@
         <meta name="author" content="Eugene Kuzmenko">
       
       
-        <link rel="canonical" href="https://thealjey.github.io/keml/event/">
+        <link rel="canonical" href="https://thealjey.github.io/keml/logging/">
       
       
-        <link rel="prev" href="../install/">
+        <link rel="prev" href="../state/">
       
       
-        <link rel="next" href="../action/">
+        <link rel="next" href="../glossary/">
       
       
       <link rel="icon" href="../img/favicon.ico">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Event - keml</title>
+        <title>Logging - keml</title>
       
     
     
@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#initiating-actions" class="md-skip">
+        <a href="#logging" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Event
+              Logging
             
           </span>
         </div>
@@ -263,32 +263,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Event
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../event/" class="md-nav__link">
         
   
   
@@ -299,62 +277,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#attributes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Attributes
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hotkey-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Hotkey Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bubbling-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Bubbling Example
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -429,10 +351,32 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../logging/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Logging
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -443,6 +387,35 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -518,36 +491,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#attributes" class="md-nav__link">
+  <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
-      Attributes
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hotkey-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Hotkey Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bubbling-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Bubbling Example
+      Example
     </span>
   </a>
   
@@ -572,87 +518,37 @@
   
 
 
-<h1 id="initiating-actions">Initiating actions<a class="headerlink" href="#initiating-actions" title="Permanent link">&para;</a></h1>
-<p>HTML elements can trigger any number of application actions in response to any
-number of events.</p>
-<p>More than one element can initiate the same action.</p>
-<p>An action signals that something has happened, but does nothing by itself.</p>
-<p>All event types supported by the <code>document</code> object can be used, along with
-the following custom ones:</p>
-<ol>
-<li><code>reveal</code> — triggered when an element becomes visible in the viewport, either
-on initial page load or after scrolling</li>
-<li><code>conceal</code> — triggered when an element leaves the viewport after scrolling</li>
-<li><code>navigate</code> — triggered by the History API</li>
-<li><code>result</code> — triggered after a successful request and rendering of a response
-(you can rely on new attributes being present and working when this event is
-triggered)</li>
-</ol>
-<p>All events bubble up to the root of the DOM tree.</p>
-<h2 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Any attribute that starts with <code>on:</code> and contains a space-separated list of
-  actions to initiate</li>
-<li>Any attribute that starts with <code>event:</code> and contains a comma-separated list of
-  name-value pairs separated by <code>=</code><br />
-  The value part is optional, and the key will be checked only for truthiness if
-  omitted.<br />
-  Each key and value pair must match the event object; otherwise, the event 
-  handling is skipped.<br />
-  Can be used, for example, to associate hotkeys with an element.</li>
-</ul>
-<h2 id="basic-example">Basic Example<a class="headerlink" href="#basic-example" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Moving the mouse cursor into the button initiates the <code>doSomething</code> action</li>
-<li>Clicking the button initiates two actions: <code>loadData</code> and <code>updateCounter</code></li>
-<li>Nothing happens as a result, since none of the elements subscribe to any of
-  these actions</li>
-</ul>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;loadData updateCounter&quot;</span> <span class="na">on:mouseenter</span><span class="o">=</span><span class="s">&quot;doSomething&quot;</span><span class="p">&gt;</span>
-  click me
-<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<h2 id="hotkey-example">Hotkey Example<a class="headerlink" href="#hotkey-example" title="Permanent link">&para;</a></h2>
-<ul>
-<li>putting the cursor inside of the input and pressing <code>Alt+Esc</code> initiates the
-  <code>hotkeysAreCool</code> action</li>
-</ul>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span> <span class="na">event:keyup</span><span class="o">=</span><span class="s">&quot;code=Escape, altKey&quot;</span> <span class="na">on:keyup</span><span class="o">=</span><span class="s">&quot;hotkeysAreCool&quot;</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<h2 id="bubbling-example">Bubbling Example<a class="headerlink" href="#bubbling-example" title="Permanent link">&para;</a></h2>
-<ul>
-<li>When you click the image, the button’s <code>handleClick</code> action is initiated 
-  because it is the first matching <code>on:&lt;event name&gt;</code> on a parent element.</li>
-<li>This works with any number of nesting levels (e.g., global hotkeys on the 
-  body element)</li>
-</ul>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;handleClick&quot;</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;bat-cat.jpg&quot;</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<hr />
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Please be mindful that all actions are, by design, global within the page
-they are used on.</p>
-<p>It is your responsibility to generate unique action names to ensure that no
-other parts of the application are affected by the actions you trigger.</p>
+<h1 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h1>
+<p>Sometimes the information that is available statically, by just reading the
+HTML, may not be enough and you may need to peek into the runtime value of some
+important variable.</p>
+<p>With a well-designed API, such situations should be rare. But, unfortunately,
+the real world is messy and they cannot be fully avoided.</p>
+<p>This is where the dedicated <code>log</code> attribute comes in.</p>
+<p>It will do nothing at all most of the time and is generally harmless to add,
+even to every single element. However, it is still a debugging flag and, from a
+purely aesthetic point of view, should not be left enabled in production.</p>
+<p>All that it will ever do is log to the JavaScript console some information that
+the element deems important at a particular moment in time.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Currently, this attribute only logs event objects in the presence of an
+<code>event:&lt;event name&gt;</code> attribute, right before performing the matching for
+it. But, the <code>log</code> attribute itself is meant to be general purpose and its
+functionality may be extended in the future.</p>
 </div>
-<p>Example of a potential pitfall:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">get</span><span class="o">=</span><span class="s">&quot;/data.html&quot;</span> <span class="na">on</span><span class="o">=</span><span class="s">&quot;loadData&quot;</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;loadData&quot;</span><span class="p">&gt;</span>click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">button</span> <span class="na">get</span><span class="o">=</span><span class="s">&quot;/data.html&quot;</span> <span class="na">on</span><span class="o">=</span><span class="s">&quot;loadData&quot;</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;loadData&quot;</span><span class="p">&gt;</span>click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
+<p>When this input receives a keydown event, KEML logs the browser event object
+before checking if the key is <code>Enter</code>.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span> <span class="na">event:keydown</span><span class="o">=</span><span class="s">&quot;key=Enter&quot;</span> <span class="na">log</span> <span class="na">on:keydown</span><span class="o">=</span><span class="s">&quot;someAction&quot;</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
-<p>In the example above, we can imagine that it is the same button component,
-simply rendered twice.</p>
-<p>But, they are two distinct elements on the page that trigger and subscribe to
-the same action <code>loadData</code>.</p>
-<p>Thus, when you click either of them, two network requests will be sent to the
-server.</p>
+<p>What if you don't know what fields the event object has or what values they can
+take?</p>
+<p>In that case, simply leave the <code>event:keydown</code> attribute empty, trigger the
+event, and observe the event object printed to the console — <code>on:keydown</code> must
+still have a value, otherwise KEML will skip matching it.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span> <span class="na">event:keydown</span> <span class="na">log</span> <span class="na">on:keydown</span><span class="o">=</span><span class="s">&quot;someAction&quot;</span><span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
 
 
 
