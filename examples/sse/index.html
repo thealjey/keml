@@ -20,7 +20,7 @@
         </p>
       </header>
       <form
-        action="/echo"
+        action="{url('echo')}"
         autocomplete="off"
         class="flex items-center mb4"
         method="post"
@@ -49,7 +49,7 @@
           render="response"
           result="response"
           scroll="doScroll"
-          src="/events.sse"
+          src="{url('sse')}"
           sse="echo"
           top="end"
         ></div>
