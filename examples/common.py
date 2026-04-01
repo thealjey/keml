@@ -1,3 +1,4 @@
+from argparse import ArgumentParser
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from datetime import datetime, timedelta, timezone
 from email import message_from_bytes
@@ -21,6 +22,7 @@ from traceback import format_exc
 from typing import Any, Callable, Iterable, Literal, TypeVar
 from unicodedata import normalize
 from urllib.parse import parse_qs, urlencode, urlparse, quote
+from webbrowser import open as open_browser
 from xml.dom.minidom import Node
 
 
@@ -238,12 +240,18 @@ def strip_path(path: str):
     return stripped if len(stripped) else "/"
 
 
+parser = ArgumentParser()
+parser.add_argument("-o", action="store_true")
+should_open_browser: bool = parser.parse_args().o
+
+
 class Server(ThreadingHTTPServer):
 
     def start(self, fn: Callable[[], Any] | None = None):
-        print(
-            f"Server running at http://{self.server_address[0]}:{self.server_address[1]}"
-        )
+        url = f"http://{self.server_address[0]}:{self.server_address[1]}"
+        print(f"Server running at {url}")
+        if should_open_browser:
+            open_browser(url)
         try:
             self.serve_forever()
         except KeyboardInterrupt:
@@ -320,7 +328,18 @@ class SimpleNode:
                 text = text.lstrip()
             if not self.nextSibling:
                 text = text.rstrip()
-            return "" if text.isspace() else text
+            if text.isspace():
+                return ""
+            if pretty:
+                return text
+            escape_map = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+            }
+            return "".join(escape_map.get(ch, ch) for ch in text)
         if self.nodeType == Node.COMMENT_NODE:
             return f"<!-- {self.nodeValue.strip()} -->" if pretty else ""
         depth = 0

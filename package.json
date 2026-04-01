@@ -37,9 +37,9 @@
   },
   "scripts": {
     "build": "node esbuild.config.mts",
-    "demo:realworld": "python -X utf8 -m examples.realworld.server",
-    "demo:sse": "python -X utf8 -m examples.sse.server",
-    "demo:todo": "python -X utf8 -m examples.todo.server",
+    "demo:realworld": "python -X utf8 -m examples.realworld.server -o",
+    "demo:sse": "python -X utf8 -m examples.sse.server -o",
+    "demo:todo": "python -X utf8 -m examples.todo.server -o",
     "docs:deploy": "mkdocs gh-deploy --force",
     "docs:serve": "mkdocs serve -o",
     "pip:install": "pip install --upgrade markdown 'mkdocs<2' 'mkdocs-material==9.6.20'",
