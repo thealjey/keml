@@ -20,5 +20,10 @@
     "target": "esnext",
     "types": ["vitest/importMeta"]
   },
-  "include": ["src/*", ".dependency-cruiser.mjs", "vitest.config.mts"]
+  "include": [
+    "src/*",
+    ".dependency-cruiser.mjs",
+    "esbuild.config.mts",
+    "vitest.config.mts"
+  ]
 }
