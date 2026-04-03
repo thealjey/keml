@@ -1,6 +1,6 @@
 import { attr, visitor } from "./element.mts";
 import { queue_state } from "./render.mts";
-import { affects_endpoint } from "./resolve_url.mts";
+import { method_map } from "./resolve_url.mts";
 import { traverse } from "./traverse.mts";
 
 /**
@@ -52,8 +52,8 @@ export const on_mutate = (records: MutationRecord[]) => {
         }
       }
       if (
-        node.hasAttribute("sse") &&
-        (name === "sse" || affects_endpoint.includes(name))
+        (name === "sse" || method_map.has(name)) &&
+        node.hasAttribute("sse")
       ) {
         attr.sse.added_(node, "sse");
       }

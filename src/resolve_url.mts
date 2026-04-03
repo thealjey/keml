@@ -1,37 +1,12 @@
-/**
- * Attribute names that influence endpoint resolution.
- *
- * These attributes are checked in order when determining which endpoint an
- * element intends to target. The first attribute found on the element
- * determines the endpoint used for the request or navigation.
- *
- * Order matters. Earlier attributes take precedence over later ones.
- *
- * Supported attributes:
- * - `get`
- * - `post`
- * - `put`
- * - `delete`
- * - `href`
- * - `action`
- * - `src`
- *
- * @example
- * const el = document.createElement("div");
- * el.setAttribute("get", "/a");
- * el.setAttribute("post", "/b");
- *
- * affects_endpoint.includes("get"); // true
- */
-export const affects_endpoint = [
-  "get",
-  "post",
-  "put",
-  "delete",
-  "href",
-  "action",
-  "src",
-];
+export const method_map = new Map([
+  ["get", "GET"],
+  ["post", "POST"],
+  ["put", "PUT"],
+  ["delete", "DELETE"],
+  ["href", "GET"],
+  ["action", "GET"],
+  ["src", "GET"],
+]);
 
 /**
  * Resolves an element's target URL, HTTP method, and credential policy.
@@ -85,28 +60,18 @@ export const affects_endpoint = [
  * console.log(credentials);  // false
  */
 export const resolve_url = (el: Element) => {
-  let attr, end, code, ext, i, len;
+  let attr, end, code, ext, i, len, name, meth;
   let endpoint = "";
   let method = "GET";
 
-  if ((attr = el.getAttributeNode("get"))) {
-    endpoint = attr.value;
-  } else if ((attr = el.getAttributeNode("post"))) {
-    endpoint = attr.value;
-    method = "POST";
-  } else if ((attr = el.getAttributeNode("put"))) {
-    endpoint = attr.value;
-    method = "PUT";
-  } else if ((attr = el.getAttributeNode("delete"))) {
-    endpoint = attr.value;
-    method = "DELETE";
-  } else if ((attr = el.getAttributeNode("href"))) {
-    endpoint = attr.value;
-  } else if ((attr = el.getAttributeNode("action"))) {
-    endpoint = attr.value;
-  } else if ((attr = el.getAttributeNode("src"))) {
-    endpoint = attr.value;
+  for ([name, meth] of method_map) {
+    if ((attr = el.getAttributeNode(name))) {
+      endpoint = attr.value;
+      method = meth;
+      break;
+    }
   }
+
   if ((attr = el.getAttributeNode("method"))) {
     method = attr.value.toUpperCase();
   }
