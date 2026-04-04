@@ -4,8 +4,8 @@
     <a
       class="comment-author"
       href="{url('profile', slug=commenter.user_slug)}"
-      on="redirect-{increment()}"
-      on:click="redirect-{increment(True)}"
+      on="redirect-{increment(1)}"
+      on:click="redirect-{increment()}"
       redirect="pushState"
     >
       <img class="comment-author-img" src="{commenter.avatar}">
@@ -13,8 +13,8 @@
     <a
       class="comment-author"
       href="{url('profile', slug=commenter.user_slug)}"
-      on="redirect-{increment()}"
-      on:click="redirect-{increment(True)}"
+      on="redirect-{increment(1)}"
+      on:click="redirect-{increment()}"
       redirect="pushState"
     >{commenter.username}</a>
     <span class="date-posted">{ftime(comment_ctime)}</span>

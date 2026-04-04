@@ -1,7 +1,7 @@
 <a
   href="{url('profile', slug=author.user_slug)}"
-  on="redirect-{increment()}"
-  on:click="redirect-{increment(True)}"
+  on="redirect-{increment(1)}"
+  on:click="redirect-{increment()}"
   redirect="pushState"
 >
   <img src="{author.avatar}">
@@ -10,8 +10,8 @@
   <a
     class="author"
     href="{url('profile', slug=author.user_slug)}"
-    on="redirect-{increment()}"
-    on:click="redirect-{increment(True)}"
+    on="redirect-{increment(1)}"
+    on:click="redirect-{increment()}"
     redirect="pushState"
   >{author.username}</a>
   <span class="date">{ftime(article_mtime)}</span>

@@ -90,8 +90,8 @@
                 <a
                   class="tag-default tag-pill"
                   href="{url('tag', tag=item)}"
-                  on="redirect-{increment()}"
-                  on:click="redirect-{increment(True)}"
+                  on="redirect-{increment(1)}"
+                  on:click="redirect-{increment()}"
                   redirect="pushState"
                 >{item}</a>
               </for>

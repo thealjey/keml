@@ -34,8 +34,8 @@
           <a
             class="nav-link{' active' if active_route in ['profile', 'profile_pages', 'favorites', 'favorites_pages'] else ''}"
             href="{url('profile', slug=user.user_slug)}"
-            on="redirect-{increment()}"
-            on:click="redirect-{increment(True)}"
+            on="redirect-{increment(1)}"
+            on:click="redirect-{increment()}"
             redirect="pushState"
           >
             <img class="user-pic" src="{user.avatar}">

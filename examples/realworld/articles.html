@@ -12,8 +12,8 @@
     <a
       class="preview-link"
       href="{url('article', slug=article_slug)}"
-      on="redirect-{increment()}"
-      on:click="redirect-{increment(True)}"
+      on="redirect-{increment(1)}"
+      on:click="redirect-{increment()}"
       redirect="pushState"
     >
       <h1>{article_title}</h1>
@@ -40,8 +40,8 @@
           <a
             class="page-link"
             href="{url(route, **params) if item == 1 else url(f'{route}_pages', page=item, **params)}"
-            on="redirect-{increment()}"
-            on:click="redirect-{increment(True)}"
+            on="redirect-{increment(1)}"
+            on:click="redirect-{increment()}"
             redirect="pushState"
           >{item}</a>
         </li>

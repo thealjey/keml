@@ -776,10 +776,9 @@ class BaseHandler(BaseHTTPRequestHandler):
             .strftime(format if format else self.DATETIME_FORMAT)
         )
 
-    def ctx_increment(self, inc: bool = False):
+    def ctx_increment(self, inc: int = 0):
         global increment
-        if inc:
-            increment += 1
+        increment += inc
         return increment
 
     def tpl(self, name: str, **kwargs: Any) -> str:
