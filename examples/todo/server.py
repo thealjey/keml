@@ -28,11 +28,11 @@ class Handler(BaseHandler):
 
     @property
     def ctx_activeTodos(self):
-        return [x for x in todos if x.completed == False]
+        return [x for x in todos if not x.completed]
 
     @property
     def ctx_completedTodos(self):
-        return [x for x in todos if x.completed == True]
+        return [x for x in todos if x.completed]
 
     def find_todo(self):
         if id := self.parsed_params.get("id"):
