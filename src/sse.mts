@@ -48,7 +48,7 @@ const get_sse_value = (el: Element) =>
  * source.addEventListener("message", on_message);
  */
 function on_message(this: EventSource, e: MessageEvent) {
-  let url, withCredentials;
+  let url, withCredentials, responseXML;
 
   for (const el of sseElements) {
     [url, , withCredentials] = resolve_url(el);
@@ -59,7 +59,10 @@ function on_message(this: EventSource, e: MessageEvent) {
     ) {
       queue_render({
         target: {
-          responseXML: parser.parseFromString(e.data, "text/html"),
+          responseXML:
+            responseXML ?
+              (responseXML.cloneNode(true) as Document)
+            : (responseXML = parser.parseFromString(e.data, "text/html")),
           ownerElement_: el,
           status: 200,
         },
@@ -207,7 +210,7 @@ if (import.meta.vitest) {
     describe,
     it,
     expect,
-    vi: { fn },
+    vi: { spyOn },
   } = import.meta.vitest;
 
   describe("sse", () => {
@@ -257,28 +260,37 @@ if (import.meta.vitest) {
       ).not.toThrow();
     });
 
-    it("on_message does nothing if URL or credentials mismatch", () => {
-      const queue_render = fn();
+    it("on_message skips mismatches and clones responseXML only for subsequent matches", () => {
+      const cloneSpy = spyOn(Node.prototype, "cloneNode");
 
-      const el = document.createElement("div");
-      el.setAttribute("sse", "message");
-      el.setAttribute("href", "https://example.com/b/");
+      const mismatchEl = document.createElement("div");
+      mismatchEl.setAttribute("sse", "message");
+      mismatchEl.setAttribute("href", "https://example.com/b/");
+
+      const matchEl1 = document.createElement("div");
+      matchEl1.setAttribute("sse", "message");
+      matchEl1.setAttribute("href", "https://example.com/a/");
+
+      const matchEl2 = document.createElement("div");
+      matchEl2.setAttribute("sse", "message");
+      matchEl2.setAttribute("href", "https://example.com/a/");
 
       sseElements.clear();
-      sseElements.add(el);
+      sseElements.add(mismatchEl);
+      sseElements.add(matchEl1);
+      sseElements.add(matchEl2);
 
       const src = new EventSource("https://example.com/a/", {
         withCredentials: false,
       });
 
-      expect(() =>
-        on_message.call(
-          src,
-          new MessageEvent("message", { data: "<p>ok</p>" }),
-        ),
-      ).not.toThrow();
+      const before = cloneSpy.mock.calls.length;
+      on_message.call(src, new MessageEvent("message", { data: "<p>ok</p>" }));
+      const after = cloneSpy.mock.calls.length;
 
-      expect(queue_render).not.toHaveBeenCalled();
+      expect(after - before).toBeGreaterThan(0);
+
+      cloneSpy.mockRestore();
     });
 
     it("on_error reconnects when readyState is CLOSED and item exists", () => {

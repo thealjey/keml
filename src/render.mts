@@ -197,10 +197,8 @@ export const render = () => {
     actions: string[] | undefined,
     responseXML,
     nodes,
-    childNodes,
-    i,
+    bodyRoot: HTMLElement | undefined,
     len,
-    clone,
     position,
     rect,
     batch,
@@ -213,7 +211,6 @@ export const render = () => {
     el.removeAttribute("on");
   }
   while ((xhr = renderQueue.pop())) {
-    responseXML = xhr.responseXML;
     el = xhr.ownerElement_;
     actions = undefined;
     if ((el.isError_ = xhr.status > 399)) {
@@ -224,24 +221,22 @@ export const render = () => {
       actions = parse_actions(attr.value);
     }
     if (actions) {
-      clone = false;
-      childNodes =
-        responseXML ? Array.from(responseXML.body.childNodes) : emptyArr;
+      responseXML = xhr.responseXML;
+      bodyRoot = undefined;
       batch = [];
       for (renderEl of renderElements) {
         if (actions.includes(renderEl.getAttribute("render")!)) {
-          if (clone) {
-            nodes = [];
-            i = 0;
-            len = childNodes.length;
-            for (; i < len; ++i) {
-              nodes.push(childNodes[i]!.cloneNode(true) as ChildNode);
-            }
-          } else {
-            nodes = childNodes;
-          }
-          batch.push(renderEl, nodes);
-          clone = true;
+          batch.push(
+            renderEl,
+            responseXML ?
+              Array.from(
+                (bodyRoot ?
+                  (bodyRoot.cloneNode(true) as HTMLElement)
+                : (bodyRoot = responseXML.body)
+                ).childNodes,
+              )
+            : emptyArr,
+          );
         }
       }
       while ((nodes = batch.pop() as ChildNode[] | undefined)) {
