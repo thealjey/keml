@@ -52,7 +52,7 @@ export const on_mutate = (records: MutationRecord[]) => {
         }
       }
       if (
-        (name === "sse" || method_map.has(name)) &&
+        (name === "sse" || name === "credentials" || method_map.has(name)) &&
         node.hasAttribute("sse")
       ) {
         attr.sse.added_(node, "sse");
