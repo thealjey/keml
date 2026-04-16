@@ -36,10 +36,19 @@
  * <input x-value="foo">
  */
 const apply_state = (el: Element) => {
-  const attrs = Array.from(el.attributes);
-  const len = attrs.length;
-
-  for (let i = 0, j, attr, name, value, baseAttr, baseName; i < len; ++i) {
+  for (
+    let i = 0,
+      attrs = Array.from(el.attributes),
+      len = attrs.length,
+      j,
+      attr,
+      name,
+      value,
+      baseAttr,
+      baseName;
+    i < len;
+    ++i
+  ) {
     attr = attrs[i]!;
     name = attr.name;
     value = attr.value;
@@ -144,7 +153,7 @@ if (import.meta.vitest) {
       const [left, right, state] = container.childNodes as unknown as [
         Element,
         Element,
-        Element
+        Element,
       ];
       expect(left).toMatchHTML(right);
       enable_state(left);
@@ -162,7 +171,7 @@ if (import.meta.vitest) {
       const [left, right, state] = container.childNodes as unknown as [
         Element,
         Element,
-        Element
+        Element,
       ];
       expect(left).toMatchHTML(right);
       disable_state(left);

@@ -32,9 +32,7 @@ import { traverse } from "./traverse.mts";
  * });
  */
 export const on_mutate = (records: MutationRecord[]) => {
-  const len = records.length;
-
-  for (let i = 0, record, name, node, vis; i < len; ++i) {
+  for (let i = 0, len = records.length, record, name, node, vis; i < len; ++i) {
     record = records[i]!;
     name = record.attributeName;
     node = record.target;

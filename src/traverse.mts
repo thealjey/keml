@@ -31,9 +31,11 @@ import { clean, visitor } from "./element.mts";
  * traverse(mutation.removedNodes, false);
  */
 export const traverse = (nodes: ArrayLike<Node>, added: boolean) => {
-  const nodeLen = nodes.length;
-
-  for (let i = 0, j, el, it, attrLen, attrs, name; i < nodeLen; ++i) {
+  for (
+    let i = 0, nodeLen = nodes.length, j, el, it, attrLen, attrs, name;
+    i < nodeLen;
+    ++i
+  ) {
     el = nodes[i];
     if (el instanceof Element) {
       it = document.createNodeIterator(el, NodeFilter.SHOW_ELEMENT);
