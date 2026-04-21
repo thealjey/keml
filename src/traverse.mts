@@ -1,34 +1,14 @@
 import { clean, visitor } from "./element.mts";
 
 /**
- * Traverses a list of DOM nodes and their descendants using a NodeIterator.
+ * Traverses a set of DOM nodes and applies attribute lifecycle hooks or cleanup
+ * logic to all descendant elements.
  *
- * For each Element in the given node list, a NodeIterator visits that element
- * and all of its descendant elements in document order.
+ * When `added` is true, triggers "added" handlers for element attributes.
+ * When false, performs element cleanup.
  *
- * Supports two modes controlled by the `added` flag:
- * - When `added` is true, each element’s attributes are inspected and
- *   corresponding visitor methods are called via `added_()`.
- * - When `added` is false, each element is passed to `clean()` for cleanup.
- *
- * Why NodeIterator?
- *  1. Recursion — simple but prone to stack overflows and high call overhead.
- *  2. Manual stack — faster but still extra memory allocations.
- *  3. TreeWalker — fast and memory-efficient, but slightly slower in benchmarks.
- *  4. querySelectorAll("*") — acceptable speed but *very* high memory usage.
- *  5. NodeIterator — **fastest** and equally memory-efficient as TreeWalker.
- *
- * @param nodes - A list or collection of DOM nodes to traverse.
- * @param added - Boolean flag indicating the mode: if true, attributes are
- *                processed with visitor callbacks; if false, elements are
- *                cleaned.
- *
- * @example
- * // Process newly added nodes
- * traverse(mutation.addedNodes, true);
- *
- * // Clean up removed nodes
- * traverse(mutation.removedNodes, false);
+ * @param nodes - Node collection to traverse
+ * @param added - Whether nodes are being added or removed
  */
 export const traverse = (nodes: ArrayLike<Node>, added: boolean) => {
   for (
@@ -41,10 +21,11 @@ export const traverse = (nodes: ArrayLike<Node>, added: boolean) => {
       it = document.createNodeIterator(el, NodeFilter.SHOW_ELEMENT);
       do {
         if (added) {
-          j = 0;
-          attrs = el.attributes;
-          attrLen = attrs.length;
-          for (; j < attrLen; ++j) {
+          for (
+            j = 0, attrs = el.attributes, attrLen = attrs.length;
+            j < attrLen;
+            ++j
+          ) {
             name = attrs[j]!.name;
             visitor(name)?.added_(el, name);
           }

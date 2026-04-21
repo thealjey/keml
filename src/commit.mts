@@ -7,43 +7,14 @@ const internalForm = document.createElement("form");
 const emptyObj: {} = Object.create(null);
 
 /**
- * Applies string-based entries from a FormData object to the query parameters
- * of a given URL.
+ * Appends string-based form data entries to a URL's query parameters.
  *
- * Iterates through all key-value pairs in the FormData object and appends only
- * those where the value is a string to the URL's search parameters. This is
- * useful for converting form input into query parameters for GET requests or
- * API calls.
+ * Only entries with string values are included. Non-string values are ignored.
  *
- * If the provided FormData is undefined or contains no string entries, the URL
- * remains unchanged.
+ * The provided URL is mutated in-place.
  *
- * Non-string values (e.g. File, Blob) are ignored entirely to avoid unexpected
- * behavior or serialization issues.
- *
- * This function mutates the original URL object by modifying its `searchParams`
- * directly.
- * For immutability, consider cloning the URL before passing it in.
- *
- * Performance: This function runs in linear time relative to the number of
- * entries in the FormData.
- *
- * @param data - The FormData object containing entries to apply to the URL. Can
- *               be undefined.
- * @param url - The URL object to which string entries from the FormData will be
- *              appended as search parameters.
- *
- * @example
- * const formData = new FormData();
- * formData.append('search', 'test');
- * formData.append('page', '1');
- * formData.append('file', new File([], 'example.txt')); // Ignored
- *
- * const url = new URL('https://example.com');
- * apply_data_to_url(formData, url);
- *
- * console.log(url.toString());
- * // Output: "https://example.com/?search=test&page=1"
+ * @param formData - Key-value form data to apply to the URL
+ * @param url - Target URL whose search parameters will be updated
  */
 const apply_data_to_url = (data: FormData | undefined, url: URL) => {
   if (data) {
@@ -56,45 +27,13 @@ const apply_data_to_url = (data: FormData | undefined, url: URL) => {
 };
 
 /**
- * Commits an element's intent by extracting its data and performing a
- * navigation or network request.
+ * Commits an element by resolving its request data and executing either
+ * a navigation strategy or an XHR submission.
  *
- * This function interprets semantic attributes on a given DOM element (e.g.,
- * `get`, `post`, `redirect`, etc.) to determine the target endpoint, HTTP
- * method, form data, and redirection behavior. Based on these, it performs one
- * of the following:
- * - Pushes a navigation state (`pushState`, `replaceState`)
- * - Redirects the browser (`assign`, `replace`)
- * - Sends an XMLHttpRequest with optional headers and credentials
+ * May mutate browser state (history/location), element state flags,
+ * and enqueue side-effect queues depending on attributes.
  *
- * The function:
- * - Validates the element via `.checkValidity()` if available
- * - Cancels any active timeout associated with the element (`el.timeoutId_`)
- * - Resolves the appropriate request endpoint and method from attributes
- * - Serializes form-like data from the element if applicable
- * - Handles pathname normalization by enforcing the correct number of trailing
- *   slashes
- * - Dispatches render logic via a `queue_render` callback and flags application
- *   state with `queue_state`
- * - Tracks "once" interactions by pushing qualifying elements into a
- *   `onceQueue`
- *
- * Attributes supported:
- * - `get`, `post`, `put`, `delete`, `href`, `action`, `src` (for endpoint)
- * - `method` (explicit HTTP method override)
- * - `name` and `value` (for data payload on non-form elements)
- * - `credentials` (sets `withCredentials` on XHR)
- * - `redirect`: One of `"pushState"`, `"replaceState"`, `"assign"`, `"replace"`
- * - `h-*`: Custom headers passed with the request
- * - `once`: Marks element for one-time interaction tracking
- *
- * Side effects:
- * - Mutates `onceQueue`, `internalForm`, `renderQueue`, and `stateQueue`
- * - May mutate `location`, `history`, or initiate network requests
- * - Updates custom internal flags: `isError_`, `isLoading_`, `timeoutId_`, and
- *   `ownerElement_`
- *
- * @param el - A network-capable element with an `on` attribute.
+ * @param element - DOM element to commit
  */
 export const commit = (el: Element) => {
   clearTimeout(el.timeoutId_);
@@ -125,25 +64,15 @@ export const commit = (el: Element) => {
     }
 
     const redirect = el.getAttribute("redirect");
-    if (redirect === "pushState") {
+    if (redirect === "pushState" || redirect === "replaceState") {
       apply_data_to_url(data, url);
-      history.pushState(emptyObj, "", url);
+      history[redirect](emptyObj, "", url);
       on_navigate();
-    } else if (redirect === "replaceState") {
+    } else if (redirect === "assign" || redirect === "replace") {
       apply_data_to_url(data, url);
-      history.replaceState(emptyObj, "", url);
-      on_navigate();
-    } else if (redirect === "assign") {
-      apply_data_to_url(data, url);
-      location.assign(url);
-    } else if (redirect === "replace") {
-      apply_data_to_url(data, url);
-      location.replace(url);
+      location[redirect](url);
     } else {
       const xhr = new XMLHttpRequest();
-      const attrs = el.attributes;
-      const len = attrs.length;
-      let i = 0;
 
       if (method === "GET") {
         apply_data_to_url(data, url);
@@ -156,7 +85,7 @@ export const commit = (el: Element) => {
       xhr.open(method, url);
       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
-      for (; i < len; ++i) {
+      for (let i = 0, attrs = el.attributes, len = attrs.length; i < len; ++i) {
         attr = attrs[i]!;
         name = attr.name;
         if (name.startsWith("h-")) {

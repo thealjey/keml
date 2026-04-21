@@ -1,5 +1,5 @@
 import { commit } from "./commit.mts";
-import { parse_actions } from "./parse_actions.mts";
+import { has_token } from "./has_token.mts";
 import {
   actionElements,
   resetElements,
@@ -9,49 +9,17 @@ import {
 } from "./store.mts";
 
 /**
- * Generic event listener that processes declarative event actions on elements.
+ * Global event handler that resolves and dispatches declarative element actions
+ * based on event delegation, attribute-defined triggers, and action filters.
  *
- * This listener:
- * - Starts from the event target and walks up ancestors to find an attribute
- *   named `on:<event.type>`. For example, for a "click" event, looks for
- *   `on:click`.
- * - Parses the attribute value into an array of action tokens via
- *   `parse_actions`.
- * - Optionally filters the event using an `event:<event.type>` attribute
- *   containing comma-separated key=value pairs, allowing conditional event
- *   handling based on event properties.
- * - Calls `preventDefault()` on the event if actions are triggered.
- * - Iterates through `actionElements` collection, committing those whose `"on"`
- *   attribute matches any parsed action, with optional throttling or debouncing
- *   via attributes.
- * - Iterates through `resetElements` collection, pushing matching elements
- *   to `resetQueue` if their `"reset"` attribute matches any action.
+ * Supports:
+ * - delegated "on:*" attribute handlers
+ * - optional event filtering via "event:*" constraints
+ * - conditional action execution based on token-matched "on" attributes
+ * - throttled and debounced commit scheduling
+ * - reset and scroll queue scheduling
  *
- * @param event - The DOM event to handle.
- *
- * @remarks
- * - Uses element properties like `timeoutId_` for throttling and debouncing.
- * - Stops event processing if any event property check fails.
- * - Designed for declarative event-action binding via element attributes.
- *
- * @example
- * // HTML:
- * // <button
- * //   on:click="save edit"
- * //   event:click="button=0"
- * //   throttle="300"
- * //   on="save"
- * // >
- * //   Save
- * // </button>
- * //
- * // When a click event occurs on the button or its descendants:
- * // - Looks for on:click on the target or ancestors
- * // - Parses "save edit" actions
- * // - Checks if event.button === "0" (string comparison)
- * // - Calls event.preventDefault()
- * // - Finds actionElements with on="save" and commits them with a throttle
- * //   delay of 300ms
+ * @param event - DOM event triggered by user interaction
  */
 export const on_event: EventListener = event => {
   const target = event.target;
@@ -67,17 +35,22 @@ export const on_event: EventListener = event => {
     }
 
     if (el && attr) {
-      const actions = parse_actions(attr.value);
+      const actions = attr.value.trim();
 
-      if (actions.length) {
+      if (actions) {
         if ((attr = el.getAttributeNode(`event:${name}`))) {
           if (el.hasAttribute("log")) {
             console.log(event);
           }
-          const pairs = attr.value.split(",");
-          const len = pairs.length;
-
-          for (let i = 0, pair, pos; i < len; ++i) {
+          for (
+            let i = 0,
+              pair,
+              pos,
+              pairs = attr.value.split(","),
+              len = pairs.length;
+            i < len;
+            ++i
+          ) {
             pair = pairs[i]!;
             pos = pair.indexOf("=");
             if (pos === -1) {
@@ -100,7 +73,7 @@ export const on_event: EventListener = event => {
         event.preventDefault();
 
         for (el of actionElements) {
-          if (actions.includes(el.getAttribute("on")!)) {
+          if (has_token(actions, el.getAttribute("on"))) {
             if ((attr = el.getAttributeNode("throttle"))) {
               el.timeoutId_ ??= setTimeout(commit, +attr.value, el);
             } else if ((attr = el.getAttributeNode("debounce"))) {
@@ -113,13 +86,13 @@ export const on_event: EventListener = event => {
         }
 
         for (el of resetElements) {
-          if (actions.includes(el.getAttribute("reset")!)) {
+          if (has_token(actions, el.getAttribute("reset"))) {
             resetQueue.push(el);
           }
         }
 
         for (el of scrollElements) {
-          if (actions.includes(el.getAttribute("scroll")!)) {
+          if (has_token(actions, el.getAttribute("scroll"))) {
             scrollQueue.push(el);
           }
         }
@@ -262,7 +235,7 @@ if (import.meta.vitest) {
       expect(preventDefault).not.toHaveBeenCalled();
     });
 
-    it("does nothing when parse_actions returns an empty array", () => {
+    it("does nothing when no tokens", () => {
       const preventDefault = fn();
 
       const target = document.createElement("div");

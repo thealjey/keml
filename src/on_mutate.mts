@@ -4,32 +4,12 @@ import { method_map } from "./resolve_url.mts";
 import { traverse } from "./traverse.mts";
 
 /**
- * Handles mutation records produced by a `MutationObserver`.
+ * Handles DOM mutation records by processing attribute changes,
+ * node additions/removals, and triggering associated attribute handlers.
  *
- * This function processes both node additions/removals and attribute changes:
+ * Also updates SSE-related state and schedules a global state refresh.
  *
- * - Calls `traverse()` on `addedNodes` and `removedNodes` to handle elements
- *   entering or leaving the DOM tree.
- *
- * - For attribute mutations, it determines whether the attribute was added or
- *   removed and invokes the appropriate method (`added_` or `removed_`) on the
- *   corresponding `Visitor`, if one exists.
- *
- * Attribute changes are only handled if:
- * - The attribute name is defined in the mutation record.
- * - The mutation target is an `Element`.
- * - A matching visitor is found using `visitor(name)`.
- *
- * @param records - A list of mutation records from a `MutationObserver`.
- *
- * @example
- * const observer = new MutationObserver(on_mutate);
- * observer.observe(document.body, {
- *   subtree: true,
- *   childList: true,
- *   attributes: true,
- *   attributeOldValue: true,
- * });
+ * @param records - MutationObserver record batch
  */
 export const on_mutate = (records: MutationRecord[]) => {
   for (let i = 0, len = records.length, record, name, node, vis; i < len; ++i) {

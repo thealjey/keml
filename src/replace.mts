@@ -24,7 +24,7 @@ import { disable_state } from "./state.mts";
 const replace_node = (
   parent: ParentNode,
   left: ChildNode,
-  right: ChildNode
+  right: ChildNode,
 ) => {
   if (left.nodeName == right.nodeName) {
     if (left.nodeValue != right.nodeValue) {
@@ -47,10 +47,11 @@ const replace_node = (
           left.removeAttributeNode(attr);
         }
       }
-      attrs = (right as Element).attributes;
-      i = 0;
-      len = attrs.length;
-      for (; i < len; ++i) {
+      for (
+        attrs = (right as Element).attributes, i = 0, len = attrs.length;
+        i < len;
+        ++i
+      ) {
         attr = attrs[i]!;
         name = attr.name;
         value = attr.value;
@@ -140,10 +141,7 @@ export const replace_children = (el: Element, nodes: ChildNode[]) => {
   let i = 0;
   let node, j, childNode;
   for (; i < len; ++i) {
-    node = nodes[i]!;
-    j = i;
-    childNode = undefined;
-    for (; j < len2; ++j) {
+    for (node = nodes[i]!, j = i, childNode = undefined; j < len2; ++j) {
       childNode = childNodes[j]!;
       if (
         node.nodeName == childNode.nodeName &&
@@ -201,7 +199,7 @@ if (import.meta.vitest) {
       const [left] = container1.childNodes as unknown as [Element];
       const [right, span] = container2.childNodes as unknown as [
         Element,
-        Element
+        Element,
       ];
       expect(left).not.toMatchHTML(right);
       replace_with(left, [right, span]);
@@ -230,12 +228,12 @@ if (import.meta.vitest) {
         '<span class="test"></span>';
       const [textarea, orig] = container1.childNodes as unknown as [
         Element,
-        Element
+        Element,
       ];
       const [button, repl, span] = container2.childNodes as unknown as [
         Element,
         Element,
-        Element
+        Element,
       ];
       expect(orig).not.toMatchHTML(repl);
       replace_with(orig, Array.from(container2.childNodes));

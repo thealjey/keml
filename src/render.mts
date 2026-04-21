@@ -1,4 +1,4 @@
-import { parse_actions } from "./parse_actions.mts";
+import { has_token } from "./has_token.mts";
 import { replace_children, replace_with } from "./replace.mts";
 import { disable_state, enable_state } from "./state.mts";
 import {
@@ -22,116 +22,37 @@ let stateQueue = true;
 let focusEl: Element | undefined;
 
 /**
- * Queues an XMLHttpRequest for rendering based on a progress event.
+ * Enqueues a renderable target for deferred rendering.
  *
- * This function extracts the target of the provided `ProgressEvent`, casts it
- * to an XMLHttpRequest, and appends it to `renderQueue`. It is intended to be
- * used as a handler for progress-related events such as `load`, `loadend`, or
- * `progress`, particularly in contexts where you want to defer rendering until
- * multiple requests have completed.
- *
- * If the event's target is not an XMLHttpRequest or is `null`, the cast may
- * result in incorrect behavior. It assumes the event target is always a valid
- * XMLHttpRequest.
- *
- * This function mutates the `renderQueue` array by pushing new entries to it.
- *
- * Performance: Operates in constant time.
- *
- * @param event - The progress-related event whose target should be queued for
- *                rendering.
- *
- * @example
- * const xhr = new XMLHttpRequest();
- * xhr.addEventListener('loadend', queue_render);
- * xhr.open('GET', '/data');
- * xhr.send();
- *
- * // Later in the render loop:
- * for (const req of renderQueue) {
- *   renderResponse(req.responseText);
- * }
+ * @param event - Event containing the renderable target
  */
 export const queue_render = (event: { target: Renderable }) =>
   renderQueue.push(event.target);
 
 /**
- * Flags that a state update has been requested by setting `stateQueue` to
- * `true`.
- *
- * This function acts as a signal to defer or schedule a state-related
- * operation.
- *
- * It does not perform any state change itself but simply marks the system as
- * needing one.
- * Any logic that checks `stateQueue` should respond accordingly in its
- * processing loop.
- *
- * If `stateQueue` is already `true`, calling this function again has no
- * additional effect.
- *
- * Performance: Runs in constant time with negligible cost.
- *
- * @example
- * // Somewhere in the app loop
- * if (needsUpdate) {
- *   queue_state();
- * }
- *
- * // In a later processing stage
- * if (stateQueue) {
- *   updateAppState();
- *   stateQueue = false;
- * }
+ * Flags that a state update has been queued for processing.
  */
 export const queue_state = () => {
   stateQueue = true;
 };
 
 /**
- * Queues a DOM element to receive focus at the end of the current render cycle.
+ * Sets the element that should receive focus in the next focus cycle.
  *
- * This function sets an internal reference (`focusEl`) to the specified
- * element, which will be focused during the next `render` loop iteration. If
- * another element is queued later in the same cycle, it will overwrite the
- * previous one.
- *
- * This is useful for ensuring that focus is applied only after any DOM updates
- * or insertions, preventing layout thrashing or selection issues.
- *
- * The actual focus action is deferred until the end of the render function,
- * ensuring that it occurs only after all other updates (such as DOM mutations
- * and state processing) have been completed.
- *
- * If the element supports placing a text cursor (such as typical form
- * controls), an attempt will be made to move the caret to the end of the value.
- *
- * @param el - The DOM element to focus.
- *
- * @example
- * // Queue a search input to receive focus after the UI updates.
- * const input = document.getElementById('search');
- * queue_focus(input);
+ * @param el - Element to focus
  */
 export const queue_focus = (el: Element) => {
   focusEl = el;
 };
 
 /**
- * Resolves a scroll offset from an element attribute and applies it to the
- * provided scroll options object.
+ * Applies scroll position overrides from element attributes into scroll options.
  *
- * The attribute name is determined by `field` (`"top"` or `"left"`).
- * If present, its value may be either:
- * - A numeric value (interpreted as a pixel offset), or
- * - A keyword: `"start"`, `"center"`, or `"end"`, representing the beginning,
- *   middle, or end of the scrollable range.
+ * Supports numeric values and keywords: "start", "end", "center".
  *
- * If the attribute is missing or empty, no changes are made.
- *
- * @param el - The element from which to read the scroll attribute.
- * @param options - The scroll options object to mutate.
- * @param field - The scroll axis to update (`"top"` or `"left"`).
+ * @param el - Source element containing scroll attributes
+ * @param options - Scroll options object to mutate
+ * @param field - Scroll axis ("top" or "left")
  */
 const set_scroll_values = (
   el: Element,
@@ -147,17 +68,12 @@ const set_scroll_values = (
           el.scrollHeight - el.clientHeight
         : el.scrollWidth - el.clientWidth;
 
-      switch (value) {
-        case "start":
-          options[field] = 0;
-          break;
-
-        case "end":
-          options[field] = pos;
-          break;
-
-        case "center":
-          options[field] = (pos / 2) | 0;
+      if (value === "start") {
+        options[field] = 0;
+      } else if (value === "end") {
+        options[field] = pos;
+      } else if (value === "center") {
+        options[field] = (pos / 2) | 0;
       }
     } else {
       options[field] = +value;
@@ -195,6 +111,10 @@ export const render = () => {
     xhr,
     attr,
     actions: string[] | undefined,
+    actions2: string | undefined,
+    action,
+    i,
+    found,
     responseXML,
     nodes,
     bodyRoot: HTMLElement | undefined,
@@ -212,20 +132,20 @@ export const render = () => {
   }
   while ((xhr = renderQueue.pop())) {
     el = xhr.ownerElement_;
-    actions = undefined;
+    actions2 = undefined;
     if ((el.isError_ = xhr.status > 399)) {
       if ((attr = el.getAttributeNode("error"))) {
-        actions = parse_actions(attr.value);
+        actions2 = attr.value;
       }
     } else if ((attr = el.getAttributeNode("result"))) {
-      actions = parse_actions(attr.value);
+      actions2 = attr.value;
     }
-    if (actions) {
+    if ((actions2 = actions2?.trim())) {
       responseXML = xhr.responseXML;
       bodyRoot = undefined;
       batch = [];
       for (renderEl of renderElements) {
-        if (actions.includes(renderEl.getAttribute("render")!)) {
+        if (has_token(actions2, renderEl.getAttribute("render"))) {
           batch.push(
             renderEl,
             responseXML ?
@@ -276,7 +196,7 @@ export const render = () => {
         (attr = el.getAttributeNode("if:invalid")) &&
         !el.checkValidity()
       ) {
-        actions.push.apply(actions, parse_actions(attr.value));
+        actions.push(attr.value);
       }
       if (
         (el instanceof HTMLInputElement ?
@@ -288,7 +208,7 @@ export const render = () => {
           el.value) &&
         (attr = el.getAttributeNode("if:value"))
       ) {
-        actions.push.apply(actions, parse_actions(attr.value));
+        actions.push(attr.value);
       }
       if ((attr = el.getAttributeNode("if:intersects"))) {
         rect = el.getBoundingClientRect();
@@ -298,20 +218,26 @@ export const render = () => {
           rect.left <= innerWidth &&
           rect.top <= innerHeight
         ) {
-          actions.push.apply(actions, parse_actions(attr.value));
+          actions.push(attr.value);
         }
       }
       if (el.isLoading_ && (attr = el.getAttributeNode("if:loading"))) {
-        actions.push.apply(actions, parse_actions(attr.value));
+        actions.push(attr.value);
       }
       if (el.isError_ && (attr = el.getAttributeNode("if:error"))) {
-        actions.push.apply(actions, parse_actions(attr.value));
+        actions.push(attr.value);
       }
     }
+    len = actions.length;
     for (el of conditionElements) {
-      if (actions.includes(el.getAttribute("if")!)) {
-        enable_state(el);
-      } else {
+      for (i = 0, found = false, action = el.getAttribute("if"); i < len; ++i) {
+        if (has_token(actions[i]!, action)) {
+          enable_state(el);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
         disable_state(el);
       }
     }

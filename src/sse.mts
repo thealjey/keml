@@ -9,48 +9,24 @@ import {
 const parser = new DOMParser();
 
 /**
- * Retrieves the SSE value for a given element.
+ * Returns the SSE event type defined on an element, defaulting to "message".
  *
- * This function checks the `sse` attribute on a DOM element and returns its
- * trimmed string value. If the attribute is missing or empty, it defaults
- * to `"message"`.
- *
- * @param el - The DOM element to inspect.
- * @returns The SSE event name as a string.
- *
- * @example
- * const el = document.createElement("div");
- * el.setAttribute("sse", "update");
- * get_sse_value(el); // "update"
- *
- * const el2 = document.createElement("div");
- * get_sse_value(el2); // "message"
+ * @param el - Source element
+ * @returns SSE event type
  */
-const get_sse_value = (el: Element) =>
-  el.getAttribute("sse")?.trim() || "message";
+const get_sse_value = (el: Element) => el.getAttribute("sse") || "message";
 
 /**
- * Handles an SSE `message` event for an EventSource instance.
+ * Handles incoming SSE messages and routes them to matching elements,
+ * queuing a render task with the parsed payload when a match is found.
  *
- * This function iterates over the corresponding sources map (with or without
- * credentials) and checks each element in `sseElements`. When a source matches
- * and the element's SSE value equals the event type and its resolved URL
- * matches the source endpoint, a render is queued via `queue_render`.
- *
- * @param this - The EventSource instance emitting the message.
- * @param e - The MessageEvent object containing the data and type.
- *
- * @remarks
- * This function is intended to be bound to an EventSource instance.
- *
- * @example
- * const source = new EventSource("https://example.com/api/");
- * source.addEventListener("message", on_message);
+ * @param this - EventSource instance emitting the message
+ * @param e - SSE message event
  */
 function on_message(this: EventSource, e: MessageEvent) {
-  let url, withCredentials, responseXML;
+  let url, withCredentials, responseXML, el;
 
-  for (const el of sseElements) {
+  for (el of sseElements) {
     [url, , withCredentials] = resolve_url(el);
     if (
       get_sse_value(el) === e.type &&
@@ -72,20 +48,10 @@ function on_message(this: EventSource, e: MessageEvent) {
 }
 
 /**
- * Handles an SSE `error` event for an EventSource instance.
+ * Handles SSE connection errors by recreating the EventSource when closed
+ * and restoring previously registered event listeners.
  *
- * If the EventSource is closed, this function attempts to reconnect by
- * creating a new EventSource for the same endpoint, re-attaching all
- * registered event listeners, and replacing the old source in the map.
- *
- * @param this - The EventSource instance that emitted the error.
- *
- * @remarks
- * This function is intended to be bound to an EventSource instance.
- *
- * @example
- * const source = new EventSource("https://example.com/api/");
- * source.addEventListener("error", on_error);
+ * @param this - EventSource instance that triggered the error
  */
 function on_error(this: EventSource) {
   const sources =
@@ -107,24 +73,16 @@ function on_error(this: EventSource) {
 }
 
 /**
- * Cleans up SSE sources by removing obsolete events or closing sources.
+ * Synchronizes active SSE sources with the current event registry,
+ * removing stale event listeners and closing unused sources.
  *
- * This function iterates over all sources and checks whether the events
- * currently registered (`current`) match the events in the source (`sources`).
- * If an event no longer exists in the current set, its listener is removed.
- * If a source no longer has any events remaining, the source is closed and
- * removed from the map.
- *
- * @param current - Map of current URL endpoints to their active SSE events.
- * @param sources - Map of URL endpoints to their associated SSE source objects.
- *
- * @example
- * clean(currentWithoutCredentials, sourcesWithoutCredentials);
+ * @param current - Active event mapping by URL
+ * @param sources - SSE source registry
  */
 const clean = (current: Map<string, Events>, sources: Map<string, Item>) => {
-  let events, sseValue;
+  let events, sseValue, url, item;
 
-  for (const [url, item] of sources) {
+  for ([url, item] of sources) {
     if (!(events = current.get(url))) {
       item.source_.close();
       sources.delete(url);
@@ -144,29 +102,21 @@ const clean = (current: Map<string, Events>, sources: Map<string, Item>) => {
 };
 
 /**
- * Initializes SSE connections for all elements in `sseElements`.
+ * Synchronizes SSE element registrations with active EventSource connections.
  *
- * This function:
- * - Determines the SSE value, URL, and credentials for each element.
- * - Updates internal maps of current events
- *   (`currentWithCredentials` / `currentWithoutCredentials`).
- * - Creates new EventSource objects if needed.
- * - Attaches event listeners (`on_message` and `on_error`) to sources.
- * - Cleans up sources that are no longer active.
- *
- * Multiple elements with the same URL will aggregate their events,
- * ensuring each EventSource listens for all relevant SSE types.
- *
- * @example
- * sseElements.add(document.createElement("div"));
- * sse(); // Sets up SSE connections for all elements
+ * Ensures that:
+ * - Required SSE event types are registered per URL
+ * - EventSource instances are created or updated as needed
+ * - Stale event listeners and unused sources are cleaned up
+ * - Separate tracking is maintained for credentialed and non-credentialed
+ *   sources
  */
 export const sse = () => {
   const currentWithCredentials = new Map<string, Events>();
   const currentWithoutCredentials = new Map<string, Events>();
-  let sseValue, url, withCredentials, current, sources, item;
+  let sseValue, url, withCredentials, current, sources, item, el;
 
-  for (const el of sseElements) {
+  for (el of sseElements) {
     sseValue = get_sse_value(el);
     [url, , withCredentials] = resolve_url(el);
 
@@ -218,18 +168,6 @@ if (import.meta.vitest) {
       const el = document.createElement("div");
       el.setAttribute("sse", "custom");
       expect(get_sse_value(el)).toBe("custom");
-    });
-
-    it("get_sse_value trims whitespace", () => {
-      const el = document.createElement("div");
-      el.setAttribute("sse", "  event  ");
-      expect(get_sse_value(el)).toBe("event");
-    });
-
-    it("get_sse_value falls back when attribute is empty", () => {
-      const el = document.createElement("div");
-      el.setAttribute("sse", "   ");
-      expect(get_sse_value(el)).toBe("message");
     });
 
     it("get_sse_value falls back when attribute is missing", () => {

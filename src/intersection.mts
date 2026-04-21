@@ -1,21 +1,11 @@
 import { queue_state } from "./render.mts";
 
 /**
- * Creates an IntersectionObserver entry handler that dispatches a custom event
- * when elements match a specific intersection state.
+ * Creates an IntersectionObserver callback that dispatches a custom event
+ * when entries match the specified intersection state.
  *
- * The returned function is intended to be used as an IntersectionObserver
- * callback.
- * It filters entries by `isIntersecting` and dispatches either a "reveal" or
- * "conceal" event on matching targets.
- *
- * @param isIntersecting
- * Controls which intersection state to react to:
- * - `true` → dispatch "reveal" events when elements become visible
- * - `false` → dispatch "conceal" events when elements leave visibility
- *
- * @returns
- * A function compatible with `IntersectionObserver`.
+ * @param isIntersecting - Target intersection state to react to
+ * @returns Observer callback function
  */
 const dispatch = (isIntersecting: boolean, event?: Event) => (
   (event = new Event(isIntersecting ? "reveal" : "conceal")),

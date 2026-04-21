@@ -178,25 +178,10 @@ export const attr: AttrMap = {
 };
 
 /**
- * Removes an element from all internal tracking structures and observers.
+ * Removes an element from all internal registries and observers, and performs
+ * SSE cleanup if applicable.
  *
- * This is called when an element is removed from the document, ensuring that:
- * - The element is no longer considered for actions, conditions, rendering, or
- *   state.
- * - It is removed from all relevant sets like `actionElements`,
- *   `stateElements`, etc.
- * - It is unobserved from all active `IntersectionObserver` instances.
- *
- * This prevents stale references and ensures no further processing or
- * observation occurs for detached DOM nodes.
- *
- * @param el - The element to clean up.
- *
- * @remarks
- * - No attribute visitors are triggered after an element is removed from the
- *   document, so this function must explicitly perform the cleanup.
- * - Safe to call multiple times on the same element; redundant removals are
- *   harmless.
+ * @param element - DOM element to clean up
  */
 export const clean = (el: Element) => {
   actionElements.delete(el);
@@ -215,15 +200,15 @@ export const clean = (el: Element) => {
 };
 
 /**
- * Returns a `Visitor` object corresponding to the given attribute name.
+ * Resolves an attribute visitor handler based on a prefixed attribute name.
  *
- * The function selects a visitor based on the prefix of the attribute name:
- * - If the name starts with `"on:"`, returns the `on_colon_` visitor.
- * - If the name starts with `"if:"`, returns the `if_colon_` visitor.
- * - Otherwise, returns the visitor associated directly with the attribute name.
+ * Supports:
+ * - "on:*"  → event-related handler
+ * - "if:*"  → conditional handler
+ * - otherwise direct attribute lookup
  *
- * @param name - The name of the attribute for which to get the visitor.
- * @returns The corresponding `Visitor` object if found; otherwise, `undefined`.
+ * @param name - Attribute name
+ * @returns Resolved attribute handler
  */
 export const visitor = (name: string) =>
   name.startsWith("on:") ? attr.on_colon_

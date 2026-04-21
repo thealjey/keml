@@ -46,5 +46,5 @@
     "prebuild": "depcruise --config .dependency-cruiser.mjs 'src/*.mts'",
     "test": "vitest run"
   },
-  "version": "3.3.4"
+  "version": "3.3.5"
 }

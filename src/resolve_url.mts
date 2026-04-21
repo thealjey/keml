@@ -9,55 +9,16 @@ export const method_map = new Map([
 ]);
 
 /**
- * Resolves an element's target URL, HTTP method, and credential policy.
+ * Resolves the request URL, HTTP method, and credential mode from an element.
  *
- * This function inspects semantic attributes on a DOM element to determine the
- * intended endpoint and request configuration. The endpoint is derived from the
- * first matching attribute in the following order:
+ * URL is derived from attribute-defined endpoints and normalized relative to
+ * the base URI.
  *
- * - `get`
- * - `post`
- * - `put`
- * - `delete`
- * - `href`
- * - `action`
- * - `src`
- *
- * If a `method` attribute is present, it overrides the method implied by these
- * attributes.
- *
- * The resulting endpoint is normalized to enforce consistent trailing slash
- * behavior:
- *
- * - Directory paths are ensured to end with exactly one trailing slash.
- * - Paths that contain a file extension (e.g. `.txt`) will have trailing
- *   slashes removed.
- * - Multiple trailing slashes are collapsed.
- *
- * The endpoint is resolved relative to the element's `baseURI`.
- *
- * The function also checks for the presence of the `credentials` attribute,
- * which indicates whether network requests should include credentials such
- * as cookies or authentication headers.
- *
- * Performance: Runs in linear time relative to the endpoint string length.
- *
- * @param el - The element whose attributes should be inspected.
- *
+ * @param element - Source element defining request metadata
  * @returns A tuple containing:
- * - `URL` — The resolved and normalized endpoint.
- * - `string` — The HTTP method.
- * - `boolean` — Whether credentials should be included.
- *
- * @example
- * const el = document.createElement("div");
- * el.setAttribute("post", "/api/user");
- *
- * const [url, method, credentials] = resolve_url(el);
- *
- * console.log(url.pathname); // "/api/user/"
- * console.log(method);       // "POST"
- * console.log(credentials);  // false
+ * - resolved URL
+ * - HTTP method
+ * - whether credentials are enabled
  */
 export const resolve_url = (el: Element) => {
   let attr, end, code, ext, i, len, name, meth;
@@ -95,7 +56,7 @@ export const resolve_url = (el: Element) => {
       if (end < 0) {
         endpoint = endpoint.slice(0, end);
       }
-    } else if (end === 0) {
+    } else if (!end) {
       endpoint = endpoint + "/";
     } else if (end < -1) {
       endpoint = endpoint.slice(0, end + 1);

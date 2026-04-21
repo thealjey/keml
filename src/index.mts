@@ -1,5 +1,11 @@
 import { on_load } from "./on_load.mts";
 
+/**
+ * Executes a callback immediately if the document is already loaded,
+ * otherwise defers execution until DOMContentLoaded.
+ *
+ * @param cb - Function to execute when the DOM is ready
+ */
 const main = (cb: () => void) => {
   if (document.readyState.charCodeAt(0) === 108) {
     document.addEventListener("DOMContentLoaded", cb, true);

@@ -1,39 +1,11 @@
 /**
- * Toggles an element's state by activating or deactivating `x-*` attributes.
+ * Applies state synchronization rules between paired attributes on an element.
  *
- * This function interprets prefixed attributes as follows:
+ * Handles `x-*` and `d-*` attribute prefixes by swapping, promoting, or
+ * removing corresponding base attributes to maintain consistent state
+ * representation.
  *
- * - `x-*`: Indicates a pending attribute to be activated. When toggled,
- *   the `x-*` attribute is converted into its unprefixed form, and its original
- *   value (if any)
- *   is saved internally using a `d-*` attribute. This signals that the state is
- *   now enabled.
- *
- * - `d-*`: Signals that a state was previously enabled and should now be
- *   reverted.
- *   When toggled, the corresponding unprefixed attribute is removed, and any
- *   original value stored in the matching `x-*` attribute is restored.
- *
- * The toggling logic ensures that the element can flip cleanly between enabled
- * and disabled states without external bookkeeping.
- *
- * This mechanism is reversible, consistent, and stateless in terms of
- * interpretation: it does not track whether the state is "on" or "off" — only
- * that it should flip.
- *
- * @param el - The DOM element to apply state toggling on.
- *
- * @example
- * // Initial state:
- * <input x-value="foo">
- *
- * apply_state(el);
- * // Becomes:
- * <input value="foo" d-value="">
- *
- * apply_state(el);
- * // Becomes:
- * <input x-value="foo">
+ * @param el - Element whose attributes will be reconciled
  */
 const apply_state = (el: Element) => {
   for (
@@ -49,11 +21,15 @@ const apply_state = (el: Element) => {
     i < len;
     ++i
   ) {
-    attr = attrs[i]!;
-    name = attr.name;
-    value = attr.value;
-    baseName = name.slice(2);
-    for (j = 0; j < len; ++j) {
+    for (
+      attr = attrs[i]!,
+        name = attr.name,
+        value = attr.value,
+        baseName = name.slice(2),
+        j = 0;
+      j < len;
+      ++j
+    ) {
       baseAttr = attrs[j]!;
       if (baseAttr.name === baseName) {
         break;
@@ -80,27 +56,12 @@ const apply_state = (el: Element) => {
 };
 
 /**
- * Enables state on the given element if it is not already enabled.
+ * Initializes and applies attribute synchronization rules for an element.
  *
- * This function checks whether the element has a `state` attribute. If not,
- * it applies the attribute state toggling mechanism via `apply_state()` and
- * then sets the `state` attribute to signal that the element is now in its
- * active (enabled) state.
+ * If not already marked, runs attribute reconciliation between paired
+ * `x-*`, `d-*`, and base attributes, then marks the element as processed.
  *
- * The `state` attribute acts as a flag indicating that the state has already
- * been toggled. This prevents repeated re-application of the `x-*`/`d-*`
- * transformation.
- *
- * @param el - The element to toggle state on if not already enabled.
- *
- * @example
- * // If the element lacks the `state` attribute:
- * enable_state(el);
- * // → apply_state(el) is called
- * // → element now has `state=""` and toggled attributes
- *
- * // If already enabled, does nothing:
- * enable_state(el); // No effect
+ * @param el - Element to initialize
  */
 export const enable_state = (el: Element) => {
   if (!el.hasAttribute("state")) {
@@ -110,26 +71,10 @@ export const enable_state = (el: Element) => {
 };
 
 /**
- * Disables state on the given element if it is currently enabled.
+ * Removes state initialization from an element and re-applies attribute
+ * synchronization rules to restore non-state behavior.
  *
- * This function checks whether the element has a `state` attribute. If so,
- * it removes that attribute and applies the attribute state toggling
- * mechanism via `apply_state()` to revert the element back to its original
- * state.
- *
- * Removing the `state` attribute signals that the element is no longer in the
- * active (enabled) state.
- *
- * @param el - The element to toggle state off if currently enabled.
- *
- * @example
- * // If the element has the `state` attribute:
- * disable_state(el);
- * // → `state` attribute removed
- * // → apply_state(el) is called to revert attribute toggling
- *
- * // If the element does not have the `state` attribute, does nothing:
- * disable_state(el); // No effect
+ * @param el - Element to deinitialize
  */
 export const disable_state = (el: Element) => {
   const attr = el.getAttributeNode("state");
