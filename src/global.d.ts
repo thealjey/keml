@@ -17,13 +17,6 @@ declare module "vitest" {
 }
 
 declare global {
-  type Events = Set<string>;
-
-  interface Item {
-    source_: EventSource;
-    events_: Events;
-  }
-
   interface Element {
     isError_: boolean;
     isLoading_: boolean;

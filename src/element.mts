@@ -5,7 +5,7 @@ import {
 } from "./intersection.mts";
 import { on_event } from "./on_event.mts";
 import { queue_focus } from "./render.mts";
-import { sse } from "./sse.mts";
+import { sse_start } from "./sse.mts";
 import {
   actionElements,
   conditionElements,
@@ -111,12 +111,12 @@ export const attr: AttrMap = {
   sse: {
     added_(el) {
       sseElements.add(el);
-      sse();
+      sse_start();
     },
 
     removed_(el) {
       sseElements.delete(el);
-      sse();
+      sse_start();
     },
   },
 

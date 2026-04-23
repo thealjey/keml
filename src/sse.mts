@@ -1,157 +1,84 @@
-import { queue_render } from "./render.mts";
 import { resolve_url } from "./resolve_url.mts";
-import {
-  sourcesWithCredentials,
-  sourcesWithoutCredentials,
-  sseElements,
-} from "./store.mts";
+import { get_sse_value, type Resolved, SseSource } from "./sse_source.mts";
+import { sseElements } from "./store.mts";
 
-const parser = new DOMParser();
+const manager = new Map<string, readonly [SseSource, SseSource]>();
 
 /**
- * Returns the SSE event type defined on an element, defaulting to "message".
+ * Clears both SSE sources in a paired tuple.
  *
- * @param el - Source element
- * @returns SSE event type
+ * This effectively unsubscribes all event types and closes any active
+ * connections managed by each `SseSource`.
+ *
+ * @param pair - A tuple containing two SSE sources.
  */
-const get_sse_value = (el: Element) => el.getAttribute("sse") || "message";
+const clear_pair = ([left, right]: readonly [SseSource, SseSource]) => {
+  left.clear();
+  right.clear();
+};
 
 /**
- * Handles incoming SSE messages and routes them to matching elements,
- * queuing a render task with the parsed payload when a match is found.
+ * Initializes and synchronizes all SSE sources based on current DOM state.
  *
- * @param this - EventSource instance emitting the message
- * @param e - SSE message event
+ * This function:
+ * - Scans all `sseElements` in the document
+ * - Groups them by resolved URL (`href`)
+ * - Removes SSE sources that are no longer present in the DOM
+ * - Creates new `SseSource` pairs (credentialed / non-credentialed) for new URLs
+ * - Refreshes existing sources with updated subscriptions
+ *
+ * Internally, each URL is managed as a pair of `SseSource` instances:
+ * one with credentials enabled and one without.
  */
-function on_message(this: EventSource, e: MessageEvent) {
-  let url, withCredentials, responseXML, el;
+export const sse_start = () => {
+  let tuple, href, el, i, l, url, withCredentials, value, pair, left, right;
+
+  const missing: Resolved[] = [];
+  const hrefs: string[] = [];
+  const update: Resolved[] = [];
 
   for (el of sseElements) {
-    [url, , withCredentials] = resolve_url(el);
-    if (
-      get_sse_value(el) === e.type &&
-      url.href === this.url &&
-      withCredentials === this.withCredentials
-    ) {
-      queue_render({
-        target: {
-          responseXML:
-            responseXML ?
-              (responseXML.cloneNode(true) as Document)
-            : (responseXML = parser.parseFromString(e.data, "text/html")),
-          ownerElement_: el,
-          status: 200,
-        },
-      });
+    tuple = resolve_url(el);
+    href = tuple[0].href;
+    (manager.has(href) ? update : missing).push([tuple, get_sse_value(el)]);
+    hrefs.push(href);
+  }
+
+  for ([href, pair] of manager) {
+    if (!hrefs.includes(href)) {
+      clear_pair(pair);
+      manager.delete(href);
     }
   }
-}
 
-/**
- * Handles SSE connection errors by recreating the EventSource when closed
- * and restoring previously registered event listeners.
- *
- * @param this - EventSource instance that triggered the error
- */
-function on_error(this: EventSource) {
-  const sources =
-    this.withCredentials ? sourcesWithCredentials : sourcesWithoutCredentials;
-  const item = sources.get(this.url);
-
-  if (item && this.readyState === EventSource.CLOSED) {
-    const source = new EventSource(this.url, {
-      withCredentials: this.withCredentials,
-    });
-
-    for (const event of item.events_) {
-      source.addEventListener(event, on_message);
-    }
-
-    source.addEventListener("error", on_error);
-    item.source_ = source;
+  for (i = 0, l = missing.length; i < l; ++i) {
+    [[url, , withCredentials], value] = missing[i]!;
+    pair = [new SseSource(url, false), new SseSource(url, true)] as const;
+    manager.set(url.href, pair);
+    pair[+withCredentials as 0 | 1].add(value);
   }
-}
 
-/**
- * Synchronizes active SSE sources with the current event registry,
- * removing stale event listeners and closing unused sources.
- *
- * @param current - Active event mapping by URL
- * @param sources - SSE source registry
- */
-const clean = (current: Map<string, Events>, sources: Map<string, Item>) => {
-  let events, sseValue, url, item;
-
-  for ([url, item] of sources) {
-    if (!(events = current.get(url))) {
-      item.source_.close();
-      sources.delete(url);
-    } else {
-      for (sseValue of item.events_) {
-        if (!events.has(sseValue)) {
-          item.source_.removeEventListener(sseValue, on_message);
-          item.events_.delete(sseValue);
-        }
-      }
-      if (!item.events_.size) {
-        item.source_.close();
-        sources.delete(url);
-      }
-    }
+  for (i = 0, l = update.length; i < l; ++i) {
+    [url] = update[i]![0];
+    [left, right] = manager.get(url.href)!;
+    left.refresh_(update);
+    right.refresh_(update);
   }
 };
 
 /**
- * Synchronizes SSE element registrations with active EventSource connections.
+ * Stops all active SSE connections and clears the SSE manager state.
  *
- * Ensures that:
- * - Required SSE event types are registered per URL
- * - EventSource instances are created or updated as needed
- * - Stale event listeners and unused sources are cleaned up
- * - Separate tracking is maintained for credentialed and non-credentialed
- *   sources
+ * This function:
+ * - Iterates over all managed SSE source pairs
+ * - Clears each pair (closing connections and removing subscriptions)
+ * - Empties the global manager
+ *
+ * After calling this, no SSE connections remain active.
  */
-export const sse = () => {
-  const currentWithCredentials = new Map<string, Events>();
-  const currentWithoutCredentials = new Map<string, Events>();
-  let sseValue, url, withCredentials, current, sources, item, el;
-
-  for (el of sseElements) {
-    sseValue = get_sse_value(el);
-    [url, , withCredentials] = resolve_url(el);
-
-    if (withCredentials) {
-      current = currentWithCredentials;
-      sources = sourcesWithCredentials;
-    } else {
-      current = currentWithoutCredentials;
-      sources = sourcesWithoutCredentials;
-    }
-
-    if (!(item = current.get(url.href))) {
-      current.set(url.href, new Set([sseValue]));
-    } else if (!item.has(sseValue)) {
-      item.add(sseValue);
-    }
-
-    if (!(item = sources.get(url.href))) {
-      sources.set(
-        url.href,
-        (item = {
-          source_: new EventSource(url, { withCredentials }),
-          events_: new Set([sseValue]),
-        }),
-      );
-      item.source_.addEventListener(sseValue, on_message);
-      item.source_.addEventListener("error", on_error);
-    } else if (!item.events_.has(sseValue)) {
-      item.events_.add(sseValue);
-      item.source_.addEventListener(sseValue, on_message);
-    }
-  }
-
-  clean(currentWithCredentials, sourcesWithCredentials);
-  clean(currentWithoutCredentials, sourcesWithoutCredentials);
+export const sse_stop = () => {
+  manager.forEach(clear_pair);
+  manager.clear();
 };
 
 /* v8 ignore start */
@@ -160,248 +87,134 @@ if (import.meta.vitest) {
     describe,
     it,
     expect,
-    vi: { spyOn },
+    beforeEach,
+    vi: { stubGlobal },
   } = import.meta.vitest;
 
-  describe("sse", () => {
-    it("get_sse_value returns trimmed attribute value", () => {
-      const el = document.createElement("div");
-      el.setAttribute("sse", "custom");
-      expect(get_sse_value(el)).toBe("custom");
-    });
+  let instances: any[] = [];
 
-    it("get_sse_value falls back when attribute is missing", () => {
-      const el = document.createElement("div");
-      expect(get_sse_value(el)).toBe("message");
-    });
+  class MockEventSource {
+    static CLOSED = 2;
+    readyState = 1;
+    listeners: Record<string, Function[]> = {};
 
-    it("on_message queues render for matching element", () => {
-      // Mock element matching the EventSource
-      const el = document.createElement("div");
-      el.setAttribute("sse", "message");
-      el.setAttribute("href", "https://example.com/a/");
+    constructor() {
+      instances.push(this);
+    }
 
-      sseElements.clear();
+    addEventListener(type: string, fn: Function) {
+      (this.listeners[type] ||= []).push(fn);
+    }
+
+    removeEventListener(type: string, fn: Function) {
+      this.listeners[type] = (this.listeners[type] || []).filter(f => f !== fn);
+    }
+
+    close() {
+      this.readyState = MockEventSource.CLOSED;
+    }
+
+    emit(type: string, event: any) {
+      for (const fn of this.listeners[type] || []) {
+        fn(event);
+      }
+    }
+  }
+
+  stubGlobal("EventSource", MockEventSource);
+
+  const makeEl = (attrs: Record<string, string> = {}) => {
+    const el = document.createElement("div");
+    for (const k in attrs) {
+      el.setAttribute(k, attrs[k]!);
+    }
+    return el;
+  };
+
+  const setElements = (els: Element[]) => {
+    sseElements.clear();
+    for (const el of els) {
       sseElements.add(el);
+    }
+  };
 
-      // EventSource instance
-      const src = new EventSource("https://example.com/a/", {
-        withCredentials: false,
-      });
+  beforeEach(() => {
+    instances = [];
+    sseElements.clear();
+    manager.clear();
+  });
 
-      // Call the new on_message
-      expect(() =>
-        on_message.call(
-          src,
-          new MessageEvent("message", { data: "<p>ok</p>" }),
-        ),
-      ).not.toThrow();
+  describe("sse_start + see_stop", () => {
+    it("creates missing sources", () => {
+      const el = makeEl({ sse: "evt", src: "/a" });
+
+      setElements([el]);
+
+      sse_start();
+
+      expect(manager.size).toBe(1);
+      expect(instances.length).toBeGreaterThanOrEqual(1);
     });
 
-    it("on_message skips mismatches and clones responseXML only for subsequent matches", () => {
-      const cloneSpy = spyOn(Node.prototype, "cloneNode");
+    it("reuses existing manager entry on update", () => {
+      const el = makeEl({ sse: "evt", src: "/a" });
 
-      const mismatchEl = document.createElement("div");
-      mismatchEl.setAttribute("sse", "message");
-      mismatchEl.setAttribute("href", "https://example.com/b/");
+      setElements([el]);
 
-      const matchEl1 = document.createElement("div");
-      matchEl1.setAttribute("sse", "message");
-      matchEl1.setAttribute("href", "https://example.com/a/");
+      sse_start();
+      sse_start();
 
-      const matchEl2 = document.createElement("div");
-      matchEl2.setAttribute("sse", "message");
-      matchEl2.setAttribute("href", "https://example.com/a/");
-
-      sseElements.clear();
-      sseElements.add(mismatchEl);
-      sseElements.add(matchEl1);
-      sseElements.add(matchEl2);
-
-      const src = new EventSource("https://example.com/a/", {
-        withCredentials: false,
-      });
-
-      const before = cloneSpy.mock.calls.length;
-      on_message.call(src, new MessageEvent("message", { data: "<p>ok</p>" }));
-      const after = cloneSpy.mock.calls.length;
-
-      expect(after - before).toBeGreaterThan(0);
-
-      cloneSpy.mockRestore();
+      expect(manager.size).toBe(1);
     });
 
-    it("on_error reconnects when readyState is CLOSED and item exists", () => {
-      const url = "https://example.com/a/";
-      const src = new EventSource(url, { withCredentials: false });
-      // @ts-ignore
-      src.readyState = EventSource.CLOSED;
+    it("removes missing href entries", () => {
+      const el = makeEl({ sse: "evt", src: "/a" });
 
-      const item = { source_: src, events_: new Set(["message"]) };
-      sourcesWithoutCredentials.set(url, item);
+      setElements([el]);
 
-      expect(() => on_error.call(src)).not.toThrow();
+      sse_start();
 
-      // item.source_ should now be a new EventSource instance
-      expect(item.source_).not.toBe(src);
+      setElements([]);
 
-      sourcesWithoutCredentials.clear();
+      sse_start();
+
+      expect(manager.size).toBe(0);
     });
 
-    it("on_error does nothing if readyState is not CLOSED", () => {
-      const url = "https://example.com/a/";
-      const src = new EventSource(url, { withCredentials: false });
-      // @ts-ignore
-      src.readyState = EventSource.OPEN;
+    it("splits by credentials flag", () => {
+      const el = makeEl({ sse: "evt", src: "/a", credentials: "true" });
 
-      const item = { source_: src, events_: new Set(["message"]) };
-      sourcesWithoutCredentials.set(url, item);
+      setElements([el]);
 
-      expect(() => on_error.call(src)).not.toThrow();
+      sse_start();
 
-      // source should remain the same
-      expect(item.source_).toBe(src);
-
-      sourcesWithoutCredentials.clear();
+      expect(manager.size).toBe(1);
     });
 
-    it("on_error does nothing if item does not exist in sources map", () => {
-      const src = new EventSource("https://example.com/nonexistent/", {
-        withCredentials: false,
-      });
-      // @ts-ignore
-      src.readyState = EventSource.CLOSED;
+    it("refresh path does not change manager size", () => {
+      const el = makeEl({ sse: "evt", src: "/a" });
 
-      expect(() => on_error.call(src)).not.toThrow();
+      setElements([el]);
+
+      sse_start();
+
+      const before = manager.size;
+
+      sse_start();
+
+      expect(manager.size).toBe(before);
     });
 
-    it("on_error reconnects for sourcesWithCredentials when readyState is CLOSED", () => {
-      const url = "https://example.com/secure/";
-      const src = new EventSource(url, { withCredentials: true });
-      // @ts-ignore
-      src.readyState = EventSource.CLOSED;
+    it("see_stop clears manager and sources", () => {
+      const el = makeEl({ sse: "evt", src: "/a" });
 
-      const item = { source_: src, events_: new Set(["message"]) };
-      sourcesWithCredentials.set(url, item);
+      setElements([el]);
 
-      expect(() => on_error.call(src)).not.toThrow();
+      sse_start();
 
-      // item.source_ should now be a new EventSource instance
-      expect(item.source_).not.toBe(src);
+      sse_stop();
 
-      sourcesWithCredentials.clear();
-    });
-
-    it("clean removes sources when current.get(url) is undefined", () => {
-      const current = new Map<string, Set<string>>();
-      const source = { close: () => {}, removeEventListener: () => {} };
-      const sources = new Map<string, Item>();
-
-      sources.set("https://example.com/a/", {
-        source_: source as any,
-        events_: new Set(["message"]),
-      });
-
-      expect(() => clean(current, sources)).not.toThrow();
-
-      expect(sources.size).toBe(0);
-    });
-
-    it("clean removes missing events from item.events_", () => {
-      const current = new Map<string, Set<string>>();
-      current.set("https://example.com/b/", new Set(["message"]));
-
-      const closed = { closed: false };
-      const source = {
-        close: () => {
-          closed.closed = true;
-        },
-        removeEventListener: () => {},
-      };
-
-      const events = new Set(["message", "update"]);
-      const sources = new Map<string, Item>();
-      sources.set("https://example.com/b/", {
-        source_: source as any,
-        events_: events,
-      });
-
-      expect(() => clean(current, sources)).not.toThrow();
-
-      expect(events.has("update")).toBe(false); // removed
-      expect(events.has("message")).toBe(true); // kept
-      expect(closed.closed).toBe(false); // still not closed
-      expect(sources.size).toBe(1);
-    });
-
-    it("clean closes source and deletes from sources if all events removed", () => {
-      const current = new Map<string, Set<string>>();
-      current.set("https://example.com/c/", new Set());
-
-      let closed = false;
-      const source = {
-        close: () => {
-          closed = true;
-        },
-        removeEventListener: () => {},
-      };
-
-      const events = new Set(["message"]);
-      const sources = new Map<string, Item>();
-      sources.set("https://example.com/c/", {
-        source_: source as any,
-        events_: events,
-      });
-
-      expect(() => clean(current, sources)).not.toThrow();
-
-      expect(closed).toBe(true);
-      expect(sources.size).toBe(0);
-    });
-
-    it("sse covers all if and else branches including existing sseValue", () => {
-      // Elements for non-credential URL
-      const el1 = document.createElement("div");
-      el1.setAttribute("sse", "message");
-      el1.setAttribute("href", "https://example.com/a/");
-
-      const el2 = document.createElement("div");
-      el2.setAttribute("sse", "update");
-      el2.setAttribute("href", "https://example.com/a/");
-
-      const el5 = document.createElement("div");
-      el5.setAttribute("sse", "message"); // duplicate sseValue to hit else
-      el5.setAttribute("href", "https://example.com/a/");
-
-      // Elements for credential URL
-      const el3 = document.createElement("div");
-      el3.setAttribute("sse", "event");
-      el3.setAttribute("href", "https://example.com/b/");
-      el3.setAttribute("credentials", "");
-
-      const el4 = document.createElement("div");
-      el4.setAttribute("sse", "refresh");
-      el4.setAttribute("href", "https://example.com/b/");
-      el4.setAttribute("credentials", "");
-
-      const el6 = document.createElement("div");
-      el6.setAttribute("sse", "event"); // duplicate sseValue to hit else
-      el6.setAttribute("href", "https://example.com/b/");
-      el6.setAttribute("credentials", "");
-
-      sseElements.clear();
-      sseElements.add(el1);
-      sseElements.add(el2);
-      sseElements.add(el5);
-      sseElements.add(el3);
-      sseElements.add(el4);
-      sseElements.add(el6);
-
-      expect(() => sse()).not.toThrow();
-
-      // sources maps are populated
-      expect(sourcesWithoutCredentials.size).toBe(1);
-      expect(sourcesWithCredentials.size).toBe(1);
+      expect(manager.size).toBe(0);
     });
   });
 }

@@ -1,7 +1,7 @@
 import { on_mutate } from "./on_mutate.mts";
 import { on_navigate } from "./on_navigate.mts";
-import { on_unload } from "./on_unload.mts";
 import { queue_state, render } from "./render.mts";
+import { sse_stop } from "./sse.mts";
 import { traverse } from "./traverse.mts";
 
 /**
@@ -9,9 +9,6 @@ import { traverse } from "./traverse.mts";
  *
  * Sets up reactive behavior, event handling, and state tracking needed for the
  * application to function while the page is active.
- *
- * Cleanup and termination of resources should be handled by the corresponding
- * global destructor (`on_unload`) when the page is unloaded or replaced.
  */
 export const on_load = () => {
   try {
@@ -28,7 +25,7 @@ export const on_load = () => {
   document.addEventListener("input", queue_state, true);
   document.addEventListener("reset", queue_state, true);
   window.addEventListener("popstate", on_navigate, true);
-  window.addEventListener("beforeunload", on_unload, true);
+  window.addEventListener("beforeunload", sse_stop, true);
   requestAnimationFrame(render);
 };
 

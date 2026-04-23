@@ -1,5 +1,3 @@
-export const sourcesWithCredentials = new Map<string, Item>();
-export const sourcesWithoutCredentials = new Map<string, Item>();
 export const actionElements = new Set<Element>();
 export const stateElements = new Set<Element>();
 export const resetElements = new Set<Element>();
