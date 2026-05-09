@@ -12,25 +12,28 @@
         <meta name="author" content="Eugene Kuzmenko">
       
       
-        <link rel="canonical" href="https://thealjey.github.io/keml/event/">
+        <link rel="canonical" href="https://thealjey.github.io/keml/installation/">
       
       
-        <link rel="prev" href="../install/">
+        <link rel="prev" href="../taxonomy/">
       
       
-        <link rel="next" href="../action/">
+        <link rel="next" href="../event/on-colon/">
       
       
-      <link rel="icon" href="../img/favicon.ico">
+      <link rel="icon" href="../assets/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
     
     
       
-        <title>Event - keml</title>
+        <title>Installation - keml</title>
       
     
     
       <link rel="stylesheet" href="../assets/stylesheets/main.e53b48f4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -49,6 +52,10 @@
       
     
     
+      <link rel="stylesheet" href="../assets/tachyons.css">
+    
+      <link rel="stylesheet" href="../assets/style.css">
+    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -59,7 +66,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -68,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#initiating-actions" class="md-skip">
+        <a href="#using-keml-with-other-libraries-and-frameworks" class="md-skip">
           Skip to content
         </a>
       
@@ -86,7 +100,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="keml" class="md-header__button md-logo" aria-label="keml" data-md-component="logo">
       
-  <img src="../img/logo192.png" alt="logo">
+  <img src="../assets/logo192.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -103,12 +117,38 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Event
+              Installation
             
           </span>
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Light Mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Light Mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Dark Mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Dark Mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -195,7 +235,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="keml" class="md-nav__button md-logo" aria-label="keml" data-md-component="logo">
       
-  <img src="../img/logo192.png" alt="logo">
+  <img src="../assets/logo192.png" alt="logo">
 
     </a>
     keml
@@ -244,12 +284,34 @@
   
   
     <li class="md-nav__item">
-      <a href="../install/" class="md-nav__link">
+      <a href="../motivation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Install
+    Motivation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../taxonomy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Taxonomy
     
   </span>
   
@@ -272,15 +334,13 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
   
   
   <span class="md-ellipsis">
-    Event
+    Installation
     
   </span>
   
@@ -293,7 +353,7 @@
   
   
   <span class="md-ellipsis">
-    Event
+    Installation
     
   </span>
   
@@ -306,8 +366,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -316,36 +374,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#attributes" class="md-nav__link">
+  <a href="#using-keml-with-other-libraries-and-frameworks" class="md-nav__link">
     <span class="md-ellipsis">
-      Attributes
+      Using KEML with Other Libraries and Frameworks
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-example" class="md-nav__link">
+  <a href="#demos" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hotkey-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Hotkey Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bubbling-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Bubbling Example
+      Demos
     </span>
   </a>
   
@@ -365,18 +405,133 @@
   
   
   
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Event
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Event
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../action/" class="md-nav__link">
+      <a href="../event/on-colon/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Action
+    on:*
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event/on/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    on
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event/reset/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    reset
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event/scroll/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    scroll
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -387,18 +542,87 @@
   
   
   
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Result
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Result
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../render/" class="md-nav__link">
+      <a href="../result/result/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Render
+    result / error
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../result/render/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    render
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -409,13 +633,104 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../state/" class="md-nav__link">
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
     State
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            State
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../state/if-colon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    if:*
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../state/if/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    if
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SSE
     
   </span>
   
@@ -454,12 +769,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../glossary/" class="md-nav__link">
+      <a href="../reference/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Glossary
+    Reference
     
   </span>
   
@@ -508,8 +823,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -518,36 +831,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#attributes" class="md-nav__link">
+  <a href="#using-keml-with-other-libraries-and-frameworks" class="md-nav__link">
     <span class="md-ellipsis">
-      Attributes
+      Using KEML with Other Libraries and Frameworks
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-example" class="md-nav__link">
+  <a href="#demos" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hotkey-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Hotkey Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bubbling-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Bubbling Example
+      Demos
     </span>
   </a>
   
@@ -572,87 +867,44 @@
   
 
 
-<h1 id="initiating-actions">Initiating actions<a class="headerlink" href="#initiating-actions" title="Permanent link">&para;</a></h1>
-<p>HTML elements can trigger any number of application actions in response to any
-number of events.</p>
-<p>More than one element can initiate the same action.</p>
-<p>An action signals that something has happened, but does nothing by itself.</p>
-<p>All event types supported by the <code>document</code> object can be used, along with
-the following custom ones:</p>
-<ol>
-<li><code>reveal</code> — triggered when an element becomes visible in the viewport, either
-on initial page load or after scrolling</li>
-<li><code>conceal</code> — triggered when an element leaves the viewport after scrolling</li>
-<li><code>navigate</code> — triggered by the History API</li>
-<li><code>result</code> — triggered after a successful request and rendering of a response
-(you can rely on new attributes being present and working when this event is
-triggered)</li>
-</ol>
-<p>All events bubble up to the root of the DOM tree.</p>
-<h2 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Any attribute that starts with <code>on:</code> and contains a space-separated list of
-  actions to initiate</li>
-<li>Any attribute that starts with <code>event:</code> and contains a comma-separated list of
-  name-value pairs separated by <code>=</code><br />
-  The value part is optional, and the key will be checked only for truthiness if
-  omitted.<br />
-  Each key and value pair must match the event object; otherwise, the event 
-  handling is skipped.<br />
-  Can be used, for example, to associate hotkeys with an element.</li>
-</ul>
-<h2 id="basic-example">Basic Example<a class="headerlink" href="#basic-example" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Moving the mouse cursor into the button initiates the <code>doSomething</code> action</li>
-<li>Clicking the button initiates two actions: <code>loadData</code> and <code>updateCounter</code></li>
-<li>Nothing happens as a result, since none of the elements subscribe to any of
-  these actions</li>
-</ul>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;loadData updateCounter&quot;</span> <span class="na">on:mouseenter</span><span class="o">=</span><span class="s">&quot;doSomething&quot;</span><span class="p">&gt;</span>
-  click me
-<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+  <h1>Installation</h1>
+
+<p>KEML is designed to be ultra simple to use — there is no programmatic API, no
+JavaScript exports, and no setup or configuration required.</p>
+<p>First, install the
+<a href="https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode">official KEML extension</a>
+from the VS Code Marketplace if you haven't already.</p>
+<p>Then, simply include the library via CDN in your HTML:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://unpkg.com/keml&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
-<h2 id="hotkey-example">Hotkey Example<a class="headerlink" href="#hotkey-example" title="Permanent link">&para;</a></h2>
-<ul>
-<li>putting the cursor inside of the input and pressing <code>Alt+Esc</code> initiates the
-  <code>hotkeysAreCool</code> action</li>
-</ul>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span> <span class="na">event:keyup</span><span class="o">=</span><span class="s">&quot;code=Escape, altKey&quot;</span> <span class="na">on:keyup</span><span class="o">=</span><span class="s">&quot;hotkeysAreCool&quot;</span><span class="p">&gt;</span>
+<p>Alternatively, if you prefer to manage dependencies locally or bundle KEML with
+your project, install it using npm:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>keml
 </code></pre></div></td></tr></table></div>
-<h2 id="bubbling-example">Bubbling Example<a class="headerlink" href="#bubbling-example" title="Permanent link">&para;</a></h2>
-<ul>
-<li>When you click the image, the button’s <code>handleClick</code> action is initiated 
-  because it is the first matching <code>on:&lt;event name&gt;</code> on a parent element.</li>
-<li>This works with any number of nesting levels (e.g., global hotkeys on the 
-  body element)</li>
-</ul>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;handleClick&quot;</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;bat-cat.jpg&quot;</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
+<p>The compiled bundle, <code>keml.js</code>, will be available at the root of the installed
+package.</p>
 <hr />
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Please be mindful that all actions are, by design, global within the page
-they are used on.</p>
-<p>It is your responsibility to generate unique action names to ensure that no
-other parts of the application are affected by the actions you trigger.</p>
-</div>
-<p>Example of a potential pitfall:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">get</span><span class="o">=</span><span class="s">&quot;/data.html&quot;</span> <span class="na">on</span><span class="o">=</span><span class="s">&quot;loadData&quot;</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;loadData&quot;</span><span class="p">&gt;</span>click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">button</span> <span class="na">get</span><span class="o">=</span><span class="s">&quot;/data.html&quot;</span> <span class="na">on</span><span class="o">=</span><span class="s">&quot;loadData&quot;</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;loadData&quot;</span><span class="p">&gt;</span>click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>In the example above, we can imagine that it is the same button component,
-simply rendered twice.</p>
-<p>But, they are two distinct elements on the page that trigger and subscribe to
-the same action <code>loadData</code>.</p>
-<p>Thus, when you click either of them, two network requests will be sent to the
-server.</p>
+<h2 id="using-keml-with-other-libraries-and-frameworks">Using KEML with Other Libraries and Frameworks<a class="headerlink" href="#using-keml-with-other-libraries-and-frameworks" title="Permanent link">&para;</a></h2>
+<p>KEML observes DOM changes, so you don’t need to do anything special to integrate
+it with your app.</p>
+<p>Whenever your application dynamically creates or updates elements, KEML will
+seamlessly handle them just like elements rendered on the server.</p>
+<p>This makes KEML compatible with virtually any front-end framework or custom
+JavaScript code, without any extra setup.</p>
+<hr />
+<h2 id="demos">Demos<a class="headerlink" href="#demos" title="Permanent link">&para;</a></h2>
+<p>All interactive demos in this documentation run on the real KEML runtime.</p>
+<p>Each demo is split into three tabs:</p>
+<ul>
+<li>HTML — the client program</li>
+<li>Server — the server program</li>
+<li>Result — the running application produced by executing both programs</li>
+</ul>
+<p>The HTML and Server tabs contain the actual programs used to produce the Result
+tab.</p>
+<p>You can also explore the
+<a href="https://github.com/thealjey/keml/tree/main/examples">examples</a>
+folder on GitHub.</p>
 
 
 
@@ -709,6 +961,8 @@ server.</p>
     
     
       <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+        <script src="../assets/keml.js"></script>
       
     
   </body>

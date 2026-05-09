@@ -12,25 +12,28 @@
         <meta name="author" content="Eugene Kuzmenko">
       
       
-        <link rel="canonical" href="https://thealjey.github.io/keml/render/">
+        <link rel="canonical" href="https://thealjey.github.io/keml/taxonomy/">
       
       
-        <link rel="prev" href="../action/">
+        <link rel="prev" href="../motivation/">
       
       
-        <link rel="next" href="../state/">
+        <link rel="next" href="../installation/">
       
       
-      <link rel="icon" href="../img/favicon.ico">
+      <link rel="icon" href="../assets/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
     
     
       
-        <title>Render - keml</title>
+        <title>Taxonomy - keml</title>
       
     
     
       <link rel="stylesheet" href="../assets/stylesheets/main.e53b48f4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -49,6 +52,10 @@
       
     
     
+      <link rel="stylesheet" href="../assets/tachyons.css">
+    
+      <link rel="stylesheet" href="../assets/style.css">
+    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -59,7 +66,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -68,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rendering-responses" class="md-skip">
+        <a href="#action" class="md-skip">
           Skip to content
         </a>
       
@@ -86,7 +100,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="keml" class="md-header__button md-logo" aria-label="keml" data-md-component="logo">
       
-  <img src="../img/logo192.png" alt="logo">
+  <img src="../assets/logo192.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -103,12 +117,38 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Render
+              Taxonomy
             
           </span>
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Light Mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Light Mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Dark Mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Dark Mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -195,7 +235,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="keml" class="md-nav__button md-logo" aria-label="keml" data-md-component="logo">
       
-  <img src="../img/logo192.png" alt="logo">
+  <img src="../assets/logo192.png" alt="logo">
 
     </a>
     keml
@@ -244,56 +284,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../install/" class="md-nav__link">
+      <a href="../motivation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Install
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../event/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Event
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../action/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Action
+    Motivation
     
   </span>
   
@@ -316,15 +312,13 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
   
   
   <span class="md-ellipsis">
-    Render
+    Taxonomy
     
   </span>
   
@@ -337,7 +331,7 @@
   
   
   <span class="md-ellipsis">
-    Render
+    Taxonomy
     
   </span>
   
@@ -350,8 +344,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -360,27 +352,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#attributes" class="md-nav__link">
+  <a href="#action" class="md-nav__link">
     <span class="md-ellipsis">
-      Attributes
+      action
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-example" class="md-nav__link">
+  <a href="#state" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic example
+      state
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-based-optimization-example" class="md-nav__link">
+  <a href="#result" class="md-nav__link">
     <span class="md-ellipsis">
-      Key based optimization example
+      result
     </span>
   </a>
   
@@ -401,12 +393,353 @@
   
   
     <li class="md-nav__item">
-      <a href="../state/" class="md-nav__link">
+      <a href="../installation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Event
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Event
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event/on-colon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    on:*
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event/on/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    on
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event/reset/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    reset
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event/scroll/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    scroll
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Result
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Result
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../result/result/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    result / error
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../result/render/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    render
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
     State
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            State
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../state/if-colon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    if:*
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../state/if/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    if
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SSE
     
   </span>
   
@@ -445,12 +778,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../glossary/" class="md-nav__link">
+      <a href="../reference/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Glossary
+    Reference
     
   </span>
   
@@ -499,8 +832,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -509,27 +840,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#attributes" class="md-nav__link">
+  <a href="#action" class="md-nav__link">
     <span class="md-ellipsis">
-      Attributes
+      action
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-example" class="md-nav__link">
+  <a href="#state" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic example
+      state
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-based-optimization-example" class="md-nav__link">
+  <a href="#result" class="md-nav__link">
     <span class="md-ellipsis">
-      Key based optimization example
+      result
     </span>
   </a>
   
@@ -554,133 +885,58 @@
   
 
 
-<h1 id="rendering-responses">Rendering responses<a class="headerlink" href="#rendering-responses" title="Permanent link">&para;</a></h1>
-<p>HTML elements that trigger requests or subscribe to SSE events can initiate
-multiple result actions, all of which refer to the same server response.</p>
-<p>Multiple elements can initiate the same result action, thus triggering the
-rendering of different responses under the same action name.</p>
-<p>Multiple elements can subscribe to the same result action and render the same
-server response.</p>
-<p>KEML applies the minimal set of DOM mutations necessary to synchronize the
-document with the server response.</p>
-<p>If the server response is identical to what is currently rendered in the
-document, no changes are applied.</p>
-<h2 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
-<ol>
-<li><code>result</code>, specified on an element that performs a request, contains a
-   space-separated list of render actions to initiate.</li>
-<li><code>error</code> works exactly like <code>result</code>, but applies when the server responds
-   with an unsuccessful status code.</li>
-<li><code>render</code>, specified on any element — including the one that triggered the
-   request — contains the render action name to subscribe to.</li>
-<li><code>key</code> uniquely identifies an element among its DOM siblings (same-level
-   nodes). It helps the diffing algorithm recognize elements between renders. It
-   is strongly recommended only when sibling tag names or internal structures
-   differ; in that case, keys are useful if elements are added, removed, or
-   reordered.</li>
-<li><code>position</code> controls the render strategy applied to the element itself:<ul>
-<li><code>replaceChildren</code> (default) replaces all of the element's children with
-  the server response</li>
-<li><code>replaceWith</code> replaces the element itself with the server response</li>
-<li><code>before</code> renders the server response directly before the current element</li>
-<li><code>after</code> renders the server response directly after the current element</li>
-<li><code>prepend</code> prepends the server response before the first child of the
-  current element</li>
-<li><code>append</code> appends the server response after the last child of the current
-  element</li>
-</ul>
-</li>
-</ol>
-<h2 id="basic-example">Basic example<a class="headerlink" href="#basic-example" title="Permanent link">&para;</a></h2>
+  <h1>Taxonomy</h1>
+
+<p>This page provides centralized definitions for KEML-specific terminology.</p>
+<hr />
+<h2 id="action">action<a class="headerlink" href="#action" title="Permanent link">&para;</a></h2>
+<p>An action in KEML is a global name, loosely similar to CSS class names as used
+in HTML.</p>
+<p>It does not perform any work and is not owned by any element. It simply exists
+as a declared intent that elements may emit or react to.</p>
+<p>For example, <code>on:mouseover="foo bar"</code> vs <code>class="foo bar"</code>.<br />
+<code>foo</code> and <code>bar</code> are both global identifiers in their respective systems. They
+are not behavior — just names. In that sense, they are the same kind of thing.</p>
+<p>Because actions are so simple, they can be understood by tooling.<br />
+They can be statically analyzed and strictly typed.</p>
+<p>Actions can be either used as inputs or outputs. You can only input one action
+at a time into a receiving attribute, but output many.</p>
+<p>There are 3* distinct action types in KEML:</p>
 <ul>
-<li>clicking the button initiates the <code>getUserCount</code> action</li>
-<li>the button itself subscribes to that action using the <code>on</code> attribute</li>
-<li>the button sends a "GET" request to "/user-count"</li>
-<li>upon successfully receiving the response the button initiates the <code>userCount</code>
-  result action</li>
-<li>the div subscribes to the <code>userCount</code> action and renders the server response
-  into itself</li>
-<li>the span subscribes to the <code>userCount</code> action and replaces itself with the
-  server response</li>
+<li>event actions are generated by browser events</li>
+<li>result actions are generated by server results</li>
+<li>state actions are generated by evaluating state conditions</li>
+<li><a href="../sse/">SSE</a> event types could be imagined as being the forth type, in the
+  sense that they are used as event-like input actions (the output is on the
+  server). They technically are not, though. But, they are also not really
+  events in the same way as DOM events are either (I swear it is not as bad as
+  it sounds, KEML makes them really nice to work with)</li>
 </ul>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
-  <span class="na">get</span><span class="o">=</span><span class="s">&quot;/user-count&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;getUserCount&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;getUserCount&quot;</span>
-  <span class="na">result</span><span class="o">=</span><span class="s">&quot;userCount&quot;</span>
-<span class="p">&gt;</span>click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">div</span> <span class="na">render</span><span class="o">=</span><span class="s">&quot;userCount&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">span</span> <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span> <span class="na">render</span><span class="o">=</span><span class="s">&quot;userCount&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<h2 id="key-based-optimization-example">Key based optimization example<a class="headerlink" href="#key-based-optimization-example" title="Permanent link">&para;</a></h2>
-<p>Imagine that your server endpoint returns this HTML on the first request:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
-  <span class="cm">&lt;!-- heavy DOM with a lot of rows --&gt;</span>
-<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>And on the next request it returns:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;info&quot;</span><span class="p">&gt;</span>Notification text<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">table</span><span class="p">&gt;</span>
-  <span class="cm">&lt;!-- heavy DOM with a lot of rows --&gt;</span>
-<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>The table used to be at position 0 among its siblings, and now it is at 
-position 1.</p>
-<p>The renderer would have no way of knowing it is the same table and would have
-to re-render everything from scratch.</p>
-<p>Since the tag names no longer match their previous positions, we cannot take
-advantage of any diffing algorithm to help us.</p>
-<p>It would still work, but performance would suffer significantly.</p>
-<p>Here is what your server should do:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;info&quot;</span> <span class="na">key</span><span class="o">=</span><span class="s">&quot;notification&quot;</span><span class="p">&gt;</span>Notification text<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">table</span> <span class="na">key</span><span class="o">=</span><span class="s">&quot;table&quot;</span><span class="p">&gt;</span>
-  <span class="cm">&lt;!-- heavy DOM with a lot of rows --&gt;</span>
-<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>Now both elements clearly identify themselves to the renderer, and performance
-is excellent once again.</p>
+<p>You can only consume an action of a compatible type.</p>
+<!-- prettier-ignore-start -->
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>Keys are not actions.</p>
-<p>They do not need to be globally unique — only unique among sibling DOM
-elements.</p>
+<p>All actions are global within the page they are used on.<br />
+Use unique action names when needed to prevent collisions.</p>
 </div>
-<p>That said, keys matter only when the actual structure of sibling elements
-changes between renders.</p>
-<p>For example, let's imagine that your server returns this html on the first
-request:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">li</span> <span class="na">key</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="p">&gt;</span>Book title 1<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">li</span> <span class="na">key</span><span class="o">=</span><span class="s">&quot;2&quot;</span><span class="p">&gt;</span>Book title 2<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>And on the next request it returns:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">li</span> <span class="na">key</span><span class="o">=</span><span class="s">&quot;2&quot;</span><span class="p">&gt;</span>Book title 2<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">li</span> <span class="na">key</span><span class="o">=</span><span class="s">&quot;1&quot;</span><span class="p">&gt;</span>Book title 1<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>The keys are redundant here because it is slightly more expensive and 
-unnecessary to shuffle these list items than simply updating the contents of 
-their respective text nodes.</p>
-<p>This would then be both simpler and more efficient:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>Book title 2<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>Book title 1<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
+<!-- prettier-ignore-end -->
+
+<hr />
+<h2 id="state">state<a class="headerlink" href="#state" title="Permanent link">&para;</a></h2>
+<p>A state in KEML does not represent data.</p>
+<p>It is a boolean condition that an element can check on itself and output zero
+or more actions.</p>
+<p>For example, <code>if:loading="spinner"</code>.<br />
+<code>loading</code> is a state condition and <code>spinner</code> is a state action.</p>
+<hr />
+<h2 id="result">result<a class="headerlink" href="#result" title="Permanent link">&para;</a></h2>
+<p>Even though this word may appear to be used interchangeably with response,
+the two are not equal in meaning.</p>
+<p>A response is a reply to a request, while a result can also arrive completely
+unprompted, such as through <a href="../sse/">SSE</a>.</p>
+<p>All responses are results, but not all results are responses.</p>
+<hr />
+<p>Now that we're done with the formalities, lets see it in action 🎉</p>
 
 
 
@@ -737,6 +993,8 @@ their respective text nodes.</p>
     
     
       <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+        <script src="../assets/keml.js"></script>
       
     
   </body>

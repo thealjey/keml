@@ -15,11 +15,11 @@
         <link rel="canonical" href="https://thealjey.github.io/keml/news/">
       
       
-        <link rel="prev" href="../glossary/">
+        <link rel="prev" href="../reference/">
       
       
       
-      <link rel="icon" href="../img/favicon.ico">
+      <link rel="icon" href="../assets/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
     
     
@@ -29,6 +29,9 @@
     
     
       <link rel="stylesheet" href="../assets/stylesheets/main.e53b48f4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -47,6 +50,10 @@
       
     
     
+      <link rel="stylesheet" href="../assets/tachyons.css">
+    
+      <link rel="stylesheet" href="../assets/style.css">
+    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -57,7 +64,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -66,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#news" class="md-skip">
+        <a href="#v34" class="md-skip">
           Skip to content
         </a>
       
@@ -84,7 +98,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="keml" class="md-header__button md-logo" aria-label="keml" data-md-component="logo">
       
-  <img src="../img/logo192.png" alt="logo">
+  <img src="../assets/logo192.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -107,6 +121,32 @@
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Light Mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Light Mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Dark Mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Dark Mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -193,7 +233,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="keml" class="md-nav__button md-logo" aria-label="keml" data-md-component="logo">
       
-  <img src="../img/logo192.png" alt="logo">
+  <img src="../assets/logo192.png" alt="logo">
 
     </a>
     keml
@@ -242,12 +282,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../install/" class="md-nav__link">
+      <a href="../motivation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Install
+    Motivation
     
   </span>
   
@@ -264,8 +304,63 @@
   
   
     <li class="md-nav__item">
-      <a href="../event/" class="md-nav__link">
+      <a href="../taxonomy/" class="md-nav__link">
         
+  
+  
+  <span class="md-ellipsis">
+    Taxonomy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -274,24 +369,29 @@
   </span>
   
 
-      </a>
-    </li>
-  
-
-    
-      
-      
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Event
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
   
   
   
   
     <li class="md-nav__item">
-      <a href="../action/" class="md-nav__link">
+      <a href="../event/on-colon/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Action
+    on:*
     
   </span>
   
@@ -300,25 +400,80 @@
     </li>
   
 
-    
-      
-      
+              
+            
+              
+                
   
   
   
   
     <li class="md-nav__item">
-      <a href="../render/" class="md-nav__link">
+      <a href="../event/on/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Render
+    on
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event/reset/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    reset
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event/scroll/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    scroll
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -329,13 +484,195 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../state/" class="md-nav__link">
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Result
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Result
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../result/result/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    result / error
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../result/render/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    render
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
     State
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            State
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../state/if-colon/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    if:*
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../state/if/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    if
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SSE
     
   </span>
   
@@ -374,12 +711,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../glossary/" class="md-nav__link">
+      <a href="../reference/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Glossary
+    Reference
     
   </span>
   
@@ -401,8 +738,6 @@
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
-      
-        
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
@@ -436,8 +771,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -446,42 +779,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#v34" class="md-nav__link">
+    <span class="md-ellipsis">
+      v3.4
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v33" class="md-nav__link">
     <span class="md-ellipsis">
       v3.3
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="v3.3">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-is-sse" class="md-nav__link">
-    <span class="md-ellipsis">
-      What is SSE?
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#event-flow-comparison" class="md-nav__link">
-    <span class="md-ellipsis">
-      Event Flow Comparison
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
-  <a href="#official-vs-code-extension" class="md-nav__link">
+  <a href="#vs-code-extension" class="md-nav__link">
     <span class="md-ellipsis">
-      Official VS Code Extension
+      VS Code Extension
     </span>
   </a>
   
@@ -494,39 +812,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="v3.2">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#performance" class="md-nav__link">
-    <span class="md-ellipsis">
-      Performance
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#maintainability" class="md-nav__link">
-    <span class="md-ellipsis">
-      Maintainability
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#quality" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quality
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -536,71 +821,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="v3.1">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#event-bubbling" class="md-nav__link">
-    <span class="md-ellipsis">
-      Event Bubbling
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
-  <a href="#v3-is-finally-out" class="md-nav__link">
+  <a href="#v3" class="md-nav__link">
     <span class="md-ellipsis">
-      v3 is finally out!
+      v3
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="v3 is finally out!">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#no-magic" class="md-nav__link">
-    <span class="md-ellipsis">
-      No Magic
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#observing-the-dom" class="md-nav__link">
-    <span class="md-ellipsis">
-      Observing the DOM
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#new-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      New Features
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#breaking-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Breaking Changes
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -629,8 +857,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -639,42 +865,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#v34" class="md-nav__link">
+    <span class="md-ellipsis">
+      v3.4
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v33" class="md-nav__link">
     <span class="md-ellipsis">
       v3.3
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="v3.3">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-is-sse" class="md-nav__link">
-    <span class="md-ellipsis">
-      What is SSE?
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#event-flow-comparison" class="md-nav__link">
-    <span class="md-ellipsis">
-      Event Flow Comparison
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
-  <a href="#official-vs-code-extension" class="md-nav__link">
+  <a href="#vs-code-extension" class="md-nav__link">
     <span class="md-ellipsis">
-      Official VS Code Extension
+      VS Code Extension
     </span>
   </a>
   
@@ -687,39 +898,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="v3.2">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#performance" class="md-nav__link">
-    <span class="md-ellipsis">
-      Performance
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#maintainability" class="md-nav__link">
-    <span class="md-ellipsis">
-      Maintainability
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#quality" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quality
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -729,71 +907,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="v3.1">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#event-bubbling" class="md-nav__link">
-    <span class="md-ellipsis">
-      Event Bubbling
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
-  <a href="#v3-is-finally-out" class="md-nav__link">
+  <a href="#v3" class="md-nav__link">
     <span class="md-ellipsis">
-      v3 is finally out!
+      v3
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="v3 is finally out!">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#no-magic" class="md-nav__link">
-    <span class="md-ellipsis">
-      No Magic
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#observing-the-dom" class="md-nav__link">
-    <span class="md-ellipsis">
-      Observing the DOM
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#new-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      New Features
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#breaking-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Breaking Changes
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -816,214 +937,54 @@
   
 
 
-<h1 id="news">News<a class="headerlink" href="#news" title="Permanent link">&para;</a></h1>
-<hr />
+  <h1>News</h1>
+
+<h2 id="v34">v3.4<a class="headerlink" href="#v34" title="Permanent link">&para;</a></h2>
+<p>Added:</p>
+<ul>
+<li><code>failure</code> and <code>discover</code> <a href="../event/on-colon/#keml-defined-events">event types</a></li>
+</ul>
+<p>Changed:</p>
+<ul>
+<li>unified internal attribute resolution</li>
+<li><code>name</code> + <code>value</code> attribute pairs now work at any nesting level</li>
+<li>documentation rewrite</li>
+</ul>
 <hr />
 <h2 id="v33">v3.3<a class="headerlink" href="#v33" title="Permanent link">&para;</a></h2>
-<p>KEML v3.3 introduces <strong>server-driven events</strong> using SSE (Server-Sent Events).</p>
-<p>This allows events to flow <strong>from the server to the client</strong> directly, without
-requiring a user interaction to trigger them. Everything else — rendering and
-reactive updates — works just like before.</p>
-<p>Also, in this release, is automatic scrolling support with the help of the new
-<a href="../action/#attributes">scroll</a> attribute and logging support with the new
-<a href="../logging/">log</a> attribute.</p>
-<h3 id="what-is-sse">What is SSE?<a class="headerlink" href="#what-is-sse" title="Permanent link">&para;</a></h3>
-<p>SSE is a standard web technology that lets the server
-<strong>push messages to the browser</strong> over a persistent HTTP connection. It’s simple,
-efficient, and perfect for real-time updates such as chat messages,
-notifications, or live dashboards.</p>
-<p>For more information, see
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">Server-Sent Events – on MDN</a>.</p>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>Just like XHR responses,
-<strong>SSE server data must always contain HTML strings</strong>.</p>
-</div>
-<h3 id="event-flow-comparison">Event Flow Comparison<a class="headerlink" href="#event-flow-comparison" title="Permanent link">&para;</a></h3>
-<p><strong>XHR example:</strong></p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/hello&quot;</span> <span class="na">on</span><span class="o">=</span><span class="s">&quot;hello&quot;</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;hello&quot;</span> <span class="na">result</span><span class="o">=</span><span class="s">&quot;response&quot;</span><span class="p">&gt;</span>
-  click me
-<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>Steps:</p>
-<ol>
-<li>User clicks the button</li>
-<li>The click triggers a <code>hello</code> event action</li>
-<li>The button subscribes to the <code>hello</code> event action</li>
-<li>Upon observing the action, the button sends a GET request to <code>"/hello"</code></li>
-<li>When the server response is received, a <code>response</code> result action is triggered</li>
-</ol>
-<p>Flow: <strong>click → request → response</strong></p>
+<p>Added:</p>
+<ul>
+<li><a href="../sse/">SSE</a></li>
+<li><a href="../event/scroll/">scroll</a></li>
+<li><a href="../logging/">log</a></li>
+</ul>
 <hr />
-<p><strong>SSE example:</strong></p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/hello&quot;</span> <span class="na">result</span><span class="o">=</span><span class="s">&quot;response&quot;</span> <span class="na">sse</span><span class="o">=</span><span class="s">&quot;hello&quot;</span><span class="p">&gt;</span>click me<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>Steps:</p>
-<ol>
-<li>The button listens for <code>"hello"</code> events from the server</li>
-<li>The server decides when to trigger the event and sends a response directly
-   embedded into the event, with no interaction from the user necessary, which
-   triggers the <code>response</code> result action</li>
-</ol>
-<p>Flow: <strong><del>click → request →</del> response</strong><br />
-The <strong>click</strong> and <strong>request</strong> steps are no longer needed; the response arrives
-automatically.</p>
-<p>This makes it trivial to move from <strong>user-driven actions</strong> to
-<strong>server-driven updates</strong>, without changing any of your rendering logic.</p>
-<hr />
-<hr />
-<h2 id="official-vs-code-extension">Official VS Code Extension<a class="headerlink" href="#official-vs-code-extension" title="Permanent link">&para;</a></h2>
-<p>I’m excited to announce the <a href="https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode"><strong>official KEML extension for VS Code</strong></a>!  </p>
-<p>With this extension, writing KEML in your HTML files feels like working in a
-full programming language.<br />
-It provides <strong>autocomplete, hover tooltips, Go to Definition/References</strong>, and
-<strong>inline diagnostics</strong> that catch mistakes before they happen.  </p>
-<p>Beyond just helping with action names, the diagnostics
-<strong>point out missing or misused attributes, explain what’s wrong, and guide you toward correct usage</strong>.<br />
-In other words, the extension acts as <strong>interactive documentation</strong>, letting you
-learn and write KEML safely while staying productive.  </p>
-<p>The KEML runtime remains separate, so your existing projects keep working as
-before — now you can enjoy the benefits of <strong>full Intellisense</strong> without
-touching your codebase.  </p>
-<p>Writing KEML has never been faster, safer, or more fun!  </p>
-<hr />
+<h2 id="vs-code-extension">VS Code Extension<a class="headerlink" href="#vs-code-extension" title="Permanent link">&para;</a></h2>
+<p>KEML now has an
+<a href="https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode">official VS Code extension</a>.</p>
 <hr />
 <h2 id="v32">v3.2<a class="headerlink" href="#v32" title="Permanent link">&para;</a></h2>
-<p>This release changes both everything and nothing at the same time.</p>
-<p>It is fully backward compatible, but shares almost no code in common with the
-old version.</p>
-<p>Nothing in your apps needs to change.<br />
-If they are already working fine - they will continue to do so.</p>
-<p>You will be taking advantage of the improved performance, memory efficiency and
-correctness/reliability completely for free.</p>
-<p>So, what changed?</p>
-<h4 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h4>
-<p>3.2 does away with trying to be as small as possible at the expense of
-everything else.<br />
-It will happily be larger if the payoff is better run-time performance.<br />
-As a result, it has doubled in size to the still incredibly tiny 8kb.</p>
-<ol>
-<li>no functional code</li>
-<li>no regular expressions</li>
-<li>no recursion if it can be avoided</li>
-<li>minimal allocations</li>
-<li>low level APIs are used whenever possible</li>
-<li>no DOM updates outside of the render loop, no matter how trivial</li>
-<li>dedicated per-attribute intersection observers</li>
-<li>no subscribing to events not used by the application</li>
-<li>the <a href="../render/#attributes">key</a> attribute</li>
-<li>etc</li>
-</ol>
-<h4 id="maintainability">Maintainability<a class="headerlink" href="#maintainability" title="Permanent link">&para;</a></h4>
-<p>The code is no longer allowed to be an unreadable cryptic mess, whose only
-purpose is to be optimally minify-able.</p>
-<p>Related functionality is grouped into separate files.</p>
-<h4 id="quality">Quality<a class="headerlink" href="#quality" title="Permanent link">&para;</a></h4>
-<p>The source code is thoroughly documented and unit tested with 100% coverage.</p>
-<p>File imports are automatically verified not to cause any cyclic dependencies.</p>
-<p>Since python was never a requirement for the functionality of the project, but
-only for the documentation and the examples, having it as an install script was
-clearly a mistake that made installing the package through npm potentially
-inconvenient.<br />
-That has now been fixed.</p>
-<hr />
+<p>Fixed:</p>
+<ul>
+<li>removed auto-install for python dependencies</li>
+</ul>
 <hr />
 <h2 id="v31">v3.1<a class="headerlink" href="#v31" title="Permanent link">&para;</a></h2>
-<h3 id="event-bubbling">Event Bubbling<a class="headerlink" href="#event-bubbling" title="Permanent link">&para;</a></h3>
-<p>Event handling now bubbles up the DOM tree as you would expect.</p>
-<p>This is mostly a non-breaking convenience feature.</p>
-<p>Previously, it was necessary to make sure that an event is always triggered
-on the exact same element that contains the event handling logic.</p>
-<p>Like in the following example, using the <code>inert</code> attribute to make sure that the
-nested image does not "steal" the click events for itself:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;handleClick&quot;</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">img</span> <span class="na">inert</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;bat-cat.jpg&quot;</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>With v3.1, this is no longer the case, because KEML will automatically locate
-the first parent element that matches the event.</p>
-<p>So, this is now equivalent:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;handleClick&quot;</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;bat-cat.jpg&quot;</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
+<p>Added:</p>
+<ul>
+<li><a href="../event/on-colon/#parent-handler">parent handler</a></li>
+</ul>
 <hr />
-<hr />
-<h2 id="v3-is-finally-out">v3 is finally out!<a class="headerlink" href="#v3-is-finally-out" title="Permanent link">&para;</a></h2>
-<p>It is said that simplicity is hard, and absolute simplicity is hard absolutely.</p>
-<p>KEML v3 was that and much more.</p>
-<p>And, while a major version of a library could simply be prompted by any breaking
-change, what we have here is certainly not that case.</p>
-<p>It was probably more like v123, or something like that, behind the scenes with
-the sheer number of complete rewrites, head scratching, and a couple of moments
-of brilliance.</p>
-<p>v3 brings new features, stability, reliability, resilience, performance, memory
-efficiency and optimizations that were nigh impossible with v2.</p>
-<p>And it does it all while having an even smaller file size.</p>
-<p>So, what changed?</p>
-<h4 id="no-magic">No Magic<a class="headerlink" href="#no-magic" title="Permanent link">&para;</a></h4>
-<p>Magic, in programming, can be described as - behaviors determined by nothing
-other than naming something a certain way or placing it in a certain place.</p>
-<p>And it is almost always a really bad idea.</p>
-<p>The so called "special actions" were a major pain in the rear end that came out
-of technical limitations and nothing else.</p>
-<p>v3 embraces actions to the max, literally everything is controlled by them and
-nothing else and there are no special and/or reserved action names at all.</p>
-<h4 id="observing-the-dom">Observing the DOM<a class="headerlink" href="#observing-the-dom" title="Permanent link">&para;</a></h4>
-<p>DOM changes are automatically observed in v3.</p>
-<p>Whether an element came from the server on the initial page load, after
-subsequent AJAX requests, is created or modified by userland code, by you
-changing something through the dev tools DOM Inspector tab, or even by some
-browser extension, it makes no difference at all.</p>
-<p>That's right, KEML will never be broken by another password manager ever again
-:&rpar;</p>
-<p>And if you want to use jQuery or React alongside KEML, you totally can. And you
-never need to tell it that you've changed something in the document.</p>
-<h4 id="new-features">New Features<a class="headerlink" href="#new-features" title="Permanent link">&para;</a></h4>
-<p>v3 comes with a couple of new states, a couple of new ways to perform a redirect
-and somewhat of a way to handle hotkeys, but really, nothing Earth-shattering.</p>
-<p>The big deal is that the greatly improved codebase allows adding new features
-easily and without breaking the existing ones or negatively affecting the
-performance.</p>
-<hr />
-<h3 id="breaking-changes">Breaking Changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h3>
-<p>The only breaking change is the absence of "special" actions.</p>
-<p>So, this:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/something&quot;</span> <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;pushState&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>Has to turn into this (the same with <code>replaceState</code>):</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">a</span>
-  <span class="na">href</span><span class="o">=</span><span class="s">&quot;/something&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;someUniqueName&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;someUniqueName&quot;</span>
-  <span class="na">redirect</span><span class="o">=</span><span class="s">&quot;pushState&quot;</span>
-<span class="p">&gt;&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>The <code>redirect</code> attribute cannot contain an endpoint configuration anymore.</p>
-<p>And this:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">form</span> <span class="na">on:submit</span><span class="o">=</span><span class="s">&quot;doSubmit reset&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>Has to turn into this:</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">form</span> <span class="na">on:submit</span><span class="o">=</span><span class="s">&quot;doSubmit resetThisForm&quot;</span> <span class="na">reset</span><span class="o">=</span><span class="s">&quot;resetThisForm&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
-</code></pre></div></td></tr></table></div>
-<p>It looks more verbose, but offers infinitely more flexibility.</p>
-<hr />
-<p>That's all, folks!</p>
-<p>Happy coding and have an awesome day,<br />
-Eugene K.</p>
-<hr />
-<hr />
+<h2 id="v3">v3<a class="headerlink" href="#v3" title="Permanent link">&para;</a></h2>
+<p>Added:</p>
+<ul>
+<li>automatic tracking for all DOM changes</li>
+<li><a href="../event/on-colon/#event-modifier">event:</a> modifier</li>
+</ul>
+<p>Breaking:</p>
+<ul>
+<li>removed special actions</li>
+</ul>
 
 
 
@@ -1080,6 +1041,8 @@ Eugene K.</p>
     
     
       <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+        <script src="../assets/keml.js"></script>
       
     
   </body>

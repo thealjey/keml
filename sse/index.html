@@ -12,26 +12,28 @@
         <meta name="author" content="Eugene Kuzmenko">
       
       
-        <link rel="canonical" href="https://thealjey.github.io/keml/">
+        <link rel="canonical" href="https://thealjey.github.io/keml/sse/">
       
       
+        <link rel="prev" href="../state/if/">
       
-        <link rel="next" href="motivation/">
+      
+        <link rel="next" href="../logging/">
       
       
-      <link rel="icon" href="assets/favicon.ico">
+      <link rel="icon" href="../assets/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
     
     
       
-        <title>keml</title>
+        <title>SSE - keml</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.e53b48f4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.e53b48f4.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -50,11 +52,11 @@
       
     
     
-      <link rel="stylesheet" href="assets/tachyons.css">
+      <link rel="stylesheet" href="../assets/tachyons.css">
     
-      <link rel="stylesheet" href="assets/style.css">
+      <link rel="stylesheet" href="../assets/style.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -79,11 +81,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#keml" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -96,9 +93,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="keml" class="md-header__button md-logo" aria-label="keml" data-md-component="logo">
+    <a href=".." title="keml" class="md-header__button md-logo" aria-label="keml" data-md-component="logo">
       
-  <img src="assets/logo192.png" alt="logo">
+  <img src="../assets/logo192.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -115,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              SSE
             
           </span>
         </div>
@@ -231,9 +228,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="keml" class="md-nav__button md-logo" aria-label="keml" data-md-component="logo">
+    <a href=".." title="keml" class="md-nav__button md-logo" aria-label="keml" data-md-component="logo">
       
-  <img src="assets/logo192.png" alt="logo">
+  <img src="../assets/logo192.png" alt="logo">
 
     </a>
     keml
@@ -257,19 +254,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -280,7 +268,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -292,7 +279,7 @@
   
   
     <li class="md-nav__item">
-      <a href="motivation/" class="md-nav__link">
+      <a href="../motivation/" class="md-nav__link">
         
   
   
@@ -314,7 +301,7 @@
   
   
     <li class="md-nav__item">
-      <a href="taxonomy/" class="md-nav__link">
+      <a href="../taxonomy/" class="md-nav__link">
         
   
   
@@ -336,7 +323,7 @@
   
   
     <li class="md-nav__item">
-      <a href="installation/" class="md-nav__link">
+      <a href="../installation/" class="md-nav__link">
         
   
   
@@ -396,7 +383,7 @@
   
   
     <li class="md-nav__item">
-      <a href="event/on-colon/" class="md-nav__link">
+      <a href="../event/on-colon/" class="md-nav__link">
         
   
   
@@ -419,7 +406,7 @@
   
   
     <li class="md-nav__item">
-      <a href="event/on/" class="md-nav__link">
+      <a href="../event/on/" class="md-nav__link">
         
   
   
@@ -442,7 +429,7 @@
   
   
     <li class="md-nav__item">
-      <a href="event/reset/" class="md-nav__link">
+      <a href="../event/reset/" class="md-nav__link">
         
   
   
@@ -465,7 +452,7 @@
   
   
     <li class="md-nav__item">
-      <a href="event/scroll/" class="md-nav__link">
+      <a href="../event/scroll/" class="md-nav__link">
         
   
   
@@ -533,7 +520,7 @@
   
   
     <li class="md-nav__item">
-      <a href="result/result/" class="md-nav__link">
+      <a href="../result/result/" class="md-nav__link">
         
   
   
@@ -556,7 +543,7 @@
   
   
     <li class="md-nav__item">
-      <a href="result/render/" class="md-nav__link">
+      <a href="../result/render/" class="md-nav__link">
         
   
   
@@ -624,7 +611,7 @@
   
   
     <li class="md-nav__item">
-      <a href="state/if-colon/" class="md-nav__link">
+      <a href="../state/if-colon/" class="md-nav__link">
         
   
   
@@ -647,7 +634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="state/if/" class="md-nav__link">
+      <a href="../state/if/" class="md-nav__link">
         
   
   
@@ -674,10 +661,17 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="sse/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -688,6 +682,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -699,7 +694,7 @@
   
   
     <li class="md-nav__item">
-      <a href="logging/" class="md-nav__link">
+      <a href="../logging/" class="md-nav__link">
         
   
   
@@ -721,7 +716,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/" class="md-nav__link">
+      <a href="../reference/" class="md-nav__link">
         
   
   
@@ -743,7 +738,7 @@
   
   
     <li class="md-nav__item">
-      <a href="news/" class="md-nav__link">
+      <a href="../news/" class="md-nav__link">
         
   
   
@@ -775,8 +770,6 @@
   
   
   
-    
-  
   
 </nav>
                   </div>
@@ -795,19 +788,47 @@
   
 
 
-<h1 id="keml">KEML<a class="headerlink" href="#keml" title="Permanent link">&para;</a></h1>
-<p><strong>KEML — Actions over abstractions.</strong><br />
-<em>Enhance HTML with expressive, declarative attributes that connect your frontend
-directly to your server logic.</em></p>
-<p><img alt="min+gzip" src="https://img.shields.io/badge/min%2Bgzip-4.6kb-brightgreen" />
-<img alt="Latest Release" src="https://img.shields.io/npm/v/keml" />
-<img alt="License" src="https://img.shields.io/github/license/thealjey/keml" />
-<img alt="Open Issues" src="https://img.shields.io/github/issues/thealjey/keml" />
-<img alt="Open PRs" src="https://img.shields.io/github/issues-pr/thealjey/keml" />
-<a href="https://thealjey.github.io/keml/"><img alt="Docs" src="https://img.shields.io/badge/docs-online-blue" /></a>
-<a href="https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode"><img alt="VS Code Extension" src="https://img.shields.io/badge/VS%20Code%20Extension-online-blue" /></a></p>
-<hr />
+  <h1>SSE</h1>
+
 <!-- prettier-ignore-start -->
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>SSE connections are inherently limited across browser tabs on the same domain.<br />
+KEML does everything it can to minimize them while remaining spec compliant.<br />
+But you are still advised to limit them as much as possible.<br />
+Reuse the same endpoint for SSE communication and only change the event type.</p>
+</div>
+<!-- prettier-ignore-end -->
+
+<p>SSE, or
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events">Server-sent Events</a>,
+is a method of sending results from the server without first being prompted by a
+request. The server decides entirely on its own when and what to send.</p>
+<p>Think of it as a lighter and simpler alternative to WebSockets that can only
+send data in one direction — from server to client. And given that we have
+always been able to send data from client to server using normal requests, this
+already satisfies the need for full bi-directional communication.</p>
+<p><a href="../event/on/#polling">Polling</a> also works, but it is like spamming your server
+with constant "Are we there yet?" queries. You have to balance between sending
+them too often and getting a "No!" every time, or sending them too infrequently
+and accepting that you might be displaying stale data sometimes.</p>
+<hr />
+<ul>
+<li>the attribute takes an event type sent by the server as a value, and if
+  omitted, defaults to <code>message</code></li>
+<li>endpoint resolution and override rules are the same as with
+  <a href="../event/on/#endpointmethod-configuration">on</a></li>
+<li>the HTTP method is always <code>GET</code> and cannot be overridden</li>
+<li>the <code>credentials</code> attribute behaves the same</li>
+<li>result actions and events behave the same, except there is no concept of an
+  invalid status code</li>
+</ul>
+<hr />
+<div class="tabs">
+  <label><input type="radio" name="tabs-1" checked>HTML</label>
+  <label><input type="radio" name="tabs-1">Server</label>
+  <label><input type="radio" name="tabs-1">Result</label>
+  <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
 <span class="normal"> 3</span>
@@ -820,43 +841,60 @@ directly to your server logic.</em></p>
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;submitDiv&quot;</span>
-<span class="p">&gt;</span>
-  Click me!
-<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">h4</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>Inception clock<span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
 
-<span class="cm">&lt;!-- I promise, I am a form element ;) --&gt;</span>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Counting time elapsed since the initial KEML release.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Fully controlled and updated by the server. No polling.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
 <span class="p">&lt;</span><span class="nt">div</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;submitDiv&quot;</span>
-  <span class="na">name</span><span class="o">=</span><span class="s">&quot;weirdDiv&quot;</span>
-  <span class="na">value</span><span class="o">=</span><span class="s">&quot;hello&quot;</span>
-  <span class="na">result</span><span class="o">=</span><span class="s">&quot;serverSaysHi&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;clock&quot;</span>
+  <span class="na">sse</span><span class="o">=</span><span class="s">&quot;inception-clock&quot;</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">&quot;/sse&quot;</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">&quot;sseResult&quot;</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">&quot;sseResult&quot;</span>
 <span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-
-<span class="cm">&lt;!-- I will be overwritten --&gt;</span>
-<span class="p">&lt;</span><span class="nt">p</span>
-  <span class="na">render</span><span class="o">=</span><span class="s">&quot;serverSaysHi&quot;</span>
-  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
-<span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-
-<span class="cm">&lt;!-- yep, nothing special here --&gt;</span>
-<span class="p">&lt;</span><span class="nt">title</span> <span class="na">render</span><span class="o">=</span><span class="s">&quot;serverSaysHi&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
-<!-- prettier-ignore-end -->
+  </section>
+  <section>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">{{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">segment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">([</span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="p">])</span><span class="w"> </span><span class="p">=&gt;</span>
+<span class="w">    </span><span class="s2">&quot;&lt;span&gt;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;&lt;/span&gt;&lt;span&gt;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">label</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;&lt;/span&gt;&quot;</span><span class="p">;</span>
 
-<hr />
-<p>Curious? Confused? - Great!<br />
-There is plenty of other pages to read 😀</p>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">clock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">server</span><span class="p">.</span><span class="nx">timeSince</span><span class="p">(</span><span class="mf">1716062717000</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">segment</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">tick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">server</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="s2">&quot;inception-clock&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">clock</span><span class="p">());</span>
+
+<span class="w">  </span><span class="nx">server</span><span class="p">.</span><span class="nx">addIntervalId</span><span class="p">(</span><span class="nx">setInterval</span><span class="p">(</span><span class="nx">tick</span><span class="p">,</span><span class="w"> </span><span class="mf">1000</span><span class="p">));</span>
+<span class="p">}}</span>
+</code></pre></div></td></tr></table></div>
+  </section>
+  <section class="ma3">
+<h4 class="mt0">Inception clock</h4>
+
+<p>Counting time elapsed since the initial KEML release.</p>
+
+<p>Fully controlled and updated by the server. No polling.</p>
+
+<div
+  class="clock"
+  sse="inception-clock"
+  src="/sse"
+  result="sseResult"
+  render="sseResult"
+></div>
+
+  </section>
+</div>
 
 
 
@@ -909,12 +947,12 @@ There is plenty of other pages to read 😀</p>
     
     
       
-      <script id="__config" type="application/json">{"base": ".", "features": ["navigation.instant"], "search": "assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
       
-        <script src="assets/keml.js"></script>
+        <script src="../assets/keml.js"></script>
       
     
   </body>
