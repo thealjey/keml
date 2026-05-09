@@ -1,0 +1,19 @@
+<h4 class="mt0">You can only add a single entry to the log.</h4>
+
+<button
+  type="button"
+  class="btn"
+  on:click="sendOnce"
+  on="sendOnce"
+  href="/once"
+  once
+  result="onceResult"
+>
+  Append Log
+</button>
+
+<ul
+  class="mv0"
+  render="onceResult"
+  position="append"
+></ul>

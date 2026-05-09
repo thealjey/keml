@@ -1,0 +1,16 @@
+<h4 class="mt0">
+  The request is only sent when you stop typing for two seconds.
+</h4>
+
+<input
+  name="message"
+  autocomplete="off"
+  class="input"
+  on:input="submitExpensive"
+  on="submitExpensive"
+  debounce="2000"
+  src="/expensive"
+  result="expensiveResult"
+>
+
+<div render="expensiveResult"></div>

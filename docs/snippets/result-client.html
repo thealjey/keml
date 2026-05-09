@@ -1,0 +1,23 @@
+<button
+  type="button"
+  class="btn"
+  on:click="sendResultSuccessOne"
+  on="sendResultSuccessOne"
+  href="/result-success"
+  result="resultSuccessOne"
+  on:result="sendResultSuccessTwo"
+>
+  Send
+</button>
+
+<input
+  type="hidden"
+  name="cantSeeMe"
+  on="sendResultSuccessTwo"
+  href="/result-success"
+  result="resultSuccessTwo"
+>
+
+<div render="resultSuccessOne"></div>
+
+<div render="resultSuccessTwo"></div>

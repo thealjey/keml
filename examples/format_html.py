@@ -10,6 +10,7 @@ parser.add_argument(
     default="html",
     help="Output format (default: html)",
 )
+parser.add_argument("-f", required=True, help="The file path.")
 args = parser.parse_args()
 
 
@@ -21,10 +22,18 @@ def repl(match: Match[str]) -> str:
     return f"```html\n{format_html(match.group(1))}\n```"
 
 
-content = stdin.read().strip()
+content = stdin.read()
 
-print(
-    sub(r"```html\s*\n(.*?)\n```", repl, content, flags=DOTALL | IGNORECASE)
-    if args.l == "md"
-    else format_html(content)
-)
+if "docs" in args.f:
+    print(content)
+else:
+    print(
+        sub(
+            r"```html\s*\n(.*?)\n```",
+            repl,
+            content.strip(),
+            flags=DOTALL | IGNORECASE,
+        )
+        if args.l == "md"
+        else format_html(content.strip())
+    )

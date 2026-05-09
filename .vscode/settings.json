@@ -3,31 +3,27 @@
     "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "jkillian.custom-local-formatters",
     "files.trimTrailingWhitespace": false
   },
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.tabSize": 4
   },
   "black-formatter.args": ["--line-length=80"],
   "cSpell.words": [
     "depcruise",
     "frontends",
-    "hrefs",
-    "htmx",
+    "HATEOAS",
+    "HTMX",
     "keml",
     "Kuzmenko",
     "mkdocs",
-    "Renderable"
+    "validatable"
   ],
   "customLocalFormatters.formatters": [
     {
-      "command": "python -X utf8 -m examples.format_html",
+      "command": "python -X utf8 -m examples.format_html -f ${file}",
       "languages": ["html"]
-    },
-    {
-      "command": "python -X utf8 -m examples.format_html -l md",
-      "languages": ["markdown"]
     }
   ],
   "editor.codeActionsOnSave": {
@@ -41,6 +37,7 @@
     "source.unusedImports": "always"
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.detectIndentation": false,
   "editor.dragAndDrop": false,
   "editor.emptySelectionClipboard": false,
   "editor.formatOnSave": true,
@@ -51,8 +48,11 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
+  "markdown.preview.scrollEditorWithPreview": false,
+  "markdown.preview.scrollPreviewWithEditor": false,
   "prettier.arrowParens": "avoid",
   "prettier.experimentalTernaries": true,
+  "prettier.singleAttributePerLine": true,
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": true,
   "python.analysis.completeFunctionParens": true,

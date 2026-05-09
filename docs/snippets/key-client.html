@@ -1,0 +1,42 @@
+<p class="mt0">
+  Both the notification message and the definition list are wrapped in their own
+  <code>div</code> elements.
+</p>
+
+<p>
+  Because the notification identifies itself using the <code>key</code>
+  attribute, the definition list is never disturbed.
+</p>
+
+<div
+  render="keyResult"
+  position="replaceWith"
+>
+  <button
+    type="button"
+    class="btn mb3"
+    on:click="toggleKey"
+    on="toggleKey"
+    href="/key"
+    name="switch"
+    value="hide"
+    result="keyResult"
+  >
+    show notification
+  </button>
+
+  <div>
+    <div>
+      <dl class="dl">
+        <dt>Roses are</dt>
+        <dd>red</dd>
+        <dt>Violets are</dt>
+        <dd>blue</dd>
+        <dt>KEML is</dt>
+        <dd>awesome</dd>
+        <dt>And so are</dt>
+        <dd>you</dd>
+      </dl>
+    </div>
+  </div>
+</div>

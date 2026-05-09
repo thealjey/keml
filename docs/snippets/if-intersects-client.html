@@ -1,0 +1,17 @@
+<p
+  if="isIntersecting"
+  class="mt0"
+  x-class="mt0 green"
+>
+  Scroll the container down to reveal the green <code>div</code>, and watch this
+  paragraph turn green as well.
+</p>
+
+<div class="overflow-y-auto h4">
+  <div class="h5"></div>
+
+  <div
+    class="h5 bg-green"
+    if:intersects="isIntersecting"
+  ></div>
+</div>

@@ -1,0 +1,23 @@
+<button
+  type="button"
+  class="btn"
+  on:click="sendResultFailureOne"
+  on="sendResultFailureOne"
+  href="/result-failure"
+  error="resultFailureOne"
+  on:failure="sendResultFailureTwo"
+>
+  Send
+</button>
+
+<input
+  type="hidden"
+  name="cantSeeMe"
+  on="sendResultFailureTwo"
+  href="/result-failure"
+  error="resultFailureTwo"
+>
+
+<div render="resultFailureOne"></div>
+
+<div render="resultFailureTwo"></div>

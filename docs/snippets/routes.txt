@@ -1,0 +1,27 @@
+1 => event-modifier
+1 => endpoint-override
+1 => expensive
+1 => form-submit
+1 => request-headers
+1 => parent-handler
+1 => once
+1 => result-success
+1 => result-failure
+1 => position
+1 => key
+1 => polling
+3 => if-loading
+1 => if-error
+4 => sse
+1 => https://www.example.com/nefarious => credentials
+0 => https://www.log-example.com => log
+0 => https://www.assign-example.com/page-a => location-assign-a
+0 => https://www.assign-example.com/page-b => location-assign-b
+0 => https://www.assign-example.com/page-c => location-assign-c
+0 => https://www.replace-example.com/page-a => location-replace-a
+0 => https://www.replace-example.com/page-b => location-replace-b
+0 => https://www.replace-example.com/page-c => location-assign-c
+0 => https://www.history-example.com/page-a => history-home
+1 => https://www.history-example.com/page-a => history-a
+1 => https://www.history-example.com/page-b => history-b
+1 => https://www.history-example.com/page-c => history-c

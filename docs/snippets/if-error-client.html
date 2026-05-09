@@ -1,0 +1,31 @@
+<button
+  class="btn mr3"
+  on:click="sendIfError"
+  on="sendIfError"
+  href="/if-error"
+  name="switch"
+  value="success"
+  result="ifErrorResult"
+  error="ifErrorResult"
+  render="ifErrorResult"
+  position="replaceWith"
+  if:error="isError"
+>
+  Get error code
+</button>
+
+<small
+  if="isError"
+  class="dn"
+  x-class="chip error"
+>
+  Error
+</small>
+
+<small
+  if="isError"
+  class="chip success"
+  x-class="dn"
+>
+  No errors
+</small>

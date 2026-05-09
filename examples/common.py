@@ -240,14 +240,13 @@ def strip_path(path: str):
     return stripped if len(stripped) else "/"
 
 
-parser = ArgumentParser()
-parser.add_argument("-o", action="store_true")
-should_open_browser: bool = parser.parse_args().o
-
-
 class Server(ThreadingHTTPServer):
 
     def start(self, fn: Callable[[], Any] | None = None):
+        parser = ArgumentParser()
+        parser.add_argument("-o", action="store_true")
+        should_open_browser: bool = parser.parse_args().o
+
         url = f"http://{self.server_address[0]}:{self.server_address[1]}"
         print(f"Server running at {url}")
         if should_open_browser:

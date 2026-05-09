@@ -1,0 +1,15 @@
+<h4 class="mt0">Type something in and press `Ctrl+Enter` 😊</h4>
+
+<input
+  name="message"
+  autocomplete="off"
+  class="input"
+  required
+  on:keydown="submitEventModifier"
+  event:keydown="key = Enter, ctrlKey"
+  on="submitEventModifier"
+  src="/event-modifier"
+  result="eventModifierResult"
+>
+
+<div render="eventModifierResult"></div>

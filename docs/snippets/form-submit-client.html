@@ -1,0 +1,24 @@
+<h4 class="mt0">Enter your name and submit the form</h4>
+
+<form
+  action="/form-submit"
+  on:submit="submitForm"
+  on="submitForm"
+  result="formSubmitResult"
+>
+  <label>
+    Name:
+    <!-- no KEML-specific attributes on the input -->
+    <input
+      type="text"
+      name="name"
+      autocomplete="off"
+      required
+      class="input"
+    >
+  </label>
+
+  <button class="btn mt2">submit</button>
+</form>
+
+<div render="formSubmitResult"></div>

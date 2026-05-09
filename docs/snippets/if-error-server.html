@@ -1,0 +1,17 @@
+{{ server.status = server.getParam('switch') === 'error' ? 200 : 500 }}
+
+<button
+  class="btn mr3"
+  on:click="sendIfError"
+  on="sendIfError"
+  href="/if-error"
+  name="switch"
+  value="{ server.getParam('switch') === 'error' ? 'success' : 'error' }"
+  result="ifErrorResult"
+  error="ifErrorResult"
+  render="ifErrorResult"
+  position="replaceWith"
+  if:error="isError"
+>
+  Get { server.getParam("switch") } code
+</button>

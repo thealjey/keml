@@ -1,0 +1,67 @@
+<a
+  href="/page-a"
+  class="mr3"
+  on:click="redirectPushStateA"
+  on="redirectPushStateA"
+  redirect="pushState"
+>
+  Push A
+</a>
+
+<a
+  href="/page-b"
+  class="mr3"
+  on:click="redirectPushStateB"
+  on="redirectPushStateB"
+  redirect="pushState"
+>
+  Push B
+</a>
+
+<a
+  href="/page-c"
+  class="mr3"
+  on:click="redirectPushStateC"
+  on="redirectPushStateC"
+  redirect="pushState"
+>
+  Push C
+</a>
+|
+<a
+  href="/page-a"
+  class="mh3"
+  on:click="redirectReplaceStateA"
+  on="redirectReplaceStateA"
+  redirect="replaceState"
+>
+  Replace A
+</a>
+
+<a
+  href="/page-b"
+  class="mr3"
+  on:click="redirectReplaceStateB"
+  on="redirectReplaceStateB"
+  redirect="replaceState"
+>
+  Replace B
+</a>
+
+<a
+  href="/page-c"
+  on:click="redirectReplaceStateC"
+  on="redirectReplaceStateC"
+  redirect="replaceState"
+>
+  Replace C
+</a>
+
+<div
+  on:navigate="showHistoryPage"
+  on="showHistoryPage"
+  result="historyResult"
+  render="historyResult"
+>
+  { server.partial } <!-- SSR partial render -->
+</div>

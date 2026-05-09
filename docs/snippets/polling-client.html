@@ -1,0 +1,13 @@
+<h4 class="mt0">Changes color every 5 seconds.</h4>
+
+<div
+  class="w3 h3 bg-red"
+  on:discover="startPolling"
+  on="startPolling"
+  debounce="5000"
+  get="/polling"
+  on:result="startPolling"
+  result="pollingResult"
+  render="pollingResult"
+  position="replaceWith"
+></div>

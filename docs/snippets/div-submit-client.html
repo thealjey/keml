@@ -1,0 +1,23 @@
+<h4 class="mt0">A div huh 🤔</h4>
+
+Name:
+<div
+  name="name"
+  value="Batman"
+  class="input"
+  action="/form-submit"
+  on="submitDiv"
+  result="divSubmitResult"
+>
+  I'm Batman!
+</div>
+
+<button
+  type="button"
+  class="btn mt2"
+  on:click="submitDiv"
+>
+  submit
+</button>
+
+<div render="divSubmitResult"></div>

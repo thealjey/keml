@@ -1,0 +1,26 @@
+<h4 class="mt0">Enter your name and submit the field</h4>
+
+Name:
+<!-- Look Ma, no form! -->
+<input
+  type="text"
+  name="name"
+  autocomplete="off"
+  required
+  class="input"
+  action="/form-submit"
+  on:keydown="submitField"
+  event:keydown="key = Enter"
+  on="submitField"
+  result="fieldSubmitResult"
+>
+
+<button
+  type="button"
+  class="btn mt2"
+  on:click="submitField"
+>
+  submit
+</button>
+
+<div render="fieldSubmitResult"></div>

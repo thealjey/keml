@@ -1,43 +1,49 @@
-# Logging
+Sometimes, the information available statically, just by reading the HTML, may
+not be enough, and you may need to peek at the runtime value of an important
+variable.
 
-Sometimes the information that is available statically, by just reading the
-HTML, may not be enough and you may need to peek into the runtime value of some
-important variable.
-
-With a well-designed API, such situations should be rare. But, unfortunately,
-the real world is messy and they cannot be fully avoided.
+With a well-designed API, such situations should be rare. But the real world is
+messy, and they cannot be avoided entirely.
 
 This is where the dedicated `log` attribute comes in.
 
-It will do nothing at all most of the time and is generally harmless to add,
-even to every single element. However, it is still a debugging flag and, from a
-purely aesthetic point of view, should not be left enabled in production.
+Most of the time, it does nothing and is generally harmless to add, even to
+every single element. However, it is still a debugging flag and, from a purely
+aesthetic point of view, should not be left enabled in production.
 
-All that it will ever do is log to the JavaScript console some information that
-the element deems important at a particular moment in time.
+All it ever does is log information to the JavaScript console that the element
+deems important at a particular moment in time.
 
+<!-- prettier-ignore-start -->
 !!! info "Info"
     Currently, this attribute only logs event objects in the presence of an
-    `event:<event name>` attribute, right before performing the matching for
-    it. But, the `log` attribute itself is meant to be general purpose and its
-    functionality may be extended in the future.
+    [event:](./event/on-colon.md#event-modifier) modifier, right before
+    performing the matching for it. However, the `log` attribute itself is meant
+    to be general-purpose, and its functionality may be extended in the future.
+<!-- prettier-ignore-end -->
 
-## Example
+---
 
-When this input receives a keydown event, KEML logs the browser event object
-before checking if the key is `Enter`.
-
+<div class="tabs">
+  <label><input type="radio" name="tabs-1" checked>HTML</label>
+  <label><input type="radio" name="tabs-1">Result</label>
+  <section>
 ```html
-<input event:keydown="key=Enter" log on:keydown="someAction">
+--8<-- "snippets/log-server.html"
 ```
-
-What if you don't know what fields the event object has or what values they can
-take?
-
-In that case, simply leave the `event:keydown` attribute empty, trigger the
-event, and observe the event object printed to the console — `on:keydown` must
-still have a value, otherwise KEML will skip matching it.
-
-```html
-<input event:keydown log on:keydown="someAction">
-```
+  </section>
+  <section class="browser">
+    <div>
+      <button></button>
+      <button></button>
+      <div>https://www.log-example.com/</div>
+    </div>
+    <div></div>
+    <div>
+      <div>
+        <button></button>
+      </div>
+      <div></div>
+    </div>
+  </section>
+</div>

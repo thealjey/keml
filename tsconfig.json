@@ -10,7 +10,6 @@
     "moduleResolution": "nodenext",
     "noEmit": true,
     "noImplicitOverride": true,
-    "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "noUncheckedSideEffectImports": true,
@@ -18,12 +17,7 @@
     "noUnusedParameters": true,
     "strict": true,
     "target": "esnext",
-    "types": ["vitest/importMeta"]
+    "types": ["node"]
   },
-  "include": [
-    "src/*",
-    ".dependency-cruiser.mjs",
-    "esbuild.config.mts",
-    "vitest.config.mts"
-  ]
+  "include": ["src/**/*", "bin/**/*"]
 }

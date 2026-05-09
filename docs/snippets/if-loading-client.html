@@ -1,0 +1,17 @@
+<h4 class="mt0">This endpoint takes 2 seconds to respond.</h4>
+
+<button
+  type="button"
+  class="btn"
+  on:click="sendIfLoading"
+  on="sendIfLoading"
+  href="/if-loading"
+  if:loading="isLoading"
+>
+  click me
+</button>
+
+<div
+  if="isLoading"
+  x-class="spinner mt3"
+></div>

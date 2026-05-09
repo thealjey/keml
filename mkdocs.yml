@@ -5,21 +5,47 @@ edit_uri: blob/main/docs/
 site_description: Enhance HTML with custom attributes for clean, server-driven interactivity.
 site_author: Eugene Kuzmenko
 copyright: Copyright &copy; 2026 Eugene Kuzmenko
+extra_css:
+  - assets/tachyons.css
+  - assets/style.css
+extra_javascript:
+  - assets/keml.js
+exclude_docs: |
+  snippets/
 theme:
   name: material
-  favicon: img/favicon.ico
-  logo: img/logo192.png
+  favicon: assets/favicon.ico
+  logo: assets/logo192.png
   features:
     - navigation.instant
+  palette:
+    - scheme: slate
+      toggle:
+        icon: material/weather-night
+        name: Light Mode
+    - scheme: default
+      toggle:
+        icon: material/weather-sunny
+        name: Dark Mode
 nav:
   - Home: index.md
-  - Install: install.md
-  - Event: event.md
-  - Action: action.md
-  - Render: render.md
-  - State: state.md
+  - Motivation: motivation.md
+  - Taxonomy: taxonomy.md
+  - Installation: installation.md
+  - Event:
+      - "on:*": event/on-colon.md
+      - "on": event/on.md
+      - reset: event/reset.md
+      - scroll: event/scroll.md
+  - Result:
+      - "result / error": result/result.md
+      - render: result/render.md
+  - State:
+      - "if:*": state/if-colon.md
+      - if: state/if.md
+  - SSE: sse.md
   - Logging: logging.md
-  - Glossary: glossary.md
+  - Reference: reference.md
   - News: news.md
 markdown_extensions:
   - admonition
@@ -27,5 +53,7 @@ markdown_extensions:
       linenums: true
   - pymdownx.superfences
   - pymdownx.tilde
+  - pymdownx.snippets:
+      base_path: "docs"
   - toc:
       permalink: true

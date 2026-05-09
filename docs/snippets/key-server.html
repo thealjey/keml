@@ -1,0 +1,39 @@
+<div
+  render="keyResult"
+  position="replaceWith"
+>
+  <button
+    type="button"
+    class="btn mb3"
+    on:click="toggleKey"
+    on="toggleKey"
+    href="/key"
+    name="switch"
+    value="{ server.getParam('switch') === 'hide' ? 'show' : 'hide' }"
+    result="keyResult"
+  >
+    { server.getParam("switch") } notification
+  </button>
+
+  <div>
+    {{ if (server.getParam("switch") === "hide") { }}
+      <div key="notification" class="admonition info mt0">
+        <p class="admonition-title">Info</p>
+        <p>Just passing by...</p>
+      </div>
+    {{ } }}
+
+    <div>
+      <dl class="dl">
+        <dt>Roses are</dt>
+        <dd>red</dd>
+        <dt>Violets are</dt>
+        <dd>blue</dd>
+        <dt>KEML is</dt>
+        <dd>awesome</dd>
+        <dt>And so are</dt>
+        <dd>you</dd>
+      </dl>
+    </div>
+  </div>
+</div>

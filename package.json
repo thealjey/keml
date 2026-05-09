@@ -5,9 +5,9 @@
   },
   "description": "Enhance HTML with custom attributes for clean, server-driven interactivity.",
   "devDependencies": {
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.6.2",
     "@vitest/coverage-v8": "^4.1.5",
-    "dependency-cruiser": "^17.3.10",
+    "dependency-cruiser": "^17.4.0",
     "esbuild": "^0.28.0",
     "happy-dom": "^20.9.0",
     "vitest": "^4.1.5"
@@ -19,14 +19,32 @@
   ],
   "homepage": "https://thealjey.github.io/keml/",
   "keywords": [
-    "html",
-    "server-rendered",
+    "ajax",
+    "attribute-driven",
+    "declarative-ui",
     "declarative",
-    "no javascript",
-    "interactive html",
-    "htmx alternative",
-    "progressive enhancement",
-    "keml"
+    "dom-updates",
+    "event-driven-ui",
+    "frontend-framework",
+    "html-attributes",
+    "html-extensions",
+    "html",
+    "htmx-alternative",
+    "hypermedia",
+    "interactive-html",
+    "keml",
+    "lightweight",
+    "no-javascript",
+    "progressive-enhancement",
+    "server-driven-ui",
+    "server-rendered",
+    "server-sent-events",
+    "server-side-rendering",
+    "spa-alternative",
+    "sse",
+    "ssr",
+    "unobtrusive-javascript",
+    "zero-javascript"
   ],
   "license": "MIT",
   "main": "keml.js",
@@ -36,15 +54,16 @@
     "url": "git+https://github.com/thealjey/keml.git"
   },
   "scripts": {
-    "build": "node esbuild.config.mts",
+    "build": "node bin/build.mts",
     "demo:realworld": "python -X utf8 -m examples.realworld.server -o",
     "demo:sse": "python -X utf8 -m examples.sse.server -o",
     "demo:todo": "python -X utf8 -m examples.todo.server -o",
-    "docs:deploy": "mkdocs gh-deploy --force",
-    "docs:serve": "mkdocs serve -o",
+    "docs:deploy": "NODE_ENV=docs npm run build && mkdocs gh-deploy --force",
+    "docs:serve": "node bin/docsServe.mts",
     "pip:install": "pip install --upgrade markdown 'mkdocs<2' 'mkdocs-material==9.6.20'",
-    "prebuild": "depcruise --config .dependency-cruiser.mjs 'src/*.mts'",
-    "test": "vitest run"
+    "prebuild": "depcruise --config bin/cycles.mjs 'src/**/*.mts'",
+    "test": "NODE_ENV=test vitest run -c bin/test.mts",
+    "test:watch": "NODE_ENV=test vitest watch -c bin/test.mts"
   },
-  "version": "3.3.6"
+  "version": "3.4.0"
 }

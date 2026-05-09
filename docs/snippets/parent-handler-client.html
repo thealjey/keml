@@ -1,0 +1,20 @@
+<h4 class="mt0">
+  The button is clicked, a parent div is outputting the actions, but then the
+  button itself is still handling them anyway 😅.
+</h4>
+
+<div on:click="sendFromParent">
+  <div>
+    <button
+      type="button"
+      class="btn"
+      on="sendFromParent"
+      href="/parent-handler"
+      result="parentResult"
+    >
+      click me
+    </button>
+  </div>
+</div>
+
+<div render="parentResult"></div>

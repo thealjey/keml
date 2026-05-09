@@ -1,299 +1,57 @@
-# News
+## v3.4
 
---------------------------------------------------------------------------------
+Added:
 
---------------------------------------------------------------------------------
+- `failure` and `discover` [event types](./event/on-colon.md#keml-defined-events)
+
+Changed:
+
+- unified internal attribute resolution
+- `name` + `value` attribute pairs now work at any nesting level
+- documentation rewrite
+
+---
 
 ## v3.3
 
-KEML v3.3 introduces **server-driven events** using SSE (Server-Sent Events).
+Added:
 
-This allows events to flow **from the server to the client** directly, without
-requiring a user interaction to trigger them. Everything else — rendering and
-reactive updates — works just like before.
+- [SSE](./sse.md)
+- [scroll](./event/scroll.md)
+- [log](./logging.md)
 
-Also, in this release, is automatic scrolling support with the help of the new
-[scroll](action.md#attributes) attribute and logging support with the new
-[log](logging.md) attribute.
+---
 
-### What is SSE?
+## VS Code Extension
 
-SSE is a standard web technology that lets the server
-**push messages to the browser** over a persistent HTTP connection. It’s simple,
-efficient, and perfect for real-time updates such as chat messages,
-notifications, or live dashboards.
+KEML now has an
+[official VS Code extension](https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode).
 
-For more information, see
-[Server-Sent Events – on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events).
-
-!!! info "Info"
-    Just like XHR responses,
-    **SSE server data must always contain HTML strings**.
-
-### Event Flow Comparison
-
-**XHR example:**
-
-```html
-<button href="/hello" on="hello" on:click="hello" result="response">
-  click me
-</button>
-```
-
-Steps:
-
-1. User clicks the button
-1. The click triggers a `hello` event action
-1. The button subscribes to the `hello` event action
-1. Upon observing the action, the button sends a GET request to `"/hello"`
-1. When the server response is received, a `response` result action is triggered
-
-Flow: **click → request → response**
-
---------------------------------------------------------------------------------
-
-**SSE example:**
-
-```html
-<button href="/hello" result="response" sse="hello">click me</button>
-```
-
-Steps:
-
-1. The button listens for `"hello"` events from the server
-1. The server decides when to trigger the event and sends a response directly
-   embedded into the event, with no interaction from the user necessary, which
-   triggers the `response` result action
-
-Flow: **~~click → request →~~ response**  
-The **click** and **request** steps are no longer needed; the response arrives
-automatically.
-
-This makes it trivial to move from **user-driven actions** to
-**server-driven updates**, without changing any of your rendering logic.
-
---------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------
-
-## Official VS Code Extension
-
-I’m excited to announce the [**official KEML extension for VS Code**](https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode)!  
-
-With this extension, writing KEML in your HTML files feels like working in a
-full programming language.  
-It provides **autocomplete, hover tooltips, Go to Definition/References**, and
-**inline diagnostics** that catch mistakes before they happen.  
-
-Beyond just helping with action names, the diagnostics
-**point out missing or misused attributes, explain what’s wrong, and guide you toward correct usage**.  
-In other words, the extension acts as **interactive documentation**, letting you
-learn and write KEML safely while staying productive.  
-
-The KEML runtime remains separate, so your existing projects keep working as
-before — now you can enjoy the benefits of **full Intellisense** without
-touching your codebase.  
-
-Writing KEML has never been faster, safer, or more fun!  
-
---------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------
+---
 
 ## v3.2
 
-This release changes both everything and nothing at the same time.
+Fixed:
 
-It is fully backward compatible, but shares almost no code in common with the
-old version.
+- removed auto-install for python dependencies
 
-Nothing in your apps needs to change.  
-If they are already working fine - they will continue to do so.
-
-You will be taking advantage of the improved performance, memory efficiency and
-correctness/reliability completely for free.
-
-So, what changed?
-
-#### Performance
-
-3.2 does away with trying to be as small as possible at the expense of
-everything else.  
-It will happily be larger if the payoff is better run-time performance.  
-As a result, it has doubled in size to the still incredibly tiny 8kb.
-
-1. no functional code
-1. no regular expressions
-1. no recursion if it can be avoided
-1. minimal allocations
-1. low level APIs are used whenever possible
-1. no DOM updates outside of the render loop, no matter how trivial
-1. dedicated per-attribute intersection observers
-1. no subscribing to events not used by the application
-1. the [key](render.md#attributes) attribute
-1. etc
-
-#### Maintainability
-
-The code is no longer allowed to be an unreadable cryptic mess, whose only
-purpose is to be optimally minify-able.
-
-Related functionality is grouped into separate files.
-
-#### Quality
-
-The source code is thoroughly documented and unit tested with 100% coverage.
-
-File imports are automatically verified not to cause any cyclic dependencies.
-
-Since python was never a requirement for the functionality of the project, but
-only for the documentation and the examples, having it as an install script was
-clearly a mistake that made installing the package through npm potentially
-inconvenient.  
-That has now been fixed.
-
---------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------
+---
 
 ## v3.1
 
-### Event Bubbling
+Added:
 
-Event handling now bubbles up the DOM tree as you would expect.
+- [parent handler](./event/on-colon.md#parent-handler)
 
-This is mostly a non-breaking convenience feature.
+---
 
-Previously, it was necessary to make sure that an event is always triggered
-on the exact same element that contains the event handling logic.
+## v3
 
-Like in the following example, using the `inert` attribute to make sure that the
-nested image does not "steal" the click events for itself:
+Added:
 
-```html
-<button on:click="handleClick">
-  <img inert src="bat-cat.jpg">
-</button>
-```
+- automatic tracking for all DOM changes
+- [event:](./event/on-colon.md#event-modifier) modifier
 
-With v3.1, this is no longer the case, because KEML will automatically locate
-the first parent element that matches the event.
+Breaking:
 
-So, this is now equivalent:
-
-```html
-<button on:click="handleClick">
-  <img src="bat-cat.jpg">
-</button>
-```
-
---------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------
-
-## v3 is finally out!
-
-It is said that simplicity is hard, and absolute simplicity is hard absolutely.
-
-KEML v3 was that and much more.
-
-And, while a major version of a library could simply be prompted by any breaking
-change, what we have here is certainly not that case.
-
-It was probably more like v123, or something like that, behind the scenes with
-the sheer number of complete rewrites, head scratching, and a couple of moments
-of brilliance.
-
-v3 brings new features, stability, reliability, resilience, performance, memory
-efficiency and optimizations that were nigh impossible with v2.
-
-And it does it all while having an even smaller file size.
-
-So, what changed?
-
-#### No Magic
-
-Magic, in programming, can be described as - behaviors determined by nothing
-other than naming something a certain way or placing it in a certain place.
-
-And it is almost always a really bad idea.
-
-The so called "special actions" were a major pain in the rear end that came out
-of technical limitations and nothing else.
-
-v3 embraces actions to the max, literally everything is controlled by them and
-nothing else and there are no special and/or reserved action names at all.
-
-#### Observing the DOM
-
-DOM changes are automatically observed in v3.
-
-Whether an element came from the server on the initial page load, after
-subsequent AJAX requests, is created or modified by userland code, by you
-changing something through the dev tools DOM Inspector tab, or even by some
-browser extension, it makes no difference at all.
-
-That's right, KEML will never be broken by another password manager ever again
-:&rpar;
-
-And if you want to use jQuery or React alongside KEML, you totally can. And you
-never need to tell it that you've changed something in the document.
-
-#### New Features
-
-v3 comes with a couple of new states, a couple of new ways to perform a redirect
-and somewhat of a way to handle hotkeys, but really, nothing Earth-shattering.
-
-The big deal is that the greatly improved codebase allows adding new features
-easily and without breaking the existing ones or negatively affecting the
-performance.
-
---------------------------------------------------------------------------------
-
-### Breaking Changes
-
-The only breaking change is the absence of "special" actions.
-
-So, this:
-
-```html
-<a href="/something" on:click="pushState"></a>
-```
-
-Has to turn into this (the same with `replaceState`):
-
-```html
-<a
-  href="/something"
-  on="someUniqueName"
-  on:click="someUniqueName"
-  redirect="pushState"
-></a>
-```
-
-The `redirect` attribute cannot contain an endpoint configuration anymore.
-
-And this:
-
-```html
-<form on:submit="doSubmit reset"></form>
-```
-
-Has to turn into this:
-
-```html
-<form on:submit="doSubmit resetThisForm" reset="resetThisForm"></form>
-```
-
-It looks more verbose, but offers infinitely more flexibility.
-
---------------------------------------------------------------------------------
-
-That's all, folks!
-
-Happy coding and have an awesome day,  
-Eugene K.
-
---------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------
+- removed special actions

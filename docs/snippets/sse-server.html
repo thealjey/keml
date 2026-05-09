@@ -1,0 +1,10 @@
+{{
+  const segment = ([value, label]) =>
+    "<span>" + value + "</span><span>" + label + "</span>";
+
+  const clock = () => server.timeSince(1716062717000).map(segment).join("");
+
+  const tick = () => server.dispatchEvent("inception-clock", clock());
+
+  server.addIntervalId(setInterval(tick, 1000));
+}}

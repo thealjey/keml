@@ -1,0 +1,13 @@
+<button
+  type="button"
+  class="btn"
+  on:click="submitOverrideMethod"
+  on="submitOverrideMethod"
+  put="/endpoint-override"
+  method="custom"
+  result="overrideMethodResult"
+>
+  click me
+</button>
+
+<div render="overrideMethodResult"></div>

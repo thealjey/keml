@@ -1,0 +1,14 @@
+<input
+  type="email"
+  class="input"
+  placeholder="Email address"
+  if:invalid="isInvalidEmail"
+>
+
+<small
+  if="isInvalidEmail"
+  class="dn"
+  x-class
+>
+  Please enter a valid email address.
+</small>
