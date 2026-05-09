@@ -3,3 +3,4 @@ database.db
 site
 coverage
 node_modules
+docs/assets/keml.js

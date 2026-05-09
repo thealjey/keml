@@ -58,6 +58,7 @@
     "demo:realworld": "python -X utf8 -m examples.realworld.server -o",
     "demo:sse": "python -X utf8 -m examples.sse.server -o",
     "demo:todo": "python -X utf8 -m examples.todo.server -o",
+    "docs:build": "NODE_ENV=docs npm run build && mkdocs build",
     "docs:deploy": "NODE_ENV=docs npm run build && mkdocs gh-deploy --force",
     "docs:serve": "node bin/docsServe.mts",
     "pip:install": "pip install --upgrade markdown 'mkdocs<2' 'mkdocs-material==9.6.20'",
