@@ -183,26 +183,14 @@ if (process.env["NODE_ENV"] === "test") {
     }
   }
 
-  const divideTimestamp =
-    (divisor: number, mod: number, label: string, size?: number) =>
-    (dividend: number | string) => (
-      (dividend = String(
-        Math.trunc((dividend as number) / divisor) % mod,
-      ).padStart(size!, "0")),
-      [dividend, label + (/^0*1$/.test(dividend) ? "" : "s")] as const
-    );
-
-  const timestampFormatters = [
-    divideTimestamp(1000 * 60 * 60 * 24 * 30 * 12, Infinity, "year"),
-    divideTimestamp(1000 * 60 * 60 * 24 * 30, 12, "month"),
-    divideTimestamp(1000 * 60 * 60 * 24, 30, "day"),
-    divideTimestamp(1000 * 60 * 60, 24, "hour"),
-    divideTimestamp(1000 * 60, 60, "minute", 2),
-    divideTimestamp(1000, 60, "second", 2),
-  ];
-
-  const formatTimestamp = (timestamp: number) =>
-    timestampFormatters.map(formatter => formatter(timestamp));
+  const timeSteps = [
+    ["years", "year", 31104000000],
+    ["months", "month", 2592000000],
+    ["days", "day", 86400000],
+    ["hours", "hour", 3600000],
+    ["minutes", "minute", 60000],
+    ["seconds", "second", 1000],
+  ] as const;
 
   class EventSource {
     static readonly CLOSED = 2;
@@ -230,7 +218,25 @@ if (process.env["NODE_ENV"] === "test") {
     }
 
     timeSince(timestamp: number) {
-      return formatTimestamp(Date.now() - timestamp);
+      let offset = Date.now() - timestamp,
+        step,
+        i = -1,
+        value,
+        multi,
+        result = new Array(6);
+
+      while (++i < 6) {
+        step = timeSteps[i]!;
+        multi = step[2];
+        value = (offset / multi) | 0;
+        offset -= value * multi;
+        result[i] = [
+          (i > 3 && value < 10 ? "0" : "") + value,
+          step[+(value === 1)],
+        ];
+      }
+
+      return result;
     }
 
     dispatchEvent(type: string, data: string) {
