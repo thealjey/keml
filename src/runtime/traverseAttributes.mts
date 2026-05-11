@@ -13,13 +13,13 @@ export const traverseAttributes = (
   nodes: ArrayLike<Node>,
   context?: Context,
 ) => {
-  for (let i = 0, l = nodes.length, node, it, ownerElement, name; i < l; ++i) {
+  for (let i = 0, l = nodes.length, node, it, attr; i < l; ++i) {
     if ((node = nodes[i]!) instanceof Element) {
       it = document.createNodeIterator(node, NodeFilter.SHOW_ELEMENT);
 
       do {
-        for ({ ownerElement, name } of (node as Element).attributes) {
-          executeRules(mask, ownerElement!, name, context);
+        for (attr of (node as Element).attributes) {
+          executeRules(mask, node, attr.name, context);
         }
       } while ((node = it.nextNode() as Element | null));
     }

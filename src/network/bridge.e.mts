@@ -191,6 +191,7 @@ if (process.env["NODE_ENV"] === "test") {
     ["minutes", "minute", 60000],
     ["seconds", "second", 1000],
   ] as const;
+  const timeResult: [string, string][] = [[], [], [], [], [], []] as any;
 
   class EventSource {
     static readonly CLOSED = 2;
@@ -223,20 +224,19 @@ if (process.env["NODE_ENV"] === "test") {
         i = -1,
         value,
         multi,
-        result = new Array(6);
+        result;
 
       while (++i < 6) {
         step = timeSteps[i]!;
+        result = timeResult[i]!;
         multi = step[2];
         value = (offset / multi) | 0;
         offset -= value * multi;
-        result[i] = [
-          (i > 3 && value < 10 ? "0" : "") + value,
-          step[+(value === 1)],
-        ];
+        result[0] = (i > 3 && value < 10 ? "0" : "") + value;
+        result[1] = step[+(value === 1) as 0 | 1];
       }
 
-      return result;
+      return timeResult;
     }
 
     dispatchEvent(type: string, data: string) {
