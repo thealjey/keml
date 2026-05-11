@@ -414,4 +414,67 @@ describe("attrRules", () => {
 
     expect(result).toBe(false);
   });
+
+  it("value rule gate blocks input/select/textarea elements", () => {
+    const rule = attrRules.find(r => r.match === "value")!;
+
+    const input = document.createElement("input");
+    input.setAttribute("name", "x");
+    input.setAttribute("value", "1");
+
+    const select = document.createElement("select");
+    select.setAttribute("name", "x");
+    select.setAttribute("value", "1");
+
+    const textarea = document.createElement("textarea");
+    textarea.setAttribute("name", "x");
+    textarea.setAttribute("value", "1");
+
+    // @ts-ignore
+    expect(rule.gate?.(input)).toBe(false);
+    // @ts-ignore
+    expect(rule.gate?.(select)).toBe(false);
+    // @ts-ignore
+    expect(rule.gate?.(textarea)).toBe(false);
+  });
+
+  it("value rule gate blocks elements without name attribute", () => {
+    const rule = attrRules.find(r => r.match === "value")!;
+
+    const el = document.createElement("div");
+    el.setAttribute("value", "1");
+
+    // @ts-ignore
+    expect(rule.gate?.(el)).toBe(false);
+  });
+
+  it("value rule serializes name/value into FormData", () => {
+    const rule = attrRules.find(r => r.match === "value")!;
+
+    const el = document.createElement("div");
+    el.setAttribute("name", "foo");
+    el.setAttribute("value", "bar");
+
+    const formData = {
+      set: vi.fn(),
+    };
+
+    const context = { formData } as any;
+
+    rule.serialize?.(el, "value", context);
+
+    expect(formData.set).toHaveBeenCalledWith("foo", "bar");
+  });
+
+  it("value rule serialize is safe when context or data is missing", () => {
+    const rule = attrRules.find(r => r.match === "value")!;
+
+    const el = document.createElement("div");
+    el.setAttribute("name", "foo");
+    el.setAttribute("value", "bar");
+
+    expect(() => {
+      rule.serialize?.(el, "value", undefined);
+    }).not.toThrow();
+  });
 });

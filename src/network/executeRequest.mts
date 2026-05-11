@@ -4,7 +4,8 @@ import {
   pushOneTimeElement,
   pushRenderPayload,
 } from "../render/data.mts";
-import { traverseAttributes } from "../runtime/attrExecutor.mts";
+import { SERIALIZE } from "../runtime/executeRules.mts";
+import { traverseAttributes } from "../runtime/traverseAttributes.mts";
 import { appendFormDataToUrl } from "./appendFormDataToUrl.mts";
 import { bridge } from "./bridge.e.mts";
 import { resolveRequestDescriptor } from "./resolveRequestDescriptor.mts";
@@ -30,12 +31,12 @@ export const executeRequest = (el: Element) => {
   if (el.checkValidity?.() ?? true) {
     el.hasAttribute("once") && pushOneTimeElement(el);
 
-    let data: FormData | undefined = new FormData(
+    let formData: FormData | undefined = new FormData(
       el instanceof HTMLFormElement ? el : (
         (internalForm.replaceChildren(el.cloneNode(true)), internalForm)
       ),
     );
-    traverseAttributes([el], 3, { data });
+    traverseAttributes(SERIALIZE, [el], { formData });
 
     const redirect = el.getAttribute("redirect");
     const [url, method, withCredentials] = resolveRequestDescriptor(el);
@@ -45,15 +46,15 @@ export const executeRequest = (el: Element) => {
     }
 
     if (redirect === "pushState" || redirect === "replaceState") {
-      appendFormDataToUrl(url, data);
+      appendFormDataToUrl(url, formData);
       bridge.history[redirect](emptyObj, "", url);
       dispatchNavigate();
     } else if (redirect === "assign" || redirect === "replace") {
-      appendFormDataToUrl(url, data);
+      appendFormDataToUrl(url, formData);
       bridge.location[redirect](url);
     } else {
       if (method === "GET") {
-        data = appendFormDataToUrl(url, data);
+        formData = appendFormDataToUrl(url, formData);
       }
 
       const xhr = new bridge.XMLHttpRequest();
@@ -72,7 +73,7 @@ export const executeRequest = (el: Element) => {
       el.isLoading = true;
       markStateDirty();
 
-      xhr.send(data);
+      xhr.send(formData);
     }
   }
 };

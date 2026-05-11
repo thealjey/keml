@@ -4,9 +4,10 @@ import { bridge } from "../network/bridge.e.mts";
 import { SseManager } from "../network/SseManager.mts";
 import { markStateDirty } from "../render/data.mts";
 import { render } from "../render/render.mts";
-import { traverseAttributes } from "./attrExecutor.mts";
 import { mutationObserver } from "./attrMutation.mts";
 import { setEventListener, setLifecyclePhase } from "./data.mts";
+import { ADDED } from "./executeRules.mts";
+import { traverseAttributes } from "./traverseAttributes.mts";
 
 /**
  * Initializes the runtime system and starts all DOM-driven behaviors.
@@ -23,7 +24,7 @@ export const bootstrap = () => {
   } catch {}
 
   setEventListener(onEvent);
-  traverseAttributes(document.childNodes, 0);
+  traverseAttributes(ADDED, document.childNodes);
   setLifecyclePhase(1);
 
   SseManager.instance.start();

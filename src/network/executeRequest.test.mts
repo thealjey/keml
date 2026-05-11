@@ -1,228 +1,281 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+/* -----------------------
+   SAFE MODULE MOCKS
+----------------------- */
+
+vi.mock("../runtime/traverseAttributes.mts", () => ({
+  traverseAttributes: vi.fn(),
+}));
+
+vi.mock("./resolveRequestDescriptor.mts", async importOriginal => {
+  const actual = await importOriginal<any>();
+
+  return {
+    ...actual,
+    resolveRequestDescriptor: vi.fn(),
+  };
+});
 
 vi.mock("../event/dispatchNavigate.mts", () => ({
   dispatchNavigate: vi.fn(),
 }));
 
-vi.mock("../render/data.mts", () => ({
-  markStateDirty: vi.fn(),
-  pushOneTimeElement: vi.fn(),
-  pushRenderPayload: vi.fn(),
-  pushResettableElement: vi.fn(),
-  pushScrollableElement: vi.fn(),
-  pushDiscoverableElement: vi.fn(),
-  setFocusElement: vi.fn(),
-}));
+vi.mock("../render/data.mts", async importOriginal => {
+  const actual = await importOriginal<any>();
 
-vi.mock("./appendFormDataToUrl.mts", () => ({
-  appendFormDataToUrl: vi.fn(),
-}));
+  return {
+    ...actual,
+    pushOneTimeElement: vi.fn(),
+    markStateDirty: vi.fn(),
+    pushRenderPayload: vi.fn(),
 
-vi.mock("./resolveRequestDescriptor.mts", () => ({
-  resolveRequestDescriptor: vi.fn(() => [
-    new URL("http://example.com"),
-    "POST",
-    false,
-  ]),
-  methodAttrs: ["foo"],
-}));
+    // IMPORTANT: prevent attrRules runtime crash
+    setFocusElement: vi.fn(),
+    pushDiscoverableElement: vi.fn(),
+  };
+});
+
+/* -----------------------
+   IMPORTS
+----------------------- */
 
 import { dispatchNavigate } from "../event/dispatchNavigate.mts";
-import { markStateDirty, pushOneTimeElement } from "../render/data.mts";
+import { pushOneTimeElement } from "../render/data.mts";
+import { traverseAttributes } from "../runtime/traverseAttributes.mts";
 import { bridge } from "./bridge.e.mts";
 import { executeRequest } from "./executeRequest.mts";
 import { resolveRequestDescriptor } from "./resolveRequestDescriptor.mts";
 
-/* helper */
+/* -----------------------
+   MOCK CASTS
+----------------------- */
+
+const mockedTraverseAttributes = traverseAttributes as unknown as ReturnType<
+  typeof vi.fn
+>;
+const mockedResolveRequestDescriptor =
+  resolveRequestDescriptor as unknown as ReturnType<typeof vi.fn>;
+const mockedDispatchNavigate = dispatchNavigate as unknown as ReturnType<
+  typeof vi.fn
+>;
+const mockedPushOneTimeElement = pushOneTimeElement as unknown as ReturnType<
+  typeof vi.fn
+>;
+
+/* -----------------------
+   TESTS
+----------------------- */
 
 describe("executeRequest", () => {
-  beforeAll(() => {
-    vi.spyOn(bridge.XMLHttpRequest.prototype, "open");
-    vi.spyOn(bridge.XMLHttpRequest.prototype, "setRequestHeader");
-    vi.spyOn(bridge.XMLHttpRequest.prototype, "send");
-  });
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("HTMLFormElement -> xhr path (default branch)", () => {
+  it("stops when invalid", () => {
     const el = document.createElement("form");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => false,
+    });
 
     executeRequest(el);
 
-    expect(markStateDirty).toHaveBeenCalled();
+    expect(mockedResolveRequestDescriptor).not.toHaveBeenCalled();
   });
 
-  it("once attribute pushes oneTimeElement", () => {
+  it("calls resolveRequestDescriptor when valid", () => {
     const el = document.createElement("form");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
+
+    executeRequest(el);
+
+    expect(mockedResolveRequestDescriptor).toHaveBeenCalledWith(el);
+  });
+
+  it("pushes one-time element when 'once' is set", () => {
+    const el = document.createElement("form");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
     el.setAttribute("once", "");
 
-    executeRequest(el);
-
-    expect(pushOneTimeElement).toHaveBeenCalledWith(el);
-  });
-
-  it("name+value attribute fallback branch", () => {
-    const el = document.createElement("div");
-    el.setAttribute("name", "foo");
-    el.setAttribute("value", "bar");
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
 
     executeRequest(el);
 
-    expect(markStateDirty).toHaveBeenCalled();
+    expect(mockedPushOneTimeElement).toHaveBeenCalledWith(el);
   });
 
-  it("redirect pushState triggers dispatchNavigate", () => {
+  it("calls traverseAttributes for SERIALIZE phase", () => {
     const el = document.createElement("form");
 
-    (resolveRequestDescriptor as any).mockReturnValue([
-      new URL("http://example.com"),
-      "POST",
-      false,
-    ]);
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
+
+    executeRequest(el);
+
+    expect(mockedTraverseAttributes).toHaveBeenCalled();
+  });
+
+  it("handles pushState redirect", () => {
+    const el = document.createElement("form");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
 
     el.setAttribute("redirect", "pushState");
 
-    vi.spyOn(bridge.history, "pushState").mockImplementation(() => {});
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
 
     executeRequest(el);
 
-    expect(dispatchNavigate).toHaveBeenCalled();
+    expect(mockedDispatchNavigate).toHaveBeenCalled();
   });
 
-  it("redirect assign triggers location.assign", () => {
+  it("handles assign redirect", () => {
     const el = document.createElement("form");
 
-    (resolveRequestDescriptor as any).mockReturnValue([
-      new URL("http://example.com"),
-      "POST",
-      false,
-    ]);
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
 
     el.setAttribute("redirect", "assign");
 
-    const assignSpy = vi
-      .spyOn(bridge.location, "assign")
-      .mockImplementation(() => {});
+    const assignMock = vi.fn();
+    bridge.location.assign = assignMock;
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
 
     executeRequest(el);
 
-    expect(assignSpy).toHaveBeenCalled();
+    expect(assignMock).toHaveBeenCalledWith("/url");
   });
 
-  it("GET method clears data path", () => {
+  it("handles replace redirect", () => {
     const el = document.createElement("form");
 
-    (resolveRequestDescriptor as any).mockReturnValue([
-      new URL("http://example.com"),
-      "GET",
-      false,
-    ]);
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
+    el.setAttribute("redirect", "replace");
+
+    const replaceMock = vi.fn();
+    bridge.location.replace = replaceMock;
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
 
     executeRequest(el);
 
-    expect(markStateDirty).toHaveBeenCalled();
+    expect(replaceMock).toHaveBeenCalledWith("/url");
   });
 
-  it("XHR branch executes send path", () => {
+  it("treats missing checkValidity as valid", () => {
+    const el = document.createElement("div"); // no checkValidity on Element
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
+
+    executeRequest(el as any);
+
+    expect(mockedResolveRequestDescriptor).toHaveBeenCalledWith(el);
+  });
+
+  it("sets bridge location ownerElement when NODE_ENV is docs", () => {
     const el = document.createElement("form");
 
-    executeRequest(el);
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
 
-    expect(bridge.XMLHttpRequest.prototype.send).toHaveBeenCalled();
-  });
-
-  it("non-valid checkValidity blocks execution", () => {
-    const el = document.createElement("form");
-    (el as any).checkValidity = () => false;
-
-    executeRequest(el);
-
-    expect(markStateDirty).not.toHaveBeenCalled();
-  });
-
-  it("uses internalForm clone branch for input/select/textarea", () => {
-    const el = document.createElement("input");
-
-    (resolveRequestDescriptor as any).mockReturnValue([
-      new URL("http://example.com"),
-      "POST",
-      false,
-    ]);
-
-    executeRequest(el);
-
-    expect(markStateDirty).toHaveBeenCalled();
-    expect(bridge.XMLHttpRequest.prototype.send).toHaveBeenCalled();
-  });
-
-  it("skips form-data creation when no name and not form field", () => {
-    const el = document.createElement("div");
-
-    (resolveRequestDescriptor as any).mockReturnValue([
-      new URL("http://example.com"),
-      "POST",
-      false,
-    ]);
-
-    executeRequest(el);
-
-    expect(bridge.XMLHttpRequest.prototype.send).toHaveBeenCalled();
-  });
-
-  it("name present but no value does not set FormData", () => {
-    const el = document.createElement("div");
-    el.setAttribute("name", "foo");
-
-    (resolveRequestDescriptor as any).mockReturnValue([
-      new URL("http://example.com"),
-      "POST",
-      false,
-    ]);
-
-    executeRequest(el);
-
-    expect(bridge.XMLHttpRequest.prototype.send).toHaveBeenCalled();
-  });
-
-  it("sends headers for attributes starting with h-", () => {
-    const el = document.createElement("form");
-    el.setAttribute("h-auth", "token");
-
-    (resolveRequestDescriptor as any).mockReturnValue([
-      new URL("http://example.com"),
-      "POST",
-      false,
-    ]);
-
-    executeRequest(el);
-
-    expect(
-      bridge.XMLHttpRequest.prototype.setRequestHeader,
-    ).toHaveBeenCalledWith("auth", "token");
-  });
-
-  it("docs path", () => {
     const originalEnv = process.env["NODE_ENV"];
 
     process.env["NODE_ENV"] = "docs";
 
-    const el = document.createElement("form");
-    el.setAttribute("h-auth", "token");
+    const mockOwner = {};
 
-    (resolveRequestDescriptor as any).mockReturnValue([
-      new URL("http://example.com"),
-      "POST",
-      false,
-    ]);
+    bridge.location.ownerElement = mockOwner as Element;
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
 
     executeRequest(el);
 
-    expect(
-      bridge.XMLHttpRequest.prototype.setRequestHeader,
-    ).toHaveBeenCalledWith("auth", "token");
+    expect(bridge.location.ownerElement).toBe(el);
 
     process.env["NODE_ENV"] = originalEnv;
+  });
+
+  it("GET request appends form data to URL before XHR send", () => {
+    const el = document.createElement("form");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "GET", false]);
+
+    const send = vi.fn();
+    const open = vi.fn();
+    const setRequestHeader = vi.fn();
+
+    class MockXHR {
+      responseType = "";
+      withCredentials = false;
+      open = open;
+      send = send;
+      setRequestHeader = setRequestHeader;
+      ownerElement = null;
+      onloadend = null;
+    }
+
+    bridge.XMLHttpRequest = MockXHR as any;
+
+    executeRequest(el);
+
+    expect(open).toHaveBeenCalledWith("GET", "/url");
+    expect(send).toHaveBeenCalled();
+  });
+
+  it('sets custom headers for attributes starting with "h-"', () => {
+    const el = document.createElement("form");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
+    el.setAttribute("h-test", "value");
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
+
+    const send = vi.fn();
+    const open = vi.fn();
+    const setRequestHeader = vi.fn();
+
+    class MockXHR {
+      responseType = "";
+      withCredentials = false;
+      open = open;
+      send = send;
+      setRequestHeader = setRequestHeader;
+      ownerElement = null;
+      onloadend = null;
+    }
+
+    bridge.XMLHttpRequest = MockXHR as any;
+
+    executeRequest(el);
+
+    expect(setRequestHeader).toHaveBeenCalledWith("test", "value");
   });
 });

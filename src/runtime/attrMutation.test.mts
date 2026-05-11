@@ -1,94 +1,113 @@
-import { describe, expect, it, vi } from "vitest";
-
-vi.mock("./attrExecutor.mts", () => {
-  return {
-    traverseAttributes: vi.fn(),
-    attrDispatchers: [vi.fn(), vi.fn(), vi.fn()],
-  };
-});
-
-import { attrDispatchers, traverseAttributes } from "./attrExecutor.mts";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { onMutation } from "./attrMutation.mts";
+import { ADDED, CHANGED, executeRules, REMOVED } from "./executeRules.mts";
+import { traverseAttributes } from "./traverseAttributes.mts";
+
+vi.mock("./executeRules.mts", () => ({
+  executeRules: vi.fn(),
+  ADDED: 1,
+  REMOVED: 2,
+  CHANGED: 4,
+}));
+
+vi.mock("./traverseAttributes.mts", () => ({
+  traverseAttributes: vi.fn(),
+}));
+
+const mockedExecuteRules = executeRules as unknown as ReturnType<typeof vi.fn>;
+const mockedTraverseAttributes = traverseAttributes as unknown as ReturnType<
+  typeof vi.fn
+>;
 
 describe("onMutation", () => {
-  it("calls traverseAttributes for added and removed nodes", () => {
+  beforeEach(() => {
+    mockedExecuteRules.mockReset();
+    mockedTraverseAttributes.mockReset();
+  });
+
+  it("forwards added and removed nodes to traverseAttributes", () => {
+    const added = document.createElement("div");
+    const removed = document.createElement("span");
+
     const record = {
-      addedNodes: ["a"],
-      removedNodes: ["b"],
-      attributeName: undefined,
+      addedNodes: [added],
+      removedNodes: [removed],
+      attributeName: null,
       oldValue: null,
-      target: {
-        hasAttribute: () => true,
-      },
-    } as any;
+      target: added,
+    } as unknown as MutationRecord;
 
     onMutation([record]);
 
-    expect(traverseAttributes).toHaveBeenCalledWith(["b"], 1);
-    expect(traverseAttributes).toHaveBeenCalledWith(["a"], 0);
+    expect(mockedTraverseAttributes).toHaveBeenCalledWith(REMOVED, [removed]);
+    expect(mockedTraverseAttributes).toHaveBeenCalledWith(ADDED, [added]);
   });
 
-  it("calls dispatcher index 0 when attribute exists and oldValue is null", () => {
+  it("calls ADDED when attribute is newly added", () => {
+    const el = document.createElement("div");
+    el.setAttribute("x", "1");
+
     const record = {
       addedNodes: [],
       removedNodes: [],
-      attributeName: "test",
+      attributeName: "x",
       oldValue: null,
-      target: {
-        hasAttribute: () => true,
-      },
-    } as any;
+      target: el,
+    } as unknown as MutationRecord;
 
     onMutation([record]);
 
-    expect(attrDispatchers[0]).toHaveBeenCalledWith(record.target, "test");
+    expect(mockedExecuteRules).toHaveBeenCalledWith(ADDED, el, "x");
   });
 
-  it("calls dispatcher index 2 when attribute is removed and oldValue is null", () => {
+  it("calls REMOVED when attribute is removed", () => {
+    const el = document.createElement("div");
+
     const record = {
       addedNodes: [],
       removedNodes: [],
-      attributeName: "test",
+      attributeName: "x",
+      oldValue: "1",
+      target: el,
+    } as unknown as MutationRecord;
+
+    onMutation([record]);
+
+    expect(mockedExecuteRules).toHaveBeenCalledWith(REMOVED, el, "x");
+  });
+
+  it("calls CHANGED when neither ADDED nor REMOVED conditions match", () => {
+    const el = document.createElement("div");
+
+    const record = {
+      addedNodes: [],
+      removedNodes: [],
+      attributeName: "x",
       oldValue: null,
-      target: {
-        hasAttribute: () => false,
-      },
-    } as any;
+      target: el,
+    } as unknown as MutationRecord;
+
+    // force CHANGED path by ensuring element state doesn't match add/remove branches
+    el.removeAttribute("x");
 
     onMutation([record]);
 
-    expect(attrDispatchers[2]).toHaveBeenCalledWith(record.target, "test");
+    expect(mockedExecuteRules).toHaveBeenCalledWith(CHANGED, el, "x");
   });
 
-  it("calls dispatcher index 1 when attribute missing but oldValue exists", () => {
+  it("does nothing when attributeName is missing", () => {
+    const el = document.createElement("div");
+
     const record = {
       addedNodes: [],
       removedNodes: [],
-      attributeName: "test",
-      oldValue: "old",
-      target: {
-        hasAttribute: () => false,
-      },
-    } as any;
+      attributeName: null,
+      oldValue: null,
+      target: el,
+    } as unknown as MutationRecord;
 
     onMutation([record]);
 
-    expect(attrDispatchers[1]).toHaveBeenCalledWith(record.target, "test");
-  });
-
-  it("calls dispatcher index 2 when hasAttribute is true and oldValue is not null", () => {
-    const record = {
-      addedNodes: [],
-      removedNodes: [],
-      attributeName: "test",
-      oldValue: "old",
-      target: {
-        hasAttribute: () => true,
-      },
-    } as any;
-
-    onMutation([record]);
-
-    expect(attrDispatchers[2]).toHaveBeenCalledWith(record.target, "test");
+    expect(mockedExecuteRules).not.toHaveBeenCalled();
   });
 });

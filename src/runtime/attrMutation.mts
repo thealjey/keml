@@ -1,4 +1,5 @@
-import { attrDispatchers, traverseAttributes } from "./attrExecutor.mts";
+import { ADDED, CHANGED, executeRules, REMOVED } from "./executeRules.mts";
+import { traverseAttributes } from "./traverseAttributes.mts";
 
 /**
  * Handles DOM mutation records and dispatches corresponding lifecycle updates.
@@ -18,18 +19,15 @@ export const onMutation = (records: MutationRecord[]) => {
     removedNodes,
     target,
   } of records) {
-    traverseAttributes(removedNodes, 1);
-    traverseAttributes(addedNodes, 0);
+    traverseAttributes(REMOVED, removedNodes);
+    traverseAttributes(ADDED, addedNodes);
 
     if (attributeName) {
-      attrDispatchers[
-        (target as Element).hasAttribute(attributeName) ?
-          oldValue == null ?
-            0
-          : 2
-        : oldValue == null ? 2
-        : 1
-      ](target as Element, attributeName);
+      const has = (target as Element).hasAttribute(attributeName);
+      let mask;
+      has && oldValue == null && (mask = ADDED);
+      !has && oldValue != null && (mask = REMOVED);
+      executeRules(mask || CHANGED, target as Element, attributeName);
     }
   }
 };

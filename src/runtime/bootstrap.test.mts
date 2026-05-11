@@ -17,13 +17,15 @@ vi.mock("../render/data.mts", () => ({
   markStateDirty: vi.fn(),
   pushResettableElement: vi.fn(),
   pushScrollableElement: vi.fn(),
+  setFocusElement: vi.fn(),
+  pushDiscoverableElement: vi.fn(),
 }));
 
 vi.mock("../render/render.mts", () => ({
   render: vi.fn(),
 }));
 
-vi.mock("./attrExecutor.mts", () => ({
+vi.mock("./traverseAttributes.mts", () => ({
   traverseAttributes: vi.fn(),
 }));
 
@@ -55,7 +57,7 @@ describe("bootstrap", () => {
     const { mutationObserver } = await import("./attrMutation.mts");
     const { markStateDirty } = await import("../render/data.mts");
     const { render } = await import("../render/render.mts");
-    const { traverseAttributes } = await import("./attrExecutor.mts");
+    const { traverseAttributes } = await import("./traverseAttributes.mts");
     const { setLifecyclePhase } = await import("./data.mts");
     const { dispatchNavigate } = await import("../event/dispatchNavigate.mts");
 

@@ -14,6 +14,15 @@ directly to your server logic._
 
 ---
 
+<noscript>
+  <div class="admonition warning">
+    <p class="admonition-title">Warning</p>
+    <p>JavaScript is disabled.</p>
+    <p>Thou shalt not pass.</p>
+    <p>But, seriously, lots of things will be broken. Go enable it first!</p>
+  </div>
+</noscript>
+
 <!-- prettier-ignore-start -->
 ```html
 <button

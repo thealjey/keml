@@ -20,7 +20,7 @@ import { getEventListener } from "./data.mts";
 
 type Matcher = string | string[] | RegExp;
 
-export type Context = { data?: FormData };
+export type Context = { formData?: FormData };
 type Handler = (el: Element, name: string, context?: Context) => any;
 
 export type AttrRule = {
@@ -168,6 +168,9 @@ export const attrRules: AttrRule[] = [
       !(el instanceof HTMLTextAreaElement) &&
       el.hasAttribute("name"),
     serialize: (el, _name, context) =>
-      context?.data?.set(el.getAttribute("name")!, el.getAttribute("value")!),
+      context?.formData?.set(
+        el.getAttribute("name")!,
+        el.getAttribute("value")!,
+      ),
   },
 ];
