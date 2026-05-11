@@ -18,7 +18,7 @@ export const traverseAttributes = (
       it = document.createNodeIterator(node, NodeFilter.SHOW_ELEMENT);
 
       do {
-        for (attr of (node as Element).attributes) {
+        for (attr of node.attributes) {
           executeRules(mask, node, attr.name, context);
         }
       } while ((node = it.nextNode() as Element | null));
