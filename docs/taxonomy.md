@@ -8,7 +8,7 @@ An action in KEML is a global name, loosely similar to CSS class names as used
 in HTML.
 
 It does not perform any work and is not owned by any element. It simply exists
-as a declared intent that elements may emit or react to.
+as a declared intent that elements may produce or consume.
 
 For example, `on:mouseover="foo bar"` vs `class="foo bar"`.  
 `foo` and `bar` are both global identifiers in their respective systems. They
