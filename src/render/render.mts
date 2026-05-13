@@ -105,9 +105,9 @@ export const render = () => {
 
     actions2d = [];
     for (el of ifColonElements) {
-      (el.checkValidity?.() ?? true) ||
-        ((temp = el.getAttributeNode("if:invalid")) &&
-          actions2d.push(temp.value));
+      !(el.checkValidity?.() ?? true) &&
+        (temp = el.getAttributeNode("if:invalid")) &&
+        actions2d.push(temp.value);
 
       // we don't care about the type
       // as long as the element conforms to the shape
