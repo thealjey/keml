@@ -155,7 +155,7 @@ export const render = () => {
     writeScrollAxis(el, options, "left");
 
     ("top" in options || "left" in options) &&
-      el[el.hasAttribute("relative") ? "scrollBy" : "scroll"](options);
+      (el.hasAttribute("relative") ? el.scrollBy(options) : el.scroll(options));
   }
 
   while ((el = popDiscoverableElement())) {

@@ -10,7 +10,7 @@ const methods = {
   src: "GET",
 };
 
-export const methodAttrs = Object.keys(methods) as (keyof typeof methods)[];
+export const methodAttrs = Object.keys(methods);
 const trailing = /\/+$/;
 
 /**
@@ -31,7 +31,7 @@ export const resolveRequestDescriptor = (el: Element) => {
   const name = methodAttrs.find(el.hasAttribute, el);
   const attr = el.getAttributeNode("method");
   let endpoint = name ? el.getAttribute(name)! : "";
-  let method = methods[name!] ?? "GET";
+  let method = methods[name as keyof typeof methods] ?? "GET";
 
   attr && (method = attr.value.toUpperCase());
 

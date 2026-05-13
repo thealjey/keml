@@ -151,7 +151,7 @@ export const attrRules: AttrRule[] = [
     changed: setNeedsSse,
   },
   {
-    match: Object.keys(methodAttrs).concat("credentials"),
+    match: methodAttrs.concat("credentials"),
     gate: el => el.hasAttribute("sse"),
     added: setNeedsSse,
     removed: setNeedsSse,

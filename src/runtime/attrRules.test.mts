@@ -21,7 +21,7 @@ vi.mock("../event/visibilityStateSync.mts", () => ({
 }));
 
 vi.mock("../network/resolveRequestDescriptor.mts", () => ({
-  methodAttrs: {},
+  methodAttrs: [],
 }));
 
 vi.mock("../network/SseManager.mts", () => ({
