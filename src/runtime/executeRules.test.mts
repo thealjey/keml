@@ -7,17 +7,11 @@ import {
   SERIALIZE,
 } from "./executeRules.mts";
 
-// ---- mocks ----
-vi.mock("./data.mts", () => ({
-  getLifecyclePhase: vi.fn(),
-}));
-
 vi.mock("./attrRules.mts", () => ({
   attrRules: [],
 }));
 
 import { attrRules } from "./attrRules.mts";
-import { getLifecyclePhase } from "./data.mts";
 
 // helper to reset mocked rules
 const setRules = (rules: any[]) => {
@@ -29,7 +23,6 @@ describe("executeRules", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     setRules([]);
-    (getLifecyclePhase as any).mockReturnValue("phase-1");
   });
 
   it("calls added handler when ADDED bit is set", () => {
@@ -114,22 +107,6 @@ describe("executeRules", () => {
     executeRules(ADDED, document.createElement("div"), "foo");
 
     expect(gate).toHaveBeenCalled();
-    expect(added).not.toHaveBeenCalled();
-  });
-
-  it("respects lifecycle phase filter", () => {
-    const added = vi.fn();
-
-    setRules([
-      {
-        match: "foo",
-        phase: "other-phase",
-        added,
-      },
-    ]);
-
-    executeRules(ADDED, document.createElement("div"), "foo");
-
     expect(added).not.toHaveBeenCalled();
   });
 

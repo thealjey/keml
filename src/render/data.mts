@@ -5,10 +5,38 @@ const scrollableElementStack: Element[] = [];
 const discoverableElementStack: Element[] = [];
 let currentFocusElement: Element | undefined;
 let stateDirty = false;
+let needsSse = false;
 
 export const ifColonElements = new Set<Element>();
 export const ifElements = new Set<Element>();
 export const renderElements = new Set<Element>();
+
+/**
+ * Marks the SSE subsystem as required for the next render cycle.
+ *
+ * @remarks
+ * This sets the internal `needsSse` flag to `true`.
+ * The render loop will later consume this flag and start the shared
+ * SSE manager if needed.
+ */
+export const setNeedsSse = () => (needsSse = true);
+
+/**
+ * Returns whether SSE startup has been requested.
+ *
+ * @returns `true` if the render loop should start the SSE manager;
+ * otherwise `false`.
+ */
+export const getNeedsSse = () => needsSse;
+
+/**
+ * Clears the pending SSE startup request flag.
+ *
+ * @remarks
+ * This resets the internal `needsSse` flag back to `false`
+ * after it has been consumed by the render loop.
+ */
+export const clearNeedsSse = () => (needsSse = false);
 
 /**
  * Pushes a render payload onto the render queue.

@@ -5,16 +5,15 @@ import { SseManager } from "../network/SseManager.mts";
 import { markStateDirty } from "../render/data.mts";
 import { render } from "../render/render.mts";
 import { mutationObserver } from "./attrMutation.mts";
-import { setEventListener, setLifecyclePhase } from "./data.mts";
+import { setEventListener } from "./data.mts";
 import { ADDED } from "./executeRules.mts";
 import { traverseAttributes } from "./traverseAttributes.mts";
 
 /**
  * Initializes the runtime system and starts all DOM-driven behaviors.
  *
- * Performs initial setup of lifecycle state, attribute traversal, SSE
- * subsystem, mutation observation, and global event listeners required for
- * reactive behavior.
+ * Performs initial setup of attribute traversal, mutation observation, and
+ * global event listeners required for reactive behavior.
  *
  * Also schedules the main render loop.
  */
@@ -25,9 +24,6 @@ export const bootstrap = () => {
 
   setEventListener(onEvent);
   traverseAttributes(ADDED, document.childNodes);
-  setLifecyclePhase(1);
-
-  SseManager.instance.start();
 
   mutationObserver.observe(document, {
     attributeOldValue: true,

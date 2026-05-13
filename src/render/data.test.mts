@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   clearFocusElement,
+  clearNeedsSse,
   clearStateDirty,
   getFocusElement,
+  getNeedsSse,
   ifColonElements,
   ifElements,
   isStateDirty,
@@ -19,6 +21,7 @@ import {
   pushScrollableElement,
   renderElements,
   setFocusElement,
+  setNeedsSse,
 } from "./data.mts";
 
 describe("state module", () => {
@@ -65,6 +68,17 @@ describe("state module", () => {
 
     clearStateDirty();
     expect(isStateDirty()).toBe(false);
+  });
+
+  it("sse needed works", () => {
+    clearNeedsSse();
+    expect(getNeedsSse()).toBe(false);
+
+    setNeedsSse();
+    expect(getNeedsSse()).toBe(true);
+
+    clearNeedsSse();
+    expect(getNeedsSse()).toBe(false);
   });
 
   it("sets are exposed and usable", () => {

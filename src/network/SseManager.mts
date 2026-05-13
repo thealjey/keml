@@ -104,7 +104,7 @@ export class SseManager extends Map<string, readonly [SseSource, SseSource]> {
    * Computes which connections need to be created, updated, or removed
    * based on the currently registered elements.
    */
-  start = () => {
+  start() {
     const outdated = new Map<string, [Set<string>, Set<string>, URL]>();
     const missing = new Map<string, [Set<string>, Set<string>, URL]>();
     const all = new Set<string>();
@@ -141,7 +141,7 @@ export class SseManager extends Map<string, readonly [SseSource, SseSource]> {
         new SseSource(url, true, this.onMessage, otherRight),
       ]);
     }
-  };
+  }
 
   /**
    * Stops all SSE activity and clears all connections and subscriptions.

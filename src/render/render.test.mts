@@ -48,6 +48,8 @@ vi.mock("./data.mts", () => ({
   popResettableElement: vi.fn(() => undefined),
   popScrollableElement: vi.fn(() => undefined),
   popDiscoverableElement: vi.fn(() => undefined),
+  getNeedsSse: vi.fn(() => false),
+  clearNeedsSse: vi.fn(),
   renderElements: [],
 }));
 
@@ -70,13 +72,20 @@ vi.mock("./writeScrollAxis.mts", () => ({
   writeScrollAxis: vi.fn(),
 }));
 
+vi.mock("../network/SseManager.mts", () => ({
+  SseManager: { instance: { start: vi.fn() } },
+}));
+
 /* ---------------- imports ---------------- */
 
+import { SseManager } from "../network/SseManager.mts";
 import { hasToken } from "../util/hasToken.mts";
 import {
   clearFocusElement,
+  clearNeedsSse,
   clearStateDirty,
   getFocusElement,
+  getNeedsSse,
   ifColonElements,
   ifElements,
   isStateDirty,
@@ -532,5 +541,12 @@ describe("render (baseline)", () => {
     expect(dispatchEvent).toHaveBeenCalledWith(
       expect.objectContaining({ type: "discover" }),
     );
+  });
+
+  it("starts sse", () => {
+    (getNeedsSse as any).mockReturnValueOnce(true);
+    render();
+    expect(clearNeedsSse).toHaveBeenCalledTimes(1);
+    expect(SseManager.instance.start).toHaveBeenCalledTimes(1);
   });
 });

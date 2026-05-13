@@ -1,5 +1,4 @@
 import { attrRules, type Context } from "./attrRules.mts";
-import { getLifecyclePhase } from "./data.mts";
 
 export const ADDED = 0b1;
 export const REMOVED = 0b10;
@@ -20,17 +19,8 @@ export const executeRules = (
   name: string,
   context?: Context,
 ) => {
-  for (const {
-    match,
-    gate,
-    phase,
-    added,
-    removed,
-    changed,
-    serialize,
-  } of attrRules) {
+  for (const { match, gate, added, removed, changed, serialize } of attrRules) {
     if (
-      (phase == null || phase === getLifecyclePhase()) &&
       (!match ||
         (typeof match === "string" ? name === match
         : Array.isArray(match) ? match.includes(name)

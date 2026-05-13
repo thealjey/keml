@@ -15,6 +15,7 @@ import {
   pushDiscoverableElement,
   renderElements,
   setFocusElement,
+  setNeedsSse,
 } from "../render/data.mts";
 import { getEventListener } from "./data.mts";
 
@@ -25,7 +26,6 @@ type Handler = (el: Element, name: string, context?: Context) => any;
 
 export type AttrRule = {
   match?: Matcher;
-  phase?: number;
   gate?: Handler;
   added?: Handler;
   removed?: Handler;
@@ -49,7 +49,6 @@ const events = new Set<string>();
  *
  * Optional constraints:
  * - `gate` functions to conditionally apply rules
- * - `phase` restrictions to limit execution timing
  */
 export const attrRules: AttrRule[] = [
   {
@@ -147,18 +146,16 @@ export const attrRules: AttrRule[] = [
   },
   {
     match: "sse",
-    phase: 1,
-    added: SseManager.instance.start,
-    removed: SseManager.instance.start,
-    changed: SseManager.instance.start,
+    added: setNeedsSse,
+    removed: setNeedsSse,
+    changed: setNeedsSse,
   },
   {
     match: Object.keys(methodAttrs).concat("credentials"),
     gate: el => el.hasAttribute("sse"),
-    phase: 1,
-    added: SseManager.instance.start,
-    removed: SseManager.instance.start,
-    changed: SseManager.instance.start,
+    added: setNeedsSse,
+    removed: setNeedsSse,
+    changed: setNeedsSse,
   },
   {
     match: "value",

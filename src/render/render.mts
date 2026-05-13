@@ -1,8 +1,11 @@
+import { SseManager } from "../network/SseManager.mts";
 import { hasToken } from "../util/hasToken.mts";
 import {
   clearFocusElement,
+  clearNeedsSse,
   clearStateDirty,
   getFocusElement,
+  getNeedsSse,
   ifColonElements,
   ifElements,
   isStateDirty,
@@ -157,6 +160,11 @@ export const render = () => {
 
   while ((el = popDiscoverableElement())) {
     el.dispatchEvent(discoverEvent);
+  }
+
+  if (getNeedsSse()) {
+    clearNeedsSse();
+    SseManager.instance.start();
   }
 
   if ((el = getFocusElement())) {

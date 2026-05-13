@@ -19,6 +19,7 @@ vi.mock("../render/data.mts", () => ({
   pushScrollableElement: vi.fn(),
   setFocusElement: vi.fn(),
   pushDiscoverableElement: vi.fn(),
+  setNeedsSse: vi.fn(),
 }));
 
 vi.mock("../render/render.mts", () => ({
@@ -36,9 +37,15 @@ vi.mock("./attrMutation.mts", () => ({
 }));
 
 vi.mock("./data.mts", () => ({
-  setLifecyclePhase: vi.fn(),
   setEventListener: vi.fn(),
 }));
+
+import { dispatchNavigate } from "../event/dispatchNavigate.mts";
+import { markStateDirty } from "../render/data.mts";
+import { render } from "../render/render.mts";
+import { mutationObserver } from "./attrMutation.mts";
+import { bootstrap } from "./bootstrap.mts";
+import { traverseAttributes } from "./traverseAttributes.mts";
 
 describe("bootstrap", () => {
   beforeEach(() => {
@@ -52,21 +59,9 @@ describe("bootstrap", () => {
   });
 
   it("bootstraps application and wires core systems", async () => {
-    const { bootstrap } = await import("./bootstrap.mts");
-    const { SseManager } = await import("../network/SseManager.mts");
-    const { mutationObserver } = await import("./attrMutation.mts");
-    const { markStateDirty } = await import("../render/data.mts");
-    const { render } = await import("../render/render.mts");
-    const { traverseAttributes } = await import("./traverseAttributes.mts");
-    const { setLifecyclePhase } = await import("./data.mts");
-    const { dispatchNavigate } = await import("../event/dispatchNavigate.mts");
-
     bootstrap();
 
     expect(traverseAttributes).toHaveBeenCalled();
-    expect(setLifecyclePhase).toHaveBeenCalledWith(1);
-
-    expect(SseManager.instance.start).toHaveBeenCalled();
 
     expect(mutationObserver.observe).toHaveBeenCalledWith(
       document,

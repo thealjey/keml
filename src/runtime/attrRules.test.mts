@@ -41,6 +41,7 @@ vi.mock("../render/data.mts", () => ({
   renderElements: new Set(),
   setFocusElement: vi.fn(),
   pushDiscoverableElement: vi.fn(),
+  setNeedsSse: vi.fn(),
 }));
 
 import {
@@ -122,13 +123,15 @@ describe("attrRules", () => {
     expect(SseManager.instance.addElement).toHaveBeenCalledWith(el, "sse");
   });
 
-  it("sse phase 1 rule starts manager", () => {
-    const rule = attrRules.find(r => r.match === "sse" && r.phase === 1)!;
+  it("gated credentials sse", () => {
+    const rule = attrRules.find(
+      r => Array.isArray(r.match) && r.match.includes("credentials"),
+    )!;
     const el = document.createElement("div");
 
-    rule.added?.(el, "sse");
-
-    expect(SseManager.instance.start).toHaveBeenCalled();
+    expect(rule.gate!(el, "credentials")).toBe(false);
+    el.setAttribute("sse", "");
+    expect(rule.gate!(el, "credentials")).toBe(true);
   });
 
   it("adds element for /^if:/ rule", () => {
@@ -392,7 +395,7 @@ describe("attrRules", () => {
 
   it("allows execution when element has sse attribute", () => {
     const rule = attrRules.find(
-      r => r.match && typeof r.match === "object" && r.phase === 1 && r.gate,
+      r => r.match && typeof r.match === "object" && r.gate,
     )!;
 
     const el = document.createElement("div");
@@ -401,18 +404,6 @@ describe("attrRules", () => {
     const result = rule.gate!(el, "credentials");
 
     expect(result).toBe(true);
-  });
-
-  it("blocks execution when element does not have sse attribute", () => {
-    const rule = attrRules.find(
-      r => r.match && typeof r.match === "object" && r.phase === 1 && r.gate,
-    )!;
-
-    const el = document.createElement("div");
-
-    const result = rule.gate!(el, "credentials");
-
-    expect(result).toBe(false);
   });
 
   it("value rule gate blocks input/select/textarea elements", () => {
