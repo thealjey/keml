@@ -1,3 +1,4 @@
+import { isElement } from "../util/isElement.mts";
 import { findFirstEquivalentNode } from "./findFirstEquivalentNode.mts";
 import { disableState } from "./state.mts";
 import { writeAttribute } from "./writeAttribute.mts";
@@ -20,7 +21,7 @@ const replaceNode = (left: ChildNode, right: ChildNode) => {
   if (left.nodeName === right.nodeName) {
     left.nodeValue === right.nodeValue || (left.nodeValue = right.nodeValue);
 
-    if (left instanceof Element) {
+    if (isElement(left)) {
       disableState(left);
 
       let i = left.attributes.length;

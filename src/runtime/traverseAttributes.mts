@@ -1,3 +1,4 @@
+import { isElement } from "../util/isElement.mts";
 import { type Context } from "./attrRules.mts";
 import { executeRules } from "./executeRules.mts";
 
@@ -14,7 +15,7 @@ export const traverseAttributes = (
   context?: Context,
 ) => {
   for (let i = 0, l = nodes.length, node, it, attr; i < l; ++i) {
-    if ((node = nodes[i]!) instanceof Element) {
+    if (isElement((node = nodes[i]!))) {
       it = document.createNodeIterator(node, NodeFilter.SHOW_ELEMENT);
 
       do {

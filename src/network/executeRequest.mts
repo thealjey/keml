@@ -6,6 +6,7 @@ import {
 } from "../render/data.mts";
 import { SERIALIZE } from "../runtime/executeRules.mts";
 import { traverseAttributes } from "../runtime/traverseAttributes.mts";
+import { isForm } from "../util/isForm.mts";
 import { appendFormDataToUrl } from "./appendFormDataToUrl.mts";
 import { bridge } from "./bridge.e.mts";
 import { resolveRequestDescriptor } from "./resolveRequestDescriptor.mts";
@@ -32,7 +33,7 @@ export const executeRequest = (el: Element) => {
     el.hasAttribute("once") && pushOneTimeElement(el);
 
     let formData: FormData | undefined = new FormData(
-      el instanceof HTMLFormElement ? el : (
+      isForm(el) ? el : (
         (internalForm.replaceChildren(el.cloneNode(true)), internalForm)
       ),
     );

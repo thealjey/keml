@@ -1,3 +1,4 @@
+import { isRegExp } from "../util/isRegExp.mts";
 import type { Matcher } from "./attrRules.mts";
 
 /**
@@ -9,7 +10,7 @@ import type { Matcher } from "./attrRules.mts";
 export function matchesName(this: string, match: Matcher) {
   return (
     typeof match === "string" ? match === this
-    : match instanceof RegExp ? match.test(this)
+    : isRegExp(match) ? match.test(this)
     : match.some(matchesName, this)
   );
 }

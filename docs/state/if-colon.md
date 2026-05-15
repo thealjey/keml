@@ -81,10 +81,14 @@ the following event types: `change`, `input`, `reset`.
 
 The `value` condition becomes `true` when the element's value is truthy.
 
-For custom elements (e.g. Web Components) to participate, they must expose two
-properties: `type: string` and `value: string`, OR `type: 'checkbox'` and
-`checked: boolean`, and notify the system of their value changes by emitting one
-or more of the following event types: `change`, `input`, `reset`.
+Custom elements (like Web Components) can participate if they follow the same
+input-like behavior as native input elements:
+
+- They must expose a `type` property.
+- They may expose additional input-like properties depending on `type`:
+  `checked`, `files`, `src`, and `value`.
+- When their value changes, they notify the system using one or more of these
+  events: `input`, `change`, `reset`.
 
 <div class="tabs">
   <label><input type="radio" name="tabs-4" checked>HTML</label>

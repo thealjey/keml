@@ -1,5 +1,7 @@
 import { SseManager } from "../network/SseManager.mts";
+import { resolveValue } from "../runtime/resolveValue.mts";
 import { hasToken } from "../util/hasToken.mts";
+import { isFileList } from "../util/isFileList.mts";
 import {
   clearFocusElement,
   clearNeedsSse,
@@ -109,11 +111,8 @@ export const render = () => {
         (temp = el.getAttributeNode("if:invalid")) &&
         actions2d.push(temp.value);
 
-      // we don't care about the type
-      // as long as the element conforms to the shape
-      ((el as HTMLInputElement).type === "checkbox" ?
-        (el as HTMLInputElement).checked
-      : (el as HTMLInputElement).value) &&
+      (temp = resolveValue(el)) &&
+        (!isFileList(temp) || temp.length) &&
         (temp = el.getAttributeNode("if:value")) &&
         actions2d.push(temp.value);
 
@@ -132,9 +131,9 @@ export const render = () => {
     actions = actions2d.join(" ");
 
     for (el of ifElements) {
-      (hasToken(actions, el.getAttribute("if")) ? enableState : disableState)(
-        el,
-      );
+      hasToken(actions, el.getAttribute("if")) ?
+        enableState(el)
+      : disableState(el);
     }
   }
 

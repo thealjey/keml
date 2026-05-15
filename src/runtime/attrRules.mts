@@ -33,6 +33,7 @@ export type AttrRule = {
 };
 
 const events = new Set<string>();
+const formField = ["INPUT", "SELECT", "TEXTAREA"];
 
 /**
  * Registry of attribute lifecycle rules that define side-effects for DOM
@@ -152,11 +153,7 @@ export const attrRules: AttrRule[] = [
   },
   {
     match: "value",
-    gate: el =>
-      !(el instanceof HTMLInputElement) &&
-      !(el instanceof HTMLSelectElement) &&
-      !(el instanceof HTMLTextAreaElement) &&
-      el.hasAttribute("name"),
+    gate: el => !formField.includes(el.tagName) && el.hasAttribute("name"),
     serialize: (el, _name, context) =>
       context?.formData?.set(
         el.getAttribute("name")!,

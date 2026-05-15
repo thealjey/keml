@@ -362,6 +362,26 @@ describe("render (baseline)", () => {
     expect(enableState).toHaveBeenCalledWith(el);
   });
 
+  it("if:value empty file", () => {
+    const el = document.createElement("div");
+    el.setAttribute("if", "token");
+
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("if:value", "token");
+
+    (ifElements as any).push(el);
+    (ifColonElements as any).push(input);
+
+    (isStateDirty as any).mockReturnValue(true);
+    (hasToken as any).mockReturnValue(true);
+
+    render();
+
+    expect(clearStateDirty).toHaveBeenCalled();
+    expect(enableState).toHaveBeenCalledWith(el);
+  });
+
   it("pushes if:value into actions2d", () => {
     const el = document.createElement("div");
     el.setAttribute("if", "token");

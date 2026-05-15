@@ -5,6 +5,7 @@ import {
   pushScrollableElement,
 } from "../render/data.mts";
 import { hasToken } from "../util/hasToken.mts";
+import { isElement } from "../util/isElement.mts";
 import { onElements, resetElements, scrollElements } from "./data.e.mts";
 import { rejectsEventConstraint } from "./rejectsEventConstraint.mts";
 
@@ -31,7 +32,7 @@ const tokenBehavior = [
 export const onEvent: EventListener = event => {
   const { target, type } = event;
 
-  if (target instanceof Element) {
+  if (isElement(target)) {
     const attrName = `on:${type}`;
     let el: Element | null = target;
     let attr;
