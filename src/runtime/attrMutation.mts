@@ -27,7 +27,7 @@ export const onMutation = (records: MutationRecord[]) => {
       let mask;
       has && oldValue == null && (mask = ADDED);
       !has && oldValue != null && (mask = REMOVED);
-      executeRules(mask || CHANGED, target as Element, attributeName);
+      executeRules(mask ?? CHANGED, target as Element, attributeName);
     }
   }
 };

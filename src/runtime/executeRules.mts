@@ -1,4 +1,5 @@
 import { attrRules, type Context } from "./attrRules.mts";
+import { matchesName } from "./matchesName.mts";
 
 export const ADDED = 0b1;
 export const REMOVED = 0b10;
@@ -21,10 +22,7 @@ export const executeRules = (
 ) => {
   for (const { match, gate, added, removed, changed, serialize } of attrRules) {
     if (
-      (!match ||
-        (typeof match === "string" ? name === match
-        : Array.isArray(match) ? match.includes(name)
-        : match.test(name))) &&
+      (!match || matchesName.call(name, match)) &&
       (!gate || gate(el, name, context))
     ) {
       mask & ADDED && added?.(el, name, context);

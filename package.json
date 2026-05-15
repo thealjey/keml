@@ -5,7 +5,7 @@
   },
   "description": "Enhance HTML with custom attributes for clean, server-driven interactivity.",
   "devDependencies": {
-    "@types/node": "^25.7.0",
+    "@types/node": "^25.8.0",
     "@vitest/coverage-v8": "^4.1.6",
     "dependency-cruiser": "^17.4.0",
     "esbuild": "^0.28.0",
@@ -66,5 +66,5 @@
     "test": "NODE_ENV=test vitest run -c bin/test.mts",
     "test:watch": "NODE_ENV=test vitest watch -c bin/test.mts"
   },
-  "version": "3.4.4"
+  "version": "3.4.5"
 }

@@ -49,7 +49,7 @@ export const onEvent: EventListener = event => {
         }
         el.hasAttribute("log") && bridge.console.log(event);
 
-        if (attr.value.split(",").find(rejectsEventConstraint, event)) {
+        if (attr.value.split(",").some(rejectsEventConstraint, event)) {
           return;
         }
       }

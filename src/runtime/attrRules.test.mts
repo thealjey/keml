@@ -91,7 +91,9 @@ describe("attrRules", () => {
   });
 
   it("if rule triggers markStateDirty", () => {
-    const rule = attrRules.find(r => r.match === "if" && r.changed)!;
+    const rule = attrRules.find(
+      r => Array.isArray(r.match) && r.match.includes("if"),
+    )!;
     const el = document.createElement("div");
 
     rule.changed?.(el, "if");

@@ -19,10 +19,9 @@ import {
 } from "../render/data.mts";
 import { getEventListener } from "./data.mts";
 
-type Matcher = string | string[] | RegExp;
-
+export type Matcher = string | RegExp | Matcher[];
 export type Context = { formData?: FormData };
-type Handler = (el: Element, name: string, context?: Context) => any;
+export type Handler = (el: Element, name: string, context?: Context) => any;
 
 export type AttrRule = {
   match?: Matcher;
@@ -61,7 +60,7 @@ export const attrRules: AttrRule[] = [
     removed: el => ifElements.delete(el),
   },
   {
-    match: "if",
+    match: ["if", /^if:/],
     added: markStateDirty,
     removed: markStateDirty,
     changed: markStateDirty,
@@ -70,12 +69,6 @@ export const attrRules: AttrRule[] = [
     match: /^if:/,
     added: el => ifColonElements.add(el),
     removed: el => ifColonElements.delete(el),
-  },
-  {
-    match: /^if:/,
-    added: markStateDirty,
-    removed: markStateDirty,
-    changed: markStateDirty,
   },
   {
     match: "if:intersects",
