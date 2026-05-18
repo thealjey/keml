@@ -3,13 +3,17 @@ const oneTimeElementStack: Element[] = [];
 const resettableElementStack: Element[] = [];
 const scrollableElementStack: Element[] = [];
 const discoverableElementStack: Element[] = [];
+const attrEventStack: [Element, string][] = [];
 let currentFocusElement: Element | undefined;
 let stateDirty = false;
+let refDirty = false;
 let needsSse = false;
 
 export const ifColonElements = new Set<Element>();
 export const ifElements = new Set<Element>();
 export const renderElements = new Set<Element>();
+export const refElements = new Set<Element>();
+export const linkElements = new Set<Element>();
 
 /**
  * Marks the SSE subsystem as required for the next render cycle.
@@ -167,6 +171,26 @@ export const isStateDirty = () => stateDirty;
 export const clearStateDirty = () => (stateDirty = false);
 
 /**
+ * Marks reference tracking as dirty.
+ */
+export const markRefDirty = () => (refDirty = true);
+
+/**
+ * Marks both state and reference tracking as dirty.
+ */
+export const markStateRefDirty = () => (stateDirty = refDirty = true);
+
+/**
+ * Returns whether reference tracking is currently marked as dirty.
+ */
+export const isRefDirty = () => refDirty;
+
+/**
+ * Resets the reference dirty flag.
+ */
+export const clearRefDirty = () => (refDirty = false);
+
+/**
  * Pushes an element onto the stack of discoverable elements.
  *
  * @param el - The DOM element to add to the discoverable stack.
@@ -184,3 +208,14 @@ export const pushDiscoverableElement = (el: Element) =>
  * @returns The removed element, or `undefined` if the stack is empty.
  */
 export const popDiscoverableElement = () => discoverableElementStack.pop();
+
+/**
+ * Pushes an element and attribute name pair onto the attribute event stack.
+ */
+export const pushAttrEventStack = (el: Element, name: string) =>
+  attrEventStack.push([el, name]);
+
+/**
+ * Pops the most recent entry from the attribute event stack.
+ */
+export const popAttrEventStack = () => attrEventStack.pop();

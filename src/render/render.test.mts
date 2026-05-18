@@ -43,14 +43,20 @@ vi.mock("./data.mts", () => ({
   ifElements: [],
   isStateDirty: vi.fn(() => false),
   markStateDirty: vi.fn(),
-  popOneTimeElement: vi.fn(() => undefined),
-  popRenderPayload: vi.fn(() => undefined),
-  popResettableElement: vi.fn(() => undefined),
-  popScrollableElement: vi.fn(() => undefined),
-  popDiscoverableElement: vi.fn(() => undefined),
+  popOneTimeElement: vi.fn(),
+  popRenderPayload: vi.fn(),
+  popResettableElement: vi.fn(),
+  popScrollableElement: vi.fn(),
+  popDiscoverableElement: vi.fn(),
+  popAttrEventStack: vi.fn(),
+  markStateRefDirty: vi.fn(),
   getNeedsSse: vi.fn(() => false),
+  isRefDirty: vi.fn(() => false),
+  clearRefDirty: vi.fn(),
   clearNeedsSse: vi.fn(),
   renderElements: [],
+  linkElements: new Set(),
+  refElements: new Set(),
 }));
 
 vi.mock("./patchers.mts", () => ({
@@ -72,6 +78,10 @@ vi.mock("./writeScrollAxis.mts", () => ({
   writeScrollAxis: vi.fn(),
 }));
 
+vi.mock("./readLiveValue.mts", () => ({
+  readLiveValue: vi.fn(),
+}));
+
 vi.mock("../network/SseManager.mts", () => ({
   SseManager: { instance: { start: vi.fn() } },
 }));
@@ -88,16 +98,21 @@ import {
   getNeedsSse,
   ifColonElements,
   ifElements,
+  isRefDirty,
   isStateDirty,
-  markStateDirty,
+  linkElements,
+  markStateRefDirty,
+  popAttrEventStack,
   popDiscoverableElement,
   popOneTimeElement,
   popRenderPayload,
   popResettableElement,
   popScrollableElement,
+  refElements,
   renderElements,
 } from "./data.mts";
 import { patchers } from "./patchers.mts";
+import { readLiveValue } from "./readLiveValue.mts";
 import { render } from "./render.mts";
 import { disableState, enableState } from "./state.mts";
 import { writeAttribute } from "./writeAttribute.mts";
@@ -154,7 +169,7 @@ describe("render (baseline)", () => {
 
     render();
 
-    expect(markStateDirty).toHaveBeenCalled();
+    expect(markStateRefDirty).toHaveBeenCalled();
     expect(el.isLoading).toBe(false);
   });
 
@@ -568,5 +583,132 @@ describe("render (baseline)", () => {
     render();
     expect(clearNeedsSse).toHaveBeenCalledTimes(1);
     expect(SseManager.instance.start).toHaveBeenCalledTimes(1);
+  });
+
+  it("writes resolved ref values when dirty", () => {
+    vi.mocked(isRefDirty).mockReturnValue(true);
+    vi.mocked(hasToken).mockReturnValue(true);
+    vi.mocked(readLiveValue).mockReturnValue("123");
+
+    const writeSpy = vi.mocked(writeAttribute);
+
+    const linkEl = document.createElement("div");
+    linkEl.setAttribute("link:width", "tokenA");
+
+    const refEl = document.createElement("div");
+    refEl.setAttribute("ref:width", "valueA");
+
+    linkElements.clear();
+    refElements.clear();
+
+    linkElements.add(linkEl);
+    refElements.add(refEl);
+
+    markStateRefDirty();
+    render();
+
+    expect(writeSpy).toHaveBeenCalled();
+  });
+
+  it("skips when not dirty", () => {
+    vi.mocked(isRefDirty).mockReturnValue(false);
+
+    const writeSpy = vi.mocked(writeAttribute);
+
+    const linkEl = document.createElement("div");
+    linkEl.setAttribute("link:width", "tokenA");
+
+    const refEl = document.createElement("div");
+    refEl.setAttribute("ref:width", "valueA");
+
+    linkElements.clear();
+    refElements.clear();
+
+    linkElements.add(linkEl);
+    refElements.add(refEl);
+
+    render();
+
+    expect(writeSpy).not.toHaveBeenCalled();
+  });
+
+  it("skips attributes that do not start with link:", () => {
+    vi.mocked(isRefDirty).mockReturnValue(true);
+
+    const writeSpy = vi.mocked(writeAttribute);
+
+    const linkEl = document.createElement("div");
+    linkEl.setAttribute("data-x", "tokenA"); // does NOT start with link:
+
+    const refEl = document.createElement("div");
+    refEl.setAttribute("ref:width", "123");
+
+    linkElements.clear();
+    refElements.clear();
+
+    linkElements.add(linkEl);
+    refElements.add(refEl);
+
+    render();
+
+    expect(writeSpy).not.toHaveBeenCalled();
+  });
+
+  it("dispatches attr event once", () => {
+    const el = document.createElement("div");
+    const spy = vi.spyOn(el, "dispatchEvent");
+
+    vi.mocked(popAttrEventStack)
+      .mockReturnValueOnce([el, "x"])
+      .mockReturnValueOnce(undefined);
+
+    render();
+
+    expect(spy).toHaveBeenCalled();
+
+    const event = spy.mock.calls[0]![0] as Event;
+    expect(event.type).toBe("attr:x");
+  });
+
+  it("reuses cached event for same name", () => {
+    const el1 = document.createElement("div");
+    const el2 = document.createElement("div");
+
+    const spy1 = vi.spyOn(el1, "dispatchEvent");
+    const spy2 = vi.spyOn(el2, "dispatchEvent");
+
+    vi.mocked(popAttrEventStack)
+      .mockReturnValueOnce([el1, "x"])
+      .mockReturnValueOnce([el2, "x"])
+      .mockReturnValueOnce(undefined);
+
+    render();
+
+    const e1 = spy1.mock.calls[0]![0];
+    const e2 = spy2.mock.calls[0]![0];
+
+    expect(e1).toBe(e2);
+  });
+
+  it("creates different events for different names", () => {
+    const el1 = document.createElement("div");
+    const el2 = document.createElement("div");
+
+    const spy1 = vi.spyOn(el1, "dispatchEvent");
+    const spy2 = vi.spyOn(el2, "dispatchEvent");
+
+    vi.mocked(popAttrEventStack)
+      .mockReturnValueOnce([el1, "a"])
+      .mockReturnValueOnce([el2, "b"])
+      .mockReturnValueOnce(undefined);
+
+    render();
+
+    const e1 = spy1.mock.calls[0]![0] as Event;
+    const e2 = spy2.mock.calls[0]![0] as Event;
+
+    expect(e1.type).toBe("attr:a");
+    expect(e2.type).toBe("attr:b");
+    expect(e1).not.toBe(e2);
   });
 });

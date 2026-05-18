@@ -1,0 +1,19 @@
+<input
+  type="hidden"
+  name="chartWidth"
+  link:value="referenceChartWidth"
+  on:attr:value="sendChartWidth"
+  on="sendChartWidth"
+  debounce="100"
+  src="/reference-chart"
+  result="referenceChart"
+>
+
+<svg
+  class="chart"
+  height="500"
+  ref:width="referenceChartWidth"
+  measure="devicePixelContentBoxSize"
+  render="referenceChart"
+  position="replaceWith"
+></svg>

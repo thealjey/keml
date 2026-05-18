@@ -2,18 +2,23 @@ import { describe, expect, it } from "vitest";
 import {
   clearFocusElement,
   clearNeedsSse,
+  clearRefDirty,
   clearStateDirty,
   getFocusElement,
   getNeedsSse,
   ifColonElements,
   ifElements,
+  isRefDirty,
   isStateDirty,
   markStateDirty,
+  markStateRefDirty,
+  popAttrEventStack,
   popDiscoverableElement,
   popOneTimeElement,
   popRenderPayload,
   popResettableElement,
   popScrollableElement,
+  pushAttrEventStack,
   pushDiscoverableElement,
   pushOneTimeElement,
   pushRenderPayload,
@@ -91,5 +96,33 @@ describe("state module", () => {
     ifElements.add(el);
 
     expect(ifElements.has(el)).toBe(true);
+  });
+
+  it("markStateRefDirty sets refDirty to true", () => {
+    markStateRefDirty();
+
+    expect(isRefDirty()).toBe(true);
+  });
+
+  it("clearRefDirty resets only refDirty (not stateDirty)", () => {
+    markStateRefDirty();
+    clearRefDirty();
+
+    expect(isRefDirty()).toBe(false);
+  });
+
+  it("push/pop behaves as LIFO stack", () => {
+    const el1 = document.createElement("div");
+    const el2 = document.createElement("span");
+
+    pushAttrEventStack(el1, "x");
+    pushAttrEventStack(el2, "y");
+
+    expect(popAttrEventStack()).toEqual([el2, "y"]);
+    expect(popAttrEventStack()).toEqual([el1, "x"]);
+  });
+
+  it("pop returns undefined when stack is empty", () => {
+    expect(popAttrEventStack()).toBeUndefined();
   });
 });

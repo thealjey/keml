@@ -5,45 +5,41 @@ import { isFileList } from "../util/isFileList.mts";
 import {
   clearFocusElement,
   clearNeedsSse,
+  clearRefDirty,
   clearStateDirty,
   getFocusElement,
   getNeedsSse,
   ifColonElements,
   ifElements,
+  isRefDirty,
   isStateDirty,
-  markStateDirty,
+  linkElements,
+  markStateRefDirty,
+  popAttrEventStack,
   popDiscoverableElement,
   popOneTimeElement,
   popRenderPayload,
   popResettableElement,
   popScrollableElement,
+  refElements,
   renderElements,
 } from "./data.mts";
 import { patchers } from "./patchers.mts";
+import { readLiveValue } from "./readLiveValue.mts";
 import { disableState, enableState } from "./state.mts";
 import { writeAttribute } from "./writeAttribute.mts";
 import { writeScrollAxis } from "./writeScrollAxis.mts";
 
-const emptyChildNodes: readonly ChildNode[] = [];
-const validBehaviors = ["auto", "instant", "smooth"] as const;
+const emptyChildNodes: ChildNode[] = [];
+const validBehaviors = ["auto", "instant", "smooth"];
 const resultEvent = new Event("result");
 const failureEvent = new Event("failure");
 const discoverEvent = new Event("discover");
+const attrEvent = new Map<string, Event>();
 
 /**
  * Core rendering loop that processes queued UI updates, payloads, and DOM
  * effects.
- *
- * This function continuously flushes multiple internal render queues:
- * - Resettable elements (calls reset hooks)
- * - One-time attribute markers
- * - Render payloads (XHR/SSE results mapped to DOM updates)
- * - Conditional rendering state updates
- * - Scroll actions
- * - Focus management
- *
- * It performs DOM patching, attribute-driven rendering, and state
- * reconciliation, then schedules itself for the next animation frame.
  *
  * @remarks
  * This is a perpetual loop driven by `requestAnimationFrame`.
@@ -51,15 +47,24 @@ const discoverEvent = new Event("discover");
  * and side-effect systems.
  */
 export const render = () => {
-  let el,
-    temp,
-    status,
-    responseXML,
-    batch,
-    actions,
-    actions2d,
-    root,
-    options: ScrollToOptions;
+  let el: Element | undefined;
+  let ownerElement: Element | undefined;
+  let otherElement: Element | undefined;
+  let responseXML: Document | null;
+  let payload: RenderPayload | undefined;
+  let name: string;
+  let otherName: string;
+  let value: string | null;
+  let actions: string | null;
+  let actions2d: string[];
+  let patchParams: Parameters<typeof patchers.replaceChildren> | undefined;
+  let patchBatch: NonNullable<typeof patchParams>[];
+  let status: number;
+  let attr: Attr | null;
+  let inputValue: string | boolean | FileList | null;
+  let options: ScrollToOptions;
+  let attrEventEntry: [Element, string] | undefined;
+  let event: Event | undefined;
 
   while ((el = popResettableElement())) {
     el.reset?.();
@@ -69,37 +74,44 @@ export const render = () => {
     writeAttribute(el, "on");
   }
 
-  while ((temp = popRenderPayload())) {
-    ({ ownerElement: el, status, responseXML } = temp.target);
-    actions = el.getAttribute((el.isError = status > 399) ? "error" : "result");
+  while ((payload = popRenderPayload())) {
+    ({ ownerElement, status, responseXML } = payload.target);
+    actions = ownerElement.getAttribute(
+      (ownerElement.isError = status > 399) ? "error" : "result",
+    );
 
-    batch = [];
-    root = undefined;
-    for (temp of renderElements) {
-      if (hasToken(actions, temp.getAttribute("render"))) {
-        batch.push([
-          temp,
+    patchBatch = [];
+    otherElement = undefined;
+    for (el of renderElements) {
+      if (hasToken(actions, el.getAttribute("render"))) {
+        patchBatch.push([
+          el,
           responseXML ?
             Array.from(
-              (root ? root.cloneNode(true) : (root = responseXML.body))
-                .childNodes,
+              (otherElement ?
+                otherElement.cloneNode(true)
+              : (otherElement = responseXML.body)
+              ).childNodes,
             )
           : emptyChildNodes,
-        ] as const);
+        ]);
       }
     }
 
-    while ((temp = batch.pop())) {
+    while ((patchParams = patchBatch.pop())) {
       (
-        patchers[temp[0].getAttribute("position") as keyof typeof patchers] ??
-        patchers.replaceChildren
-      )(...temp);
+        patchers[
+          patchParams[0].getAttribute("position") as keyof typeof patchers
+        ] ?? patchers.replaceChildren
+      )(...patchParams);
     }
 
-    el.isLoading = false;
-    markStateDirty();
+    ownerElement.isLoading = false;
+    markStateRefDirty();
 
-    el.dispatchEvent(el.isError ? failureEvent : resultEvent);
+    ownerElement.dispatchEvent(
+      ownerElement.isError ? failureEvent : resultEvent,
+    );
   }
 
   if (isStateDirty()) {
@@ -108,25 +120,25 @@ export const render = () => {
     actions2d = [];
     for (el of ifColonElements) {
       !(el.checkValidity?.() ?? true) &&
-        (temp = el.getAttributeNode("if:invalid")) &&
-        actions2d.push(temp.value);
+        (attr = el.getAttributeNode("if:invalid")) &&
+        actions2d.push(attr.value);
 
-      (temp = resolveValue(el)) &&
-        (!isFileList(temp) || temp.length) &&
-        (temp = el.getAttributeNode("if:value")) &&
-        actions2d.push(temp.value);
+      (inputValue = resolveValue(el)) &&
+        (!isFileList(inputValue) || inputValue.length) &&
+        (attr = el.getAttributeNode("if:value")) &&
+        actions2d.push(attr.value);
 
       el.isIntersecting &&
-        (temp = el.getAttributeNode("if:intersects")) &&
-        actions2d.push(temp.value);
+        (attr = el.getAttributeNode("if:intersects")) &&
+        actions2d.push(attr.value);
 
       el.isLoading &&
-        (temp = el.getAttributeNode("if:loading")) &&
-        actions2d.push(temp.value);
+        (attr = el.getAttributeNode("if:loading")) &&
+        actions2d.push(attr.value);
 
       el.isError &&
-        (temp = el.getAttributeNode("if:error")) &&
-        actions2d.push(temp.value);
+        (attr = el.getAttributeNode("if:error")) &&
+        actions2d.push(attr.value);
     }
     actions = actions2d.join(" ");
 
@@ -137,18 +149,39 @@ export const render = () => {
     }
   }
 
+  if (isRefDirty()) {
+    clearRefDirty();
+
+    for (el of linkElements) {
+      for ({ name, value } of el.attributes) {
+        if (name.startsWith("link:")) {
+          name = name.slice(5);
+          for (otherElement of refElements) {
+            for ({
+              name: otherName,
+              value: actions,
+            } of otherElement.attributes) {
+              otherName.startsWith("ref:") &&
+                hasToken(actions, value) &&
+                writeAttribute(
+                  el,
+                  name,
+                  readLiveValue(otherElement, otherName.slice(4)),
+                );
+            }
+          }
+        }
+      }
+    }
+  }
+
   while ((el = popScrollableElement())) {
     options = {
-      behavior:
-        (
-          validBehaviors.includes(
-            (temp = el.getAttribute(
-              "behavior",
-            ) as (typeof validBehaviors)[number]),
-          )
-        ) ?
-          temp
-        : validBehaviors[0],
+      behavior: ((
+        validBehaviors.includes((value = el.getAttribute("behavior"))!)
+      ) ?
+        value
+      : validBehaviors[0]) as ScrollBehavior,
     };
     writeScrollAxis(el, options, "top");
     writeScrollAxis(el, options, "left");
@@ -159,6 +192,13 @@ export const render = () => {
 
   while ((el = popDiscoverableElement())) {
     el.dispatchEvent(discoverEvent);
+  }
+
+  while ((attrEventEntry = popAttrEventStack())) {
+    [el, name] = attrEventEntry;
+    event = attrEvent.get(name);
+    event || attrEvent.set(name, (event = new Event("attr:" + name)));
+    el.dispatchEvent(event);
   }
 
   if (getNeedsSse()) {
@@ -172,9 +212,9 @@ export const render = () => {
     try {
       // pretend the element supports this
       // silent failures are ok and expected
-      temp = (el as HTMLInputElement).value.length;
+      status = (el as HTMLInputElement).value.length;
       (el as HTMLInputElement).focus();
-      (el as HTMLInputElement).setSelectionRange(temp, temp);
+      (el as HTMLInputElement).setSelectionRange(status, status);
     } catch {}
   }
 

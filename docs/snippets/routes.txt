@@ -7,6 +7,7 @@
 1 => once
 1 => result-success
 1 => result-failure
+1 => reference-chart
 1 => position
 1 => key
 1 => polling

@@ -1,0 +1,36 @@
+{{
+  // available area for rendering from the client
+  const width = +server.getParam("chartWidth");
+
+  // pick at most the number of available pixels worth of data points
+  // this is going to look identical in the UI, but is no longer absurd
+  const data = server.sampleSeries(server.series, width);
+
+  // prepare svg compatible values
+  const chart = server.generateChart(server.series, data, width, 500);
+}}
+
+<svg
+  class="chart"
+  height="500"
+  ref:width="referenceChartWidth"
+  measure="devicePixelContentBoxSize"
+  render="referenceChart"
+  position="replaceWith"
+  viewBox="0 0 { width } 500"
+>
+  <path { chart.path } />
+
+  <line { chart.xAxis } />
+  <line { chart.yAxis } />
+
+  {{ for (const tick of chart.xTicks) { }}
+    <text { tick.text }>{ tick.label }</text>
+    <line { tick.line } />
+  {{ } }}
+
+  {{ for (const tick of chart.yTicks) { }}
+    <text { tick.text }>{ tick.label }</text>
+    <line { tick.line } />
+  {{ } }}
+</svg>

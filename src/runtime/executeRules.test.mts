@@ -1,161 +1,199 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   ADDED,
+  ADDED_ATTR,
   CHANGED,
+  CREATED,
+  DESTROYED,
   executeRules,
   REMOVED,
+  REMOVED_ATTR,
   SERIALIZE,
 } from "./executeRules.mts";
 
 vi.mock("./attrRules.mts", () => ({
   attrRules: [],
+  matchesName: vi.fn(),
 }));
 
-import { attrRules } from "./attrRules.mts";
+import { attrRules, matchesName } from "./attrRules.mts";
 
-// helper to reset mocked rules
-const setRules = (rules: any[]) => {
-  (attrRules as unknown as any[]).length = 0;
-  (attrRules as unknown as any[]).push(...rules);
-};
-
-describe("executeRules", () => {
+describe("executeRules - bitmask coverage", () => {
   beforeEach(() => {
+    attrRules.length = 0;
     vi.clearAllMocks();
-    setRules([]);
   });
 
-  it("calls added handler when ADDED bit is set", () => {
-    const added = vi.fn();
+  const el = document.createElement("div");
 
-    setRules([
-      {
-        match: "foo",
-        added,
-      },
-    ]);
+  it("ADDED", () => {
+    const fn = vi.fn();
 
-    const el = document.createElement("div");
+    attrRules.push({
+      match: "x",
+      added: fn,
+    });
 
-    executeRules(ADDED, el, "foo");
+    vi.mocked(matchesName).mockReturnValue(true);
 
-    expect(added).toHaveBeenCalledTimes(1);
-    expect(added).toHaveBeenCalledWith(el, "foo", undefined);
+    executeRules(ADDED, el, "x");
+
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it("does not call handler if attribute does not match string rule", () => {
-    const added = vi.fn();
+  it("ADDED_ATTR", () => {
+    const fn = vi.fn();
 
-    setRules([
-      {
-        match: "foo",
-        added,
-      },
-    ]);
+    attrRules.push({
+      match: "x",
+      addedAttr: fn,
+    });
 
-    executeRules(ADDED, document.createElement("div"), "bar");
+    vi.mocked(matchesName).mockReturnValue(true);
 
-    expect(added).not.toHaveBeenCalled();
+    executeRules(ADDED_ATTR, el, "x");
+
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it("supports array match rules", () => {
-    const changed = vi.fn();
+  it("REMOVED", () => {
+    const fn = vi.fn();
 
-    setRules([
-      {
-        match: ["foo", "bar"],
-        changed,
-      },
-    ]);
+    attrRules.push({
+      match: "x",
+      removed: fn,
+    });
 
-    const el = document.createElement("div");
+    vi.mocked(matchesName).mockReturnValue(true);
 
-    executeRules(CHANGED, el, "bar");
+    executeRules(REMOVED, el, "x");
 
-    expect(changed).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it("supports regex match rules", () => {
-    const removed = vi.fn();
+  it("REMOVED_ATTR", () => {
+    const fn = vi.fn();
 
-    setRules([
-      {
-        match: /^data-/,
-        removed,
-      },
-    ]);
+    attrRules.push({
+      match: "x",
+      removedAttr: fn,
+    });
 
-    const el = document.createElement("div");
+    vi.mocked(matchesName).mockReturnValue(true);
 
-    executeRules(REMOVED, el, "data-id");
+    executeRules(REMOVED_ATTR, el, "x");
 
-    expect(removed).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it("respects gate function", () => {
-    const added = vi.fn();
-    const gate = vi.fn(() => false);
+  it("CHANGED", () => {
+    const fn = vi.fn();
 
-    setRules([
-      {
-        match: "foo",
-        gate,
-        added,
-      },
-    ]);
+    attrRules.push({
+      match: "x",
+      changed: fn,
+    });
 
-    executeRules(ADDED, document.createElement("div"), "foo");
+    vi.mocked(matchesName).mockReturnValue(true);
 
-    expect(gate).toHaveBeenCalled();
-    expect(added).not.toHaveBeenCalled();
+    executeRules(CHANGED, el, "x");
+
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it("calls multiple handlers based on mask", () => {
-    const added = vi.fn();
-    const changed = vi.fn();
+  it("CREATED", () => {
+    const fn = vi.fn();
 
-    setRules([
-      {
-        match: "foo",
-        added,
-        changed,
-      },
-    ]);
+    attrRules.push({
+      match: "x",
+      created: fn,
+    });
 
-    executeRules(ADDED | CHANGED, document.createElement("div"), "foo");
+    vi.mocked(matchesName).mockReturnValue(true);
 
-    expect(added).toHaveBeenCalledTimes(1);
-    expect(changed).toHaveBeenCalledTimes(1);
+    executeRules(CREATED, el, "x");
+
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it("calls serialize handler only when SERIALIZE bit is set", () => {
-    const serialize = vi.fn();
+  it("DESTROYED", () => {
+    const fn = vi.fn();
 
-    setRules([
-      {
-        match: "foo",
-        serialize,
-      },
-    ]);
+    attrRules.push({
+      match: "x",
+      destroyed: fn,
+    });
 
-    executeRules(SERIALIZE, document.createElement("div"), "foo");
+    vi.mocked(matchesName).mockReturnValue(true);
 
-    expect(serialize).toHaveBeenCalledTimes(1);
+    executeRules(DESTROYED, el, "x");
+
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  it("passes context through to handlers", () => {
-    const added = vi.fn();
-    const context = {};
+  it("SERIALIZE", () => {
+    const fn = vi.fn();
 
-    setRules([
-      {
-        match: "foo",
-        added,
-      },
-    ]);
+    attrRules.push({
+      match: "x",
+      serialize: fn,
+    });
 
-    executeRules(ADDED, document.createElement("div"), "foo", context);
+    vi.mocked(matchesName).mockReturnValue(true);
 
-    expect(added).toHaveBeenCalledWith(expect.any(Element), "foo", context);
+    executeRules(SERIALIZE, el, "x");
+
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("combined bitmask executes multiple handlers", () => {
+    const fn = vi.fn();
+
+    attrRules.push({
+      match: "x",
+      added: fn,
+      removed: fn,
+      serialize: fn,
+    });
+
+    vi.mocked(matchesName).mockReturnValue(true);
+
+    executeRules(ADDED | REMOVED | SERIALIZE, el, "x");
+
+    expect(fn).toHaveBeenCalledTimes(3);
+  });
+
+  it("skips rule when gate returns false", () => {
+    const fn = vi.fn();
+
+    attrRules.push({
+      match: "x",
+      gate: () => false,
+      added: fn,
+      removed: fn,
+      changed: fn,
+      created: fn,
+      destroyed: fn,
+      addedAttr: fn,
+      removedAttr: fn,
+      serialize: fn,
+    });
+
+    vi.mocked(matchesName).mockReturnValue(true);
+
+    executeRules(
+      ADDED |
+        REMOVED |
+        CHANGED |
+        CREATED |
+        DESTROYED |
+        ADDED_ATTR |
+        REMOVED_ATTR |
+        SERIALIZE,
+      document.createElement("div"),
+      "x",
+    );
+
+    expect(fn).not.toHaveBeenCalled();
   });
 });

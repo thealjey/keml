@@ -2,7 +2,7 @@ import { dispatchNavigate } from "../event/dispatchNavigate.mts";
 import { onEvent } from "../event/onEvent.mts";
 import { bridge } from "../network/bridge.e.mts";
 import { SseManager } from "../network/SseManager.mts";
-import { markStateDirty } from "../render/data.mts";
+import { markStateRefDirty } from "../render/data.mts";
 import { render } from "../render/render.mts";
 import { mutationObserver } from "./attrMutation.mts";
 import { setEventListener } from "./data.mts";
@@ -32,9 +32,9 @@ export const bootstrap = () => {
     subtree: true,
   });
 
-  document.addEventListener("change", markStateDirty, true);
-  document.addEventListener("input", markStateDirty, true);
-  document.addEventListener("reset", markStateDirty, true);
+  document.addEventListener("change", markStateRefDirty, true);
+  document.addEventListener("input", markStateRefDirty, true);
+  document.addEventListener("reset", markStateRefDirty, true);
   bridge.window.addEventListener("popstate", dispatchNavigate, true);
   window.addEventListener("beforeunload", SseManager.instance.stop, true);
 

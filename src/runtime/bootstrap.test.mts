@@ -19,6 +19,9 @@ vi.mock("../render/data.mts", () => ({
   pushScrollableElement: vi.fn(),
   setFocusElement: vi.fn(),
   pushDiscoverableElement: vi.fn(),
+  pushAttrEventStack: vi.fn(),
+  markRefDirty: vi.fn(),
+  markStateRefDirty: vi.fn(),
   setNeedsSse: vi.fn(),
 }));
 

@@ -8,6 +8,11 @@ vi.mock("./executeRules.mts", () => ({
   ADDED: 1,
   REMOVED: 2,
   CHANGED: 4,
+  DESTROYED: 8,
+  CREATED: 16,
+  REMOVED_ATTR: 32,
+  ADDED_ATTR: 64,
+  SERIALIZE: 128,
 }));
 
 vi.mock("./traverseAttributes.mts", () => ({
@@ -39,8 +44,15 @@ describe("onMutation", () => {
 
     onMutation([record]);
 
-    expect(mockedTraverseAttributes).toHaveBeenCalledWith(REMOVED, [removed]);
-    expect(mockedTraverseAttributes).toHaveBeenCalledWith(ADDED, [added]);
+    const {
+      mock: {
+        calls: [first, second],
+      },
+    } = mockedTraverseAttributes;
+    expect(first![0] & REMOVED).toBeTruthy();
+    expect(first![1][0]).toBe(removed);
+    expect(second![0] & ADDED).toBeTruthy();
+    expect(second![1][0]).toBe(added);
   });
 
   it("calls ADDED when attribute is newly added", () => {
@@ -57,7 +69,14 @@ describe("onMutation", () => {
 
     onMutation([record]);
 
-    expect(mockedExecuteRules).toHaveBeenCalledWith(ADDED, el, "x");
+    const {
+      mock: {
+        calls: [first],
+      },
+    } = mockedExecuteRules;
+    expect(first![0] & ADDED).toBeTruthy();
+    expect(first![1]).toBe(el);
+    expect(first![2]).toBe("x");
   });
 
   it("calls REMOVED when attribute is removed", () => {
@@ -73,7 +92,14 @@ describe("onMutation", () => {
 
     onMutation([record]);
 
-    expect(mockedExecuteRules).toHaveBeenCalledWith(REMOVED, el, "x");
+    const {
+      mock: {
+        calls: [first],
+      },
+    } = mockedExecuteRules;
+    expect(first![0] & REMOVED).toBeTruthy();
+    expect(first![1]).toBe(el);
+    expect(first![2]).toBe("x");
   });
 
   it("calls CHANGED when neither ADDED nor REMOVED conditions match", () => {

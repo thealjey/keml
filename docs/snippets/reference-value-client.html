@@ -1,0 +1,17 @@
+<p>The references are instant and unbreakable. So, if you tried to make them
+  bi-directional here, neither element would be able to be edited, since it
+  would always be forced to exactly match the value of another.</p>
+
+<p>Type in the first field and watch the second update immediately.</p>
+
+<input
+  type="text"
+  class="input"
+  ref:value="isThisTheSameInput"
+>
+
+<input
+  type="text"
+  class="input mt3"
+  link:value="isThisTheSameInput"
+>

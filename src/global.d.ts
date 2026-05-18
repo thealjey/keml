@@ -18,6 +18,7 @@ interface Element {
   timeoutId: ReturnType<typeof setTimeout> | undefined;
   checkValidity: (() => boolean) | undefined;
   reset: (() => void) | undefined;
+  sizeEntry: ResizeObserverEntry;
 }
 
 interface XMLHttpRequest {

@@ -11,13 +11,20 @@ const onEvent = () => {};
 
 vi.mock("./data.mts", () => ({ getEventListener: () => onEvent }));
 
-vi.mock("../event/visibilityEvents.mts", () => ({
+vi.mock("../event/concealObserver.mts", () => ({
   concealObserver: { observe: vi.fn(), unobserve: vi.fn() },
+}));
+
+vi.mock("../event/revealObserver.mts", () => ({
   revealObserver: { observe: vi.fn(), unobserve: vi.fn() },
 }));
 
-vi.mock("../event/visibilityStateSync.mts", () => ({
+vi.mock("../event/intersectsObserver.mts", () => ({
   intersectsObserver: { observe: vi.fn(), unobserve: vi.fn() },
+}));
+
+vi.mock("../event/resizeObserver.mts", () => ({
+  resizeObserver: { observe: vi.fn(), unobserve: vi.fn() },
 }));
 
 vi.mock("../network/resolveRequestDescriptor.mts", () => ({
@@ -37,30 +44,39 @@ vi.mock("../network/SseManager.mts", () => ({
 vi.mock("../render/data.mts", () => ({
   ifColonElements: new Set(),
   ifElements: new Set(),
+  refElements: new Set(),
+  linkElements: new Set(),
   markStateDirty: vi.fn(),
   renderElements: new Set(),
   setFocusElement: vi.fn(),
   pushDiscoverableElement: vi.fn(),
+  pushAttrEventStack: vi.fn(),
+  markRefDirty: vi.fn(),
   setNeedsSse: vi.fn(),
 }));
 
+import { concealObserver } from "../event/concealObserver.mts";
 import {
   navigateElements,
   onElements,
   resetElements,
   scrollElements,
 } from "../event/data.e.mts";
-import { concealObserver, revealObserver } from "../event/visibilityEvents.mts";
-import { intersectsObserver } from "../event/visibilityStateSync.mts";
+import { intersectsObserver } from "../event/intersectsObserver.mts";
+import { resizeObserver } from "../event/resizeObserver.mts";
+import { revealObserver } from "../event/revealObserver.mts";
 import { SseManager } from "../network/SseManager.mts";
 import {
   ifColonElements,
   ifElements,
+  linkElements,
   markStateDirty,
+  pushAttrEventStack,
+  refElements,
   renderElements,
   setFocusElement,
 } from "../render/data.mts";
-import { attrRules } from "./attrRules.mts";
+import { attrRules, matchesName, presentAttrGate } from "./attrRules.mts";
 import { getEventListener } from "./data.mts";
 
 beforeEach(() => {
@@ -157,7 +173,7 @@ describe("attrRules", () => {
     rule.added!(el, "if:test");
     expect(ifColonElements.has(el)).toBe(true);
 
-    rule.removed!(el, "if:test");
+    rule.destroyed!(el, "if:test");
 
     expect(ifColonElements.has(el)).toBe(false);
   });
@@ -183,13 +199,14 @@ describe("attrRules", () => {
     )!;
 
     const el = document.createElement("div");
-
-    vi.spyOn(el, "getBoundingClientRect").mockReturnValue({
-      top: 10,
-      right: 10,
-      bottom: 10,
-      left: 10,
-    } as DOMRect);
+    el.sizeEntry = {
+      contentRect: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+      },
+    } as any;
 
     Object.defineProperty(globalThis, "innerWidth", { value: 100 });
     Object.defineProperty(globalThis, "innerHeight", { value: 100 });
@@ -469,5 +486,180 @@ describe("attrRules", () => {
     expect(() => {
       rule.serialize?.(el, "value", undefined);
     }).not.toThrow();
+  });
+
+  it("initializes sizeEntry when missing and triggers added rule", () => {
+    const el = document.createElement("div");
+
+    el.getBoundingClientRect = vi.fn(() => ({
+      width: 10,
+      height: 20,
+      top: 0,
+      right: 10,
+      bottom: 20,
+      left: 0,
+    })) as any;
+
+    delete (el as any).sizeEntry;
+
+    const rule = attrRules.find(
+      r => Array.isArray(r.match) && r.match.includes("ref:width"),
+    )!;
+
+    rule.added?.(el, "ref:width");
+
+    expect((el as any).sizeEntry).toBeDefined();
+    expect((el as any).sizeEntry.contentRect.width).toBe(10);
+    expect((el as any).sizeEntry.contentRect.height).toBe(20);
+  });
+
+  it("enqueues attr event only when on:attr:<name> exists", () => {
+    const el = document.createElement("div");
+
+    el.setAttribute("on:attr:x", "1");
+
+    const rule = attrRules.find(
+      r => r.gate && r.addedAttr === pushAttrEventStack,
+    )!;
+
+    expect(rule.gate?.(el, "x")).toBe(true);
+    expect(rule.gate?.(el, "y")).toBe(false);
+  });
+
+  it("observes and unobserves element for ref:width and ref:height", () => {
+    const el = document.createElement("div");
+
+    const rule = attrRules.find(
+      r =>
+        Array.isArray(r.match) && r.match.includes("ref:width") && r.destroyed,
+    )!;
+
+    rule.added?.(el, "ref:width");
+    rule.destroyed?.(el, "ref:width");
+
+    expect(resizeObserver.observe).toHaveBeenCalledWith(el);
+    expect(resizeObserver.unobserve).toHaveBeenCalledWith(el);
+  });
+
+  it("does not unobserve when presentAttrGate blocks rule", () => {
+    const el = document.createElement("div");
+    const rule = attrRules.find(
+      r =>
+        Array.isArray(r.match) &&
+        r.gate === presentAttrGate &&
+        r.match.includes("ref:width") &&
+        r.removed,
+    )!;
+
+    rule.removed?.(el, "");
+    expect(resizeObserver.unobserve).toHaveBeenCalled();
+  });
+
+  it("ref node rule", () => {
+    const el = document.createElement("div");
+    const rule = attrRules.find(
+      r => r.match instanceof RegExp && r.match.test("ref:") && r.destroyed,
+    )!;
+    rule.added?.(el, "");
+    expect(refElements.has(el)).toBeTruthy();
+    rule.destroyed?.(el, "");
+    expect(refElements.has(el)).toBeFalsy();
+  });
+
+  it("ref attr rule", () => {
+    const el = document.createElement("div");
+    const rule = attrRules.find(
+      r => r.match instanceof RegExp && r.match.test("ref:") && r.removed,
+    )!;
+    refElements.add(el);
+    rule.removed?.(el, "");
+    expect(refElements.has(el)).toBeFalsy();
+  });
+
+  it("link node rule", () => {
+    const el = document.createElement("div");
+    const rule = attrRules.find(
+      r => r.match instanceof RegExp && r.match.test("link:") && r.destroyed,
+    )!;
+    rule.added?.(el, "");
+    expect(linkElements.has(el)).toBeTruthy();
+    rule.destroyed?.(el, "");
+    expect(linkElements.has(el)).toBeFalsy();
+  });
+
+  it("link attr rule", () => {
+    const el = document.createElement("div");
+    const rule = attrRules.find(
+      r => r.match instanceof RegExp && r.match.test("link:") && r.removed,
+    )!;
+    linkElements.add(el);
+    rule.removed?.(el, "");
+    expect(linkElements.has(el)).toBeFalsy();
+  });
+
+  it("if attr rule", () => {
+    const el = document.createElement("div");
+    const rule = attrRules.find(
+      r => r.match instanceof RegExp && r.match.test("if:") && r.removed,
+    )!;
+    ifColonElements.add(el);
+    rule.removed?.(el, "");
+    expect(ifColonElements.has(el)).toBeFalsy();
+  });
+});
+
+describe("matchesName", () => {
+  it("matches exact strings", () => {
+    expect(matchesName.call("foo", "foo")).toBe(true);
+    expect(matchesName.call("foo", "bar")).toBe(false);
+  });
+
+  it("matches regular expressions", () => {
+    expect(matchesName.call("foobar", /^foo/)).toBe(true);
+    expect(matchesName.call("foobar", /^bar/)).toBe(false);
+  });
+
+  it("matches nested matcher arrays", () => {
+    expect(matchesName.call("foobar", ["bar", /^foo/])).toBe(true);
+
+    expect(matchesName.call("foobar", ["bar", /^baz/])).toBe(false);
+  });
+
+  it("matches deeply nested matcher arrays", () => {
+    expect(matchesName.call("foobar", ["bar", [/^baz/, [/^foo/]]])).toBe(true);
+
+    expect(matchesName.call("foobar", [[/^baz/, ["qux"]]])).toBe(false);
+  });
+
+  it("returns false for empty matcher arrays", () => {
+    expect(matchesName.call("foobar", [])).toBe(false);
+  });
+});
+
+describe("presentAttrGate", () => {
+  it("returns false when matching attribute exists", () => {
+    const el = document.createElement("div");
+    el.setAttribute("x", "1");
+
+    const rule = {
+      match: "x",
+    } as any;
+
+    const result = presentAttrGate.call(rule, el);
+
+    expect(result).toBe(false);
+  });
+
+  it("returns true when no matching attribute exists", () => {
+    const el = document.createElement("div");
+    el.setAttribute("y", "1");
+
+    const rule = {
+      match: "x",
+    } as any;
+
+    const result = presentAttrGate.call(rule, el);
+
+    expect(result).toBe(true);
   });
 });

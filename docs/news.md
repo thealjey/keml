@@ -1,3 +1,17 @@
+## v3.5
+
+Added:
+
+- [reference action type](./reference/ref-colon.md)
+- `attr:<name>` [event type](./event/on-colon.md#keml-defined-events)
+
+Fixed:
+
+- premature cleanup when removing one of multiple `if:` attributes
+- missing SSE reconfiguration when dependent attributes change
+
+---
+
 ## v3.4
 
 Added:

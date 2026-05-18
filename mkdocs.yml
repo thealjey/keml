@@ -43,6 +43,9 @@ nav:
   - State:
       - "if:*": state/if-colon.md
       - if: state/if.md
+  - Reference:
+      - "ref:*": reference/ref-colon.md
+      - "link:*": reference/link-colon.md
   - SSE: sse.md
   - Logging: logging.md
   - Reference: reference.md

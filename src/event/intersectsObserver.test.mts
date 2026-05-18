@@ -5,7 +5,7 @@ vi.mock("../render/data.mts", () => ({
 }));
 
 import { markStateDirty } from "../render/data.mts";
-import { onIntersects } from "./visibilityStateSync.mts";
+import { onIntersects } from "./intersectsObserver.mts";
 
 describe("onIntersects", () => {
   it("sets isIntersecting on targets and marks state dirty", () => {

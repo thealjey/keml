@@ -76,7 +76,7 @@ if (process.env["NODE_ENV"] === "test") {
 } else if (process.env["NODE_ENV"] === "docs") {
   const parser = new DOMParser();
 
-  function compileTemplate(template: string): (server: any) => string {
+  const compileTemplate = (template: string): ((server: any) => string) => {
     const parts: string[] = [];
     let cursor = 0;
 
@@ -93,10 +93,8 @@ if (process.env["NODE_ENV"] === "test") {
       parts.push(`out.push(${JSON.stringify(template.slice(cursor, index))});`);
 
       if (token.startsWith("{{")) {
-        // raw JS block (control flow)
         parts.push(token.slice(2, -2).trim());
       } else {
-        // expression evaluated directly in function scope
         const expr = token.slice(1, -1).trim();
 
         parts.push(`out.push(String(${expr}));`);
@@ -109,7 +107,143 @@ if (process.env["NODE_ENV"] === "test") {
     parts.push("return out.join('');");
 
     return new Function("server", parts.join("\n")) as (server: any) => string;
-  }
+  };
+
+  const generateSeries = (n: number): number[] => {
+    const p = Array.from(
+      { length: 10 },
+      () => (Math.random() * (90 - 10 + 1) + 10) | 0,
+    );
+    const result = new Array<number>(n);
+
+    const get = (i: number) => {
+      if (i < 0) {
+        return p[0]! + (p[0]! - p[1]!);
+      }
+      if (i >= p.length) {
+        const n = p.length;
+        return p[n - 1]! + (p[n - 1]! - p[n - 2]!);
+      }
+      return p[i]!;
+    };
+
+    for (let i = 0; i < n; ++i) {
+      const t = (i / (n - 1)) * (p.length - 1);
+      const i0 = Math.floor(t);
+      const t0 = t - i0;
+
+      const p0 = get(i0 - 1);
+      const p1 = get(i0);
+      const p2 = get(i0 + 1);
+      const p3 = get(i0 + 2);
+
+      const v =
+        0.5 *
+        (2 * p1 +
+          (-p0 + p2) * t0 +
+          (2 * p0 - 5 * p1 + 4 * p2 - p3) * t0 * t0 +
+          (-p0 + 3 * p1 - 3 * p2 + p3) * t0 * t0 * t0);
+
+      result[i] = v;
+    }
+
+    return result;
+  };
+
+  const sampleSeries = (series: number[], width: number): number[] => {
+    width |= 0;
+    if (width < 1) {
+      return [];
+    }
+
+    const n = series.length;
+
+    if (width === 1) {
+      return [series[(n / 2) | 0]!];
+    }
+
+    if (width > n) {
+      return series;
+    }
+
+    const result = new Array(width);
+
+    for (let x = 0, t; x < width; ++x) {
+      t = x / (width - 1);
+      result[x] = series[Math.round(t * (n - 1))];
+    }
+
+    return result;
+  };
+
+  const toFixed = (input: number, fractionDigits = 2) =>
+    parseFloat(input.toFixed(fractionDigits));
+
+  const joinAttrs = ([key, val]: [string, string]) =>
+    key + "=" + '"' + val + '"';
+  const printAttrs = (obj: object) =>
+    Object.entries(obj).map(joinAttrs).join(" ");
+
+  const generateChart = (
+    series: number[],
+    data: number[],
+    width: number,
+    height: number,
+  ) => {
+    const n = data.length;
+
+    return {
+      path: printAttrs({
+        d: data
+          .reduce(
+            (acc, val, i) => (
+              (acc[i] =
+                `${i ? "L" : "M"} ${toFixed((i / (n - 1)) * width)} ${toFixed(height - (val / 100) * height)}`),
+              acc
+            ),
+            new Array<string>(n),
+          )
+          .join(" "),
+      }),
+      xTicks: Array.from({ length: 11 }, (_, i) => {
+        const index = toFixed(i / 10);
+        const y = toFixed(index * width - 1);
+
+        const text = printAttrs(
+          i ?
+            {
+              x: 10 - height,
+              y: y + (i < 10 ? 4 : 0),
+              transform: "rotate(-90)",
+            }
+          : { x: y + 10, y: height - 10 },
+        );
+
+        return {
+          line: printAttrs({
+            x1: y,
+            y1: height,
+            x2: y,
+            y2: height - 6,
+          }),
+          text,
+          label: (index * series.length).toLocaleString(),
+        };
+      }),
+      yTicks: Array.from({ length: 6 }, (_, i) => {
+        const value = i / 5;
+        const y = toFixed(height - value * height + 1);
+
+        return {
+          line: printAttrs({ x1: 0, y1: y, x2: 6, y2: y }),
+          text: printAttrs({ x: 10, y: y + (!i || i > 4 ? 10 : 4) }),
+          label: toFixed(value * 100),
+        };
+      }),
+      xAxis: printAttrs({ x1: 0, y1: 0, x2: 0, y2: height }),
+      yAxis: printAttrs({ x1: 0, y1: height, x2: width, y2: height }),
+    };
+  };
 
   const templates = Object.fromEntries(
     Object.entries(process.env["TEMPLATES"]!).map(([key, value]) => [
@@ -127,6 +261,7 @@ if (process.env["NODE_ENV"] === "test") {
   const XHR = 0b1;
   const DELAY = 0b10;
   const SSE = 0b100;
+  const ser = generateSeries(10_000_000);
 
   class XMLHttpRequest {
     responseType: XMLHttpRequestResponseType = "";
@@ -138,13 +273,16 @@ if (process.env["NODE_ENV"] === "test") {
     data!: FormData | undefined;
     headers = new Map<string, string>();
     status = 200;
+    series = ser;
+    sampleSeries = sampleSeries;
+    generateChart = generateChart;
 
     getParam(key: string) {
       return this.data ? this.data.get(key) : this.url.searchParams.get(key);
     }
 
     get partial() {
-      return this.render(1)[1];
+      return this.render(XHR)[1];
     }
 
     onloadend(_res: RenderPayload) {}
@@ -177,9 +315,8 @@ if (process.env["NODE_ENV"] === "test") {
     send(data: FormData | undefined) {
       this.data = data;
       const [mode, html] = this.render();
-      const delay = (mode & DELAY) === DELAY;
       this.responseXML = parser.parseFromString(html, "text/html");
-      delay ? setTimeout(this.respond, 2000) : this.respond();
+      mode & DELAY ? setTimeout(this.respond, 2000) : this.respond();
     }
   }
 

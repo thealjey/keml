@@ -1,4 +1,13 @@
-import { ADDED, CHANGED, executeRules, REMOVED } from "./executeRules.mts";
+import {
+  ADDED,
+  ADDED_ATTR,
+  CHANGED,
+  CREATED,
+  DESTROYED,
+  executeRules,
+  REMOVED,
+  REMOVED_ATTR,
+} from "./executeRules.mts";
 import { traverseAttributes } from "./traverseAttributes.mts";
 
 /**
@@ -19,14 +28,17 @@ export const onMutation = (records: MutationRecord[]) => {
     removedNodes,
     target,
   } of records) {
-    traverseAttributes(REMOVED, removedNodes);
-    traverseAttributes(ADDED, addedNodes);
+    traverseAttributes(REMOVED | DESTROYED, removedNodes);
+    traverseAttributes(ADDED | CREATED, addedNodes);
 
     if (attributeName) {
       const has = (target as Element).hasAttribute(attributeName);
+      const had = oldValue != null;
+
       let mask;
-      has && oldValue == null && (mask = ADDED);
-      !has && oldValue != null && (mask = REMOVED);
+      has && !had && (mask = ADDED | ADDED_ATTR);
+      !has && had && (mask = REMOVED | REMOVED_ATTR);
+
       executeRules(mask ?? CHANGED, target as Element, attributeName);
     }
   }

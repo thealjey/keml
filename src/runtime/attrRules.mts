@@ -1,22 +1,29 @@
+import { concealObserver } from "../event/concealObserver.mts";
 import {
   navigateElements,
   onElements,
   resetElements,
   scrollElements,
 } from "../event/data.e.mts";
-import { concealObserver, revealObserver } from "../event/visibilityEvents.mts";
-import { intersectsObserver } from "../event/visibilityStateSync.mts";
+import { intersectsObserver } from "../event/intersectsObserver.mts";
+import { resizeObserver } from "../event/resizeObserver.mts";
+import { revealObserver } from "../event/revealObserver.mts";
 import { methodAttrs } from "../network/resolveRequestDescriptor.mts";
 import { SseManager } from "../network/SseManager.mts";
 import {
   ifColonElements,
   ifElements,
+  linkElements,
+  markRefDirty,
   markStateDirty,
+  pushAttrEventStack,
   pushDiscoverableElement,
+  refElements,
   renderElements,
   setFocusElement,
   setNeedsSse,
 } from "../render/data.mts";
+import { isRegExp } from "../util/isRegExp.mts";
 import { getEventListener } from "./data.mts";
 
 export type Matcher = string | RegExp | Matcher[];
@@ -27,8 +34,12 @@ export type AttrRule = {
   match?: Matcher;
   gate?: Handler;
   added?: Handler;
+  addedAttr?: Handler;
   removed?: Handler;
+  removedAttr?: Handler;
   changed?: Handler;
+  created?: Handler;
+  destroyed?: Handler;
   serialize?: Handler;
 };
 
@@ -36,21 +47,101 @@ const events = new Set<string>();
 const formField = ["INPUT", "SELECT", "TEXTAREA"];
 
 /**
- * Registry of attribute lifecycle rules that define side-effects for DOM
- * changes.
+ * Checks whether an attribute name matches a rule matcher.
  *
- * Each rule describes how specific attributes (or attribute patterns) should
- * react during lifecycle events such as addition, removal, or modification.
+ * @param match - Matcher to test against.
+ * @returns Whether the matcher matches an attribute name.
+ */
+export function matchesName(this: string, match: Matcher | undefined) {
+  return (
+    !match ||
+    (typeof match === "string" ? match === this
+    : isRegExp(match) ? match.test(this)
+    : match.some(matchesName, this))
+  );
+}
+
+/**
+ * Attribute-based gate that evaluates whether an element satisfies the Matcher.
  *
- * Matching supports:
- * - Exact attribute names
- * - Regular expressions
- * - Arrays of attribute names
+ * @returns `false` if any attribute name on the element satisfies the Matcher.
+ */
+export function presentAttrGate(this: AttrRule, { attributes }: Element) {
+  for (const { name } of attributes) {
+    if (matchesName.call(name, this.match)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Rules that govern all attribute related functionality.
  *
- * Optional constraints:
- * - `gate` functions to conditionally apply rules
+ * Their purpose is to maintain internal references, not to perform any actual
+ * work.
  */
 export const attrRules: AttrRule[] = [
+  {
+    match: ["if:intersects", "ref:width", "ref:height"],
+    gate: ({ sizeEntry }) => !sizeEntry,
+    added(target) {
+      const contentRect = target.getBoundingClientRect();
+      const borderBoxSize: ResizeObserverSize[] = [
+        { blockSize: contentRect.height, inlineSize: contentRect.width },
+      ];
+
+      target.sizeEntry = {
+        borderBoxSize,
+        contentBoxSize: borderBoxSize,
+        devicePixelContentBoxSize: borderBoxSize,
+        contentRect,
+        target,
+      };
+    },
+  },
+  {
+    gate: (el, name) => el.hasAttribute(`on:attr:${name}`),
+    addedAttr: pushAttrEventStack,
+    removedAttr: pushAttrEventStack,
+    changed: pushAttrEventStack,
+  },
+  {
+    match: [/^ref:/, /^link:/],
+    added: markRefDirty,
+    removed: markRefDirty,
+    changed: markRefDirty,
+  },
+  {
+    match: ["ref:width", "ref:height"],
+    added: el => resizeObserver.observe(el),
+    destroyed: el => resizeObserver.unobserve(el),
+  },
+  {
+    match: ["ref:width", "ref:height"],
+    gate: presentAttrGate,
+    removed: el => resizeObserver.unobserve(el),
+  },
+  {
+    match: /^ref:/,
+    added: el => refElements.add(el),
+    destroyed: el => refElements.delete(el),
+  },
+  {
+    match: /^ref:/,
+    gate: presentAttrGate,
+    removed: el => refElements.delete(el),
+  },
+  {
+    match: /^link:/,
+    added: el => linkElements.add(el),
+    destroyed: el => linkElements.delete(el),
+  },
+  {
+    match: /^link:/,
+    gate: presentAttrGate,
+    removed: el => linkElements.delete(el),
+  },
   {
     match: "autofocus",
     added: setFocusElement,
@@ -69,6 +160,11 @@ export const attrRules: AttrRule[] = [
   {
     match: /^if:/,
     added: el => ifColonElements.add(el),
+    destroyed: el => ifColonElements.delete(el),
+  },
+  {
+    match: /^if:/,
+    gate: presentAttrGate,
     removed: el => ifColonElements.delete(el),
   },
   {
@@ -80,7 +176,7 @@ export const attrRules: AttrRule[] = [
     match: "if:intersects",
     gate: ({ isIntersecting }) => isIntersecting == null,
     added(el) {
-      const { top, right, bottom, left } = el.getBoundingClientRect();
+      const { top, right, bottom, left } = el.sizeEntry.contentRect;
 
       el.isIntersecting =
         bottom > 0 && right > 0 && left < innerWidth && top < innerHeight;
