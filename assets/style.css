@@ -11,9 +11,12 @@
 }
 
 .md-typeset {
-  ul.mv0 {
-    margin-top: 0;
-    margin-bottom: 0;
+  ul,
+  hr {
+    &.mv0 {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
   }
   h4,
   .admonition {
@@ -460,6 +463,43 @@
     color: var(--md-default-fg-color--light);
     &:not(:last-of-type) {
       margin-right: 0.4rem;
+    }
+  }
+}
+
+svg.chart {
+  --chart-base-size: 12px;
+  --chart-stroke: calc(var(--chart-base-size) / 4);
+  width: 100%;
+
+  line {
+    stroke: var(--md-default-fg-color--light);
+    stroke-width: var(--chart-stroke);
+  }
+
+  text {
+    font-size: var(--chart-base-size);
+  }
+
+  path {
+    fill: none;
+    stroke: var(--md-accent-fg-color);
+    stroke-width: var(--chart-stroke);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  [data-md-color-scheme="slate"] & {
+    line {
+      stroke: var(--md-default-fg-color--light);
+    }
+
+    text {
+      fill: var(--md-default-fg-color);
+    }
+
+    path {
+      stroke: var(--md-accent-fg-color);
     }
   }
 }
