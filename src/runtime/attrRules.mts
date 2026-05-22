@@ -107,7 +107,6 @@ export const attrRules: AttrRule[] = [
     changed: pushAttrEventStack,
   },
   {
-    match: [/^ref:/, /^link:/],
     added: markRefDirty,
     removed: markRefDirty,
     changed: markRefDirty,

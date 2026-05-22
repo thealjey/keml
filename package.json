@@ -5,12 +5,12 @@
   },
   "description": "Enhance HTML with custom attributes for clean, server-driven interactivity.",
   "devDependencies": {
-    "@types/node": "^25.8.0",
-    "@vitest/coverage-v8": "^4.1.6",
+    "@types/node": "^25.9.1",
+    "@vitest/coverage-v8": "^4.1.7",
     "dependency-cruiser": "^17.4.0",
     "esbuild": "^0.28.0",
     "happy-dom": "^20.9.0",
-    "vitest": "^4.1.6"
+    "vitest": "^4.1.7"
   },
   "files": [
     "keml.js",
@@ -66,5 +66,5 @@
     "test": "NODE_ENV=test vitest run -c bin/test.mts",
     "test:watch": "NODE_ENV=test vitest watch -c bin/test.mts"
   },
-  "version": "3.5.0"
+  "version": "3.5.1"
 }

@@ -1,5 +1,4 @@
 import { notNil } from "../util/notNil.mts";
-import { markRefDirty } from "./data.mts";
 
 const attrBehavior = [
   ["value", (value: string | null | undefined) => value ?? ""],
@@ -39,26 +38,17 @@ export const writeAttribute = (
   }
 
   if (!attr) {
-    if (value != null) {
-      el.setAttribute(name, value);
-      markRefDirty();
-    }
+    value == null || el.setAttribute(name, value);
   } else if (value == null) {
     el.removeAttributeNode(attr);
-    markRefDirty();
   } else if (attr.value != value) {
     attr.value = value;
-    markRefDirty();
   }
 
   for (const [attrName, resolve] of attrBehavior) {
     if (name === attrName && name in el) {
       const newValue = resolve(value);
-
-      if ((el as any)[name] != newValue) {
-        (el as any)[name] = newValue;
-        markRefDirty();
-      }
+      (el as any)[name] == newValue || ((el as any)[name] = newValue);
     }
   }
 };

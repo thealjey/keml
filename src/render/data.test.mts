@@ -10,6 +10,7 @@ import {
   ifElements,
   isRefDirty,
   isStateDirty,
+  markRefDirty,
   markStateDirty,
   markStateRefDirty,
   popAttrEventStack,
@@ -106,6 +107,19 @@ describe("state module", () => {
 
   it("clearRefDirty resets only refDirty (not stateDirty)", () => {
     markStateRefDirty();
+    clearRefDirty();
+
+    expect(isRefDirty()).toBe(false);
+  });
+
+  it("markRefDirty sets refDirty to true", () => {
+    markRefDirty();
+
+    expect(isRefDirty()).toBe(true);
+  });
+
+  it("clearRefDirty resets only refDirty (not stateDirty)", () => {
+    markRefDirty();
     clearRefDirty();
 
     expect(isRefDirty()).toBe(false);
