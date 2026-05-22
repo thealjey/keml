@@ -15,7 +15,7 @@ export const traverseAttributes = (
   context?: Context,
 ) => {
   for (let i = 0, l = nodes.length, node, it, attr; i < l; ++i) {
-    if (isElement((node = nodes[i]!))) {
+    if (isElement((node = nodes[i]))) {
       it = document.createNodeIterator(node, NodeFilter.SHOW_ELEMENT);
 
       do {
