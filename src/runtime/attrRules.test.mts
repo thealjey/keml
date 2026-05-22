@@ -70,6 +70,7 @@ import {
   ifColonElements,
   ifElements,
   linkElements,
+  markRefDirty,
   markStateDirty,
   pushAttrEventStack,
   refElements,
@@ -605,6 +606,13 @@ describe("attrRules", () => {
     ifColonElements.add(el);
     rule.removed?.(el, "");
     expect(ifColonElements.has(el)).toBeFalsy();
+  });
+
+  it("ref gate", () => {
+    const el = document.createElement("div");
+    const rule = attrRules.find(r => !r.match && r.added === markRefDirty)!;
+    el.setAttribute("ref:lol", "");
+    expect(rule.gate?.(el, "lol")).toBeTruthy();
   });
 });
 

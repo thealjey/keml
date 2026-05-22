@@ -107,6 +107,13 @@ export const attrRules: AttrRule[] = [
     changed: pushAttrEventStack,
   },
   {
+    match: [/^ref:/, /^link:/],
+    added: markRefDirty,
+    removed: markRefDirty,
+    changed: markRefDirty,
+  },
+  {
+    gate: (el, name) => el.hasAttribute(`ref:${name}`),
     added: markRefDirty,
     removed: markRefDirty,
     changed: markRefDirty,
