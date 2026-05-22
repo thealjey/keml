@@ -14,7 +14,7 @@ import {
   isRefDirty,
   isStateDirty,
   linkElements,
-  markStateRefDirty,
+  markStateDirty,
   popAttrEventStack,
   popDiscoverableElement,
   popOneTimeElement,
@@ -107,7 +107,7 @@ export const render = () => {
     }
 
     ownerElement.isLoading = false;
-    markStateRefDirty();
+    markStateDirty();
 
     ownerElement.dispatchEvent(
       ownerElement.isError ? failureEvent : resultEvent,

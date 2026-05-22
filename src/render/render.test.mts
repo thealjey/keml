@@ -101,7 +101,7 @@ import {
   isRefDirty,
   isStateDirty,
   linkElements,
-  markStateRefDirty,
+  markStateDirty,
   popAttrEventStack,
   popDiscoverableElement,
   popOneTimeElement,
@@ -169,7 +169,7 @@ describe("render (baseline)", () => {
 
     render();
 
-    expect(markStateRefDirty).toHaveBeenCalled();
+    expect(markStateDirty).toHaveBeenCalled();
     expect(el.isLoading).toBe(false);
   });
 
@@ -604,7 +604,7 @@ describe("render (baseline)", () => {
     linkElements.add(linkEl);
     refElements.add(refEl);
 
-    markStateRefDirty();
+    markStateDirty();
     render();
 
     expect(writeSpy).toHaveBeenCalled();
