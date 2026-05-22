@@ -26,7 +26,7 @@ export const executeRules = (
   for (const rule of attrRules) {
     if (
       matchesName.call(name, rule.match) &&
-      (!rule.gate || rule.gate?.(el, name, context))
+      (!rule.gate || rule.gate(el, name, context))
     ) {
       mask & ADDED && rule.added?.(el, name, context);
       mask & ADDED_ATTR && rule.addedAttr?.(el, name, context);

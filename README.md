@@ -6,11 +6,9 @@
 _Enhance HTML with expressive, declarative attributes that connect your frontend
 directly to your server logic._
 
-![min+gzip](https://img.shields.io/badge/min%2Bgzip-5.4kb-brightgreen)
-![Latest Release](https://img.shields.io/npm/v/keml)
-![License](https://img.shields.io/github/license/thealjey/keml)
-![Open Issues](https://img.shields.io/github/issues/thealjey/keml)
-![Open PRs](https://img.shields.io/github/issues-pr/thealjey/keml)
+![min+gzip](https://img.shields.io/badge/min%2Bgzip-5.4kb-green)
+![License](https://img.shields.io/badge/license-MIT-green)
+![npm](https://img.shields.io/npm/v/keml)
 [![Docs](https://img.shields.io/badge/docs-online-blue)](https://thealjey.github.io/keml/)
 [![VS Code Extension](https://img.shields.io/badge/VS%20Code%20Extension-online-blue)](https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode)
 
