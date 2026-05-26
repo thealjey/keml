@@ -48,7 +48,7 @@ nav:
       - "link:*": reference/link-colon.md
   - SSE: sse.md
   - Logging: logging.md
-  - Reference: reference.md
+  - Attributes: attributes.md
   - News: news.md
 markdown_extensions:
   - admonition
