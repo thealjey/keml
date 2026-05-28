@@ -7,6 +7,8 @@ site_author: Eugene Kuzmenko
 copyright: Copyright &copy; 2026 Eugene Kuzmenko
 extra_css:
   - assets/tachyons.css
+  - assets/animate.css
+  - assets/transition.css
   - assets/style.css
 extra_javascript:
   - assets/keml.js

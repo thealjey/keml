@@ -82,11 +82,9 @@ export class SseManager extends Map<string, readonly [SseSource, SseSource]> {
     for (const el of this.elements) {
       const [url, , withCredentials] = resolveRequestDescriptor(el);
 
-      if (
-        this.getEvent(el) === type &&
+      this.getEvent(el) === type &&
         url.href === source.url.href &&
-        withCredentials === source.withCredentials
-      ) {
+        withCredentials === source.withCredentials &&
         this.onPayload({
           target: {
             ownerElement: el,
@@ -94,7 +92,6 @@ export class SseManager extends Map<string, readonly [SseSource, SseSource]> {
             status: 200,
           },
         });
-      }
     }
   };
 

@@ -1,0 +1,45 @@
+<p class="mt0">
+  The <a href="https://animate.style/" target="_blank">Animate.css</a>
+  library is used for the actual animation implementation.
+</p>
+
+<a
+  href="/page-a"
+  class="mr3"
+  on:click="redirectPushStateA"
+  on="redirectPushStateA"
+  redirect="pushState"
+>
+  Page A
+</a>
+
+<a
+  href="/page-b"
+  class="mr3"
+  on:click="redirectPushStateB"
+  on="redirectPushStateB"
+  redirect="pushState"
+>
+  Page B
+</a>
+
+<a
+  href="/page-c"
+  class="mr3"
+  on:click="redirectPushStateC"
+  on="redirectPushStateC"
+  redirect="pushState"
+>
+  Page C
+</a>
+
+<div
+  class="h4 transition-example"
+  on:navigate="showHistoryPage"
+  on="showHistoryPage"
+  result="historyResult"
+  render="historyResult"
+  transition
+>
+  { server.partial }
+</div>

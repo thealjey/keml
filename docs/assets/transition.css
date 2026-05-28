@@ -1,0 +1,13 @@
+.transition-example {
+  view-transition-name: transition-example;
+}
+
+::view-transition-old(transition-example) {
+  /* zoomOut comes from Animate.css */
+  animation: zoomOut 500ms both;
+}
+
+::view-transition-new(transition-example) {
+  /* zoomIn comes from Animate.css */
+  animation: zoomIn 590ms both;
+}

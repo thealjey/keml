@@ -54,9 +54,7 @@ export const executeRequest = (el: Element) => {
       appendFormDataToUrl(url, formData);
       bridge.location[redirect](url);
     } else {
-      if (method === "GET") {
-        formData = appendFormDataToUrl(url, formData);
-      }
+      method === "GET" && (formData = appendFormDataToUrl(url, formData));
 
       const xhr = new bridge.XMLHttpRequest();
       xhr.responseType = "document";

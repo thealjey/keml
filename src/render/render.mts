@@ -27,6 +27,7 @@ import {
 import { patchers } from "./patchers.mts";
 import { readLiveValue } from "./readLiveValue.mts";
 import { disableState, enableState } from "./state.mts";
+import { addTransition, startTransition } from "./transition.mts";
 import { writeAttribute } from "./writeAttribute.mts";
 import { writeScrollAxis } from "./writeScrollAxis.mts";
 
@@ -57,8 +58,10 @@ export const render = () => {
   let value: string | null;
   let actions: string | null;
   let actions2d: string[];
-  let patchParams: Parameters<typeof patchers.replaceChildren> | undefined;
-  let patchBatch: NonNullable<typeof patchParams>[];
+  let patchParams: [Element, ChildNode[]] | undefined;
+  let patchBatch: [Element, ChildNode[]][];
+  let patcher: (node: Element, nodes: ChildNode[]) => void;
+  let nodes: ChildNode[];
   let status: number;
   let attr: Attr | null;
   let inputValue: string | boolean | FileList | null;
@@ -83,7 +86,7 @@ export const render = () => {
     patchBatch = [];
     otherElement = undefined;
     for (el of renderElements) {
-      if (hasToken(actions, el.getAttribute("render"))) {
+      hasToken(actions, el.getAttribute("render")) &&
         patchBatch.push([
           el,
           responseXML ?
@@ -95,15 +98,14 @@ export const render = () => {
             )
           : emptyChildNodes,
         ]);
-      }
     }
 
     while ((patchParams = patchBatch.pop())) {
-      (
-        patchers[
-          patchParams[0].getAttribute("position") as keyof typeof patchers
-        ] ?? patchers.replaceChildren
-      )(...patchParams);
+      [el, nodes] = patchParams;
+      patcher =
+        patchers[el.getAttribute("position") as keyof typeof patchers] ??
+        patchers.replaceChildren;
+      addTransition(patcher, el, nodes) || patcher(el, nodes);
     }
 
     ownerElement.isLoading = false;
@@ -113,6 +115,8 @@ export const render = () => {
       ownerElement.isError ? failureEvent : resultEvent,
     );
   }
+
+  startTransition();
 
   if (isStateDirty()) {
     clearStateDirty();

@@ -78,3 +78,53 @@ Rules of thumb:
 --8<-- "snippets/key-client.html"
   </section>
 </div>
+
+---
+
+## [`transition`](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
+
+The `transition` attribute enables view transitions for the `render` feature.
+
+The actual transitions are controlled via CSS.
+
+<div class="tabs">
+  <label><input type="radio" name="tabs-3" checked>HTML</label>
+  <label><input type="radio" name="tabs-3">CSS</label>
+  <label><input type="radio" name="tabs-3">Page A</label>
+  <label><input type="radio" name="tabs-3">Page B</label>
+  <label><input type="radio" name="tabs-3">Page C</label>
+  <label><input type="radio" name="tabs-3">Result</label>
+  <section>
+```html
+--8<-- "snippets/transition-home-server.html"
+```
+  </section>
+  <section>
+```css
+--8<-- "assets/transition.css"
+```
+  </section>
+  <section>
+```html
+--8<-- "snippets/transition-a-server.html"
+```
+  </section>
+  <section>
+```html
+--8<-- "snippets/transition-b-server.html"
+```
+  </section>
+  <section>
+```html
+--8<-- "snippets/transition-c-server.html"
+```
+  </section>
+  <section class="browser">
+    <div>
+      <button></button>
+      <button></button>
+      <div>https://www.transition-example.com/page-a/</div>
+    </div>
+    <div></div>
+  </section>
+</div>

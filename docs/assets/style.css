@@ -93,7 +93,8 @@
       &:nth-of-type(2) ~ section:nth-of-type(2),
       &:nth-of-type(3) ~ section:nth-of-type(3),
       &:nth-of-type(4) ~ section:nth-of-type(4),
-      &:nth-of-type(5) ~ section:nth-of-type(5) {
+      &:nth-of-type(5) ~ section:nth-of-type(5),
+      &:nth-of-type(6) ~ section:nth-of-type(6) {
         display: block;
       }
     }

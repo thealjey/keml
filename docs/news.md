@@ -1,3 +1,11 @@
+## v3.6
+
+Added:
+
+- [View Transition](./result/render.md#transition) support
+
+---
+
 ## v3.5
 
 Added:

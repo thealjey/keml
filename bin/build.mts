@@ -35,13 +35,15 @@ if (environment === "docs") {
     (await readFile("docs/snippets/routes.txt", "utf8"))
       .trim()
       .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(line => line && !line.startsWith(";"))
       .map(value => {
         const [mode, key, val] = value.split(/\s*=>\s*/) as [
           string,
           string,
           string | undefined,
         ];
-        return [+mode, key, val ?? key] as const;
+        return [parseInt(mode, 2), key, val ?? key] as const;
       }),
   );
 }
