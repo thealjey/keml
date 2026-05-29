@@ -85,7 +85,7 @@ Rules of thumb:
 
 The `transition` attribute enables view transitions for the `render` feature.
 
-The actual transitions are controlled via CSS.
+The actual transition animations are controlled entirely through CSS.
 
 <div class="tabs">
   <label><input type="radio" name="tabs-3" checked>HTML</label>
