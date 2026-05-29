@@ -9,5 +9,5 @@
 
 ::view-transition-new(transition-example) {
   /* zoomIn comes from Animate.css */
-  animation: zoomIn 590ms both;
+  animation: zoomIn 500ms both;
 }
