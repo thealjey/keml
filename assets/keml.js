@@ -309,15 +309,16 @@
 `,"transition-b":`<div class="h-100 bg-navy"></div>
 `,"transition-c":`<div class="h-100 bg-blue"></div>
 `,"transition-home":`<p class="mt0">
-  The <a href="https://animate.style/" target="_blank">Animate.css</a>
-  library is used for the actual animation implementation.
+  This example uses
+  <a href="https://animate.style/" target="_blank">Animate.css</a>
+  for the transition animations.
 </p>
 
 <a
   href="/page-a"
   class="mr3"
-  on:click="redirectPushStateA"
-  on="redirectPushStateA"
+  on:click="transitionA"
+  on="transitionA"
   redirect="pushState"
 >
   Page A
@@ -326,8 +327,8 @@
 <a
   href="/page-b"
   class="mr3"
-  on:click="redirectPushStateB"
-  on="redirectPushStateB"
+  on:click="transitionB"
+  on="transitionB"
   redirect="pushState"
 >
   Page B
@@ -336,8 +337,8 @@
 <a
   href="/page-c"
   class="mr3"
-  on:click="redirectPushStateC"
-  on="redirectPushStateC"
+  on:click="transitionC"
+  on="transitionC"
   redirect="pushState"
 >
   Page C
@@ -345,10 +346,10 @@
 
 <div
   class="h4 transition-example"
-  on:navigate="showHistoryPage"
-  on="showHistoryPage"
-  result="historyResult"
-  render="historyResult"
+  on:navigate="showTransitionPage"
+  on="showTransitionPage"
+  result="transitionResult"
+  render="transitionResult"
   transition
 >
   { server.partial }
