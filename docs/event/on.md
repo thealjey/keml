@@ -323,6 +323,70 @@ determines whether or not the credentials are enabled.
 
 ---
 
+## `stream`
+
+This attribute allows the server to stream multiple responses after a single
+request. Responses do not need to arrive at the same time, and their number does
+not have to be finite.
+
+Think of this as a middle ground between a normal XHR request and an
+[SSE](../sse.md) connection.
+
+It behaves like an XHR request in most respects, but can remain persistent like
+[SSE](../sse.md). It is also simpler on the backend, since you can send as much
+data as you like, as often as you like, and it will continue streaming until you
+finalize the response.
+
+Use [SSE](../sse.md) when you want to send results to all subscribed clients,
+and use streaming when you want to send the same kind of results in response to
+a single request from a specific client.
+
+This is made possible by a special delimiting HTML comment convention:
+`<!-- KEML -->`. Each distinct portion of HTML you send must be separated by
+this delimiter. You must ensure that the text between two delimiting comments is
+a valid, complete, and parsable HTML fragment. The comment is case- and
+whitespace-insensitive.
+
+<div class="tabs">
+  <label><input type="radio" name="tabs-10" checked>HTML</label>
+  <label><input type="radio" name="tabs-10">Server</label>
+  <label><input type="radio" name="tabs-10">Result</label>
+  <section>
+```html
+--8<-- "snippets/stream-client.html"
+```
+  </section>
+  <section>
+    <p class="mh3">
+      Since the last message is not delimited by a
+      <code>&lt;!-- KEML --&gt;</code> comment, it will not be received until
+      <code>server.end()</code> is called.
+    </p>
+    <p class="mh3">
+      Because there is a <code>server.end()</code> call, this stream is finite.
+    </p>
+    <p class="mh3">
+      After receiving a single request, this endpoint will return four separate
+      responses: the first immediately, and the next three spaced two seconds
+      apart.
+    </p>
+    <p class="mh3">
+      In this example server, the timing is a bit contrived for simplicity.
+      In the real world, these streamed fragments may be delayed by database
+      latency, a microservice response, a chatbot generating messages, or any
+      other timing-dependent behavior.
+    </p>
+```html
+--8<-- "snippets/stream-server.html"
+```
+  </section>
+  <section class="ma3">
+--8<-- "snippets/stream-client.html"
+  </section>
+</div>
+
+---
+
 ## `redirect`
 
 This attribute switches the operational mode of `on` from sending requests to
@@ -338,10 +402,10 @@ ignored. Form data (excluding file uploads) is applied to the query string.
 This option performs a full page navigation.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-10" checked>Page A</label>
-  <label><input type="radio" name="tabs-10">Page B</label>
-  <label><input type="radio" name="tabs-10">Page C</label>
-  <label><input type="radio" name="tabs-10">Result</label>
+  <label><input type="radio" name="tabs-11" checked>Page A</label>
+  <label><input type="radio" name="tabs-11">Page B</label>
+  <label><input type="radio" name="tabs-11">Page C</label>
+  <label><input type="radio" name="tabs-11">Result</label>
   <section>
 ```html
 --8<-- "snippets/location-assign-a-server.html"
@@ -375,10 +439,10 @@ This option performs a full page navigation, but replaces the current history
 entry instead of adding a new one.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-11" checked>Page A</label>
-  <label><input type="radio" name="tabs-11">Page B</label>
-  <label><input type="radio" name="tabs-11">Page C</label>
-  <label><input type="radio" name="tabs-11">Result</label>
+  <label><input type="radio" name="tabs-12" checked>Page A</label>
+  <label><input type="radio" name="tabs-12">Page B</label>
+  <label><input type="radio" name="tabs-12">Page C</label>
+  <label><input type="radio" name="tabs-12">Result</label>
   <section>
 ```html
 --8<-- "snippets/location-replace-a-server.html"
@@ -416,11 +480,11 @@ separate thing you have to implement, and it does not impose restrictions on
 your server infrastructure 🤯.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-12" checked>HTML</label>
-  <label><input type="radio" name="tabs-12">Page A</label>
-  <label><input type="radio" name="tabs-12">Page B</label>
-  <label><input type="radio" name="tabs-12">Page C</label>
-  <label><input type="radio" name="tabs-12">Result</label>
+  <label><input type="radio" name="tabs-13" checked>HTML</label>
+  <label><input type="radio" name="tabs-13">Page A</label>
+  <label><input type="radio" name="tabs-13">Page B</label>
+  <label><input type="radio" name="tabs-13">Page C</label>
+  <label><input type="radio" name="tabs-13">Result</label>
   <section>
 ```html
 --8<-- "snippets/history-home-server.html"
@@ -459,9 +523,9 @@ This is a self-destruct instruction for the `on` attribute. It is removed after
 the first invocation.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-13" checked>HTML</label>
-  <label><input type="radio" name="tabs-13">Server</label>
-  <label><input type="radio" name="tabs-13">Result</label>
+  <label><input type="radio" name="tabs-14" checked>HTML</label>
+  <label><input type="radio" name="tabs-14">Server</label>
+  <label><input type="radio" name="tabs-14">Result</label>
   <section>
 ```html
 --8<-- "snippets/once-client.html"
@@ -491,8 +555,8 @@ KEML does not implement polling as a dedicated feature, but it can still be
 assembled from the basic building blocks shown above.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-14" checked>Server</label>
-  <label><input type="radio" name="tabs-14">Result</label>
+  <label><input type="radio" name="tabs-15" checked>Server</label>
+  <label><input type="radio" name="tabs-15">Result</label>
   <section>
 ```html
 --8<-- "snippets/polling-server.html"

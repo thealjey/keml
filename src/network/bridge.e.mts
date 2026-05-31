@@ -26,6 +26,9 @@ let bridge: {
   history: Pick<History, "pushState" | "replaceState">;
   window: Pick<Window, "addEventListener">;
   console: Pick<Console, "log" | "ownerElement">;
+  fetch: (
+    ...args: Parameters<typeof fetch>
+  ) => Promise<Pick<Response, "status" | "body">>;
 };
 
 if (process.env["NODE_ENV"] === "test") {
@@ -72,6 +75,7 @@ if (process.env["NODE_ENV"] === "test") {
     history,
     window,
     console,
+    fetch,
   };
 } else if (process.env["NODE_ENV"] === "docs") {
   const parser = new DOMParser();
@@ -261,6 +265,7 @@ if (process.env["NODE_ENV"] === "test") {
   const XHR = 0b1;
   const DELAY = 0b10;
   const SSE = 0b100;
+  const STREAM = 0b1000;
   const ser = generateSeries(10_000_000);
 
   class XMLHttpRequest {
@@ -320,6 +325,70 @@ if (process.env["NODE_ENV"] === "test") {
     }
   }
 
+  const encoder = new TextEncoder();
+
+  const fetch = async (
+    input: string | URL | Request,
+    init: RequestInit = {},
+  ) => {
+    let controller: ReadableStreamDefaultController<Uint8Array>;
+    const stream = new ReadableStream<Uint8Array>({
+      start(c) {
+        controller = c;
+      },
+    });
+    const { headers, credentials, method, body } = init;
+    const server = {
+      headers:
+        headers ?
+          Array.isArray(headers) ? new Map(headers)
+          : headers instanceof Headers ? headers
+          : new Map(Object.entries(headers))
+        : new Map<string, string>(),
+      withCredentials: credentials !== "omit",
+      method,
+      url:
+        typeof input === "string" ? new URL(input)
+        : input instanceof Request ? new URL(input.url)
+        : input,
+      data: body as FormData,
+      status: 200,
+
+      getParam(key: string) {
+        return this.data ? this.data.get(key) : this.url.searchParams.get(key);
+      },
+
+      write(message: string) {
+        controller.enqueue(encoder.encode(message));
+      },
+
+      end() {
+        controller.close();
+      },
+
+      get partial() {
+        return this.render(STREAM)[1];
+      },
+
+      render(flags?: number) {
+        for (const [mode, pattern, handler] of routes) {
+          if (
+            handler &&
+            pattern.test(this.url.href) &&
+            (flags ?? mode) & STREAM
+          ) {
+            return [mode, handler(this)] as const;
+          }
+        }
+        return [0, ""] as const;
+      },
+    };
+
+    server.write(server.render()[1]);
+
+    return new Response(stream);
+  };
+
   const timeSteps = [
     ["years", "year", 31104000000],
     ["months", "month", 2592000000],
@@ -344,7 +413,7 @@ if (process.env["NODE_ENV"] === "test") {
       this.url = typeof url === "string" ? new URL(url) : url;
 
       for (const [mode, pattern, handler] of routes) {
-        if (handler && pattern.test(this.url.href) && (mode & SSE) === SSE) {
+        if (handler && pattern.test(this.url.href) && mode & SSE) {
           handler(this);
           break;
         }
@@ -616,9 +685,18 @@ if (process.env["NODE_ENV"] === "test") {
     history,
     window: fakeWindow,
     console,
+    fetch,
   };
 } else {
-  bridge = { XMLHttpRequest, EventSource, location, history, window, console };
+  bridge = {
+    XMLHttpRequest,
+    EventSource,
+    location,
+    history,
+    window,
+    console,
+    fetch,
+  };
 }
 
 export { bridge };

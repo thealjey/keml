@@ -6,7 +6,7 @@
 _Enhance HTML with expressive, declarative attributes that connect your frontend
 directly to your server logic._
 
-![min+gzip](https://img.shields.io/badge/min%2Bgzip-5.6kb-green)
+![min+gzip](https://img.shields.io/badge/min%2Bgzip-5.9kb-green)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![npm](https://img.shields.io/npm/v/keml)
 [![Docs](https://img.shields.io/badge/docs-online-blue)](https://thealjey.github.io/keml/)

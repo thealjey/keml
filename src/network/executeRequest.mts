@@ -10,6 +10,7 @@ import { isForm } from "../util/isForm.mts";
 import { appendFormDataToUrl } from "./appendFormDataToUrl.mts";
 import { bridge } from "./bridge.e.mts";
 import { resolveRequestDescriptor } from "./resolveRequestDescriptor.mts";
+import { StreamingXMLHttpRequest } from "./StreamingXMLHttpRequest.mts";
 
 const internalForm = document.createElement("form");
 const emptyObj: {} = Object.create(null);
@@ -56,14 +57,18 @@ export const executeRequest = (el: Element) => {
     } else {
       method === "GET" && (formData = appendFormDataToUrl(url, formData));
 
-      const xhr = new bridge.XMLHttpRequest();
+      const xhr = new (
+        el.hasAttribute("stream") ?
+          StreamingXMLHttpRequest
+        : bridge.XMLHttpRequest)();
+
       xhr.responseType = "document";
       xhr.withCredentials = withCredentials;
       xhr.ownerElement = el;
       xhr.onloadend = pushRenderPayload;
       xhr.open(method, url);
-      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
       for (const { name, value } of el.attributes) {
         name.startsWith("h-") && xhr.setRequestHeader(name.slice(2), value);
       }

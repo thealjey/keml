@@ -17,6 +17,12 @@ vi.mock("./resolveRequestDescriptor.mts", async importOriginal => {
   };
 });
 
+vi.mock("./StreamingXMLHttpRequest.mts", () => ({
+  StreamingXMLHttpRequest: class {
+    setRequestHeader = vi.fn();
+  },
+}));
+
 vi.mock("../event/dispatchNavigate.mts", () => ({
   dispatchNavigate: vi.fn(),
 }));
@@ -46,6 +52,7 @@ import { traverseAttributes } from "../runtime/traverseAttributes.mts";
 import { bridge } from "./bridge.e.mts";
 import { executeRequest } from "./executeRequest.mts";
 import { resolveRequestDescriptor } from "./resolveRequestDescriptor.mts";
+import { StreamingXMLHttpRequest } from "./StreamingXMLHttpRequest.mts";
 
 /* -----------------------
    MOCK CASTS
@@ -245,6 +252,28 @@ describe("executeRequest", () => {
 
     expect(open).toHaveBeenCalledWith("GET", "/url");
     expect(send).toHaveBeenCalled();
+  });
+
+  it("GET request appends form data to URL before XHR send stream", () => {
+    const el = document.createElement("form");
+    el.setAttribute("stream", "");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "GET", false]);
+
+    StreamingXMLHttpRequest.prototype.open = vi.fn();
+    StreamingXMLHttpRequest.prototype.send = vi.fn();
+
+    executeRequest(el);
+
+    expect(StreamingXMLHttpRequest.prototype.open).toHaveBeenCalledWith(
+      "GET",
+      "/url",
+    );
+    expect(StreamingXMLHttpRequest.prototype.send).toHaveBeenCalled();
   });
 
   it('sets custom headers for attributes starting with "h-"', () => {

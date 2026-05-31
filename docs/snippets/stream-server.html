@@ -1,0 +1,21 @@
+{{
+
+  const msg4 = () => setTimeout(() => (
+    server.write("<dt>And so are</dt><dd>you</dd>"),
+    server.end()
+  ), 2000);
+
+  const msg3 = () => setTimeout(() => (
+    server.write("<dt>KEML is</dt><dd>awesome</dd><!-- KEML -->"),
+    msg4()
+  ), 2000);
+
+  setTimeout(() => (
+    server.write("<dt>Violets are</dt><dd>blue</dd><!-- KEML -->"),
+    msg3()
+  ), 2000);
+
+}}
+
+<dt>Roses are</dt><dd>red</dd>
+<!-- KEML -->

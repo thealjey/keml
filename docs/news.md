@@ -1,3 +1,11 @@
+## v3.7
+
+Added:
+
+- [Streaming Responses](./event/on.md#stream)
+
+---
+
 ## v3.6
 
 Added:

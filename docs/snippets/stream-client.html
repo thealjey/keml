@@ -1,0 +1,18 @@
+<button
+  type="button"
+  class="btn"
+  on:click="requestStream"
+>
+  Get Streamed Results
+</button>
+
+<dl
+  class="dl"
+  on="requestStream"
+  once
+  href="/stream"
+  stream
+  result="streamResult"
+  render="streamResult"
+  position="append"
+></dl>

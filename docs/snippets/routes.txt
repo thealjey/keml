@@ -1,5 +1,6 @@
 ; the first column defines a bit mask with the following bits:
-; [SSE, DELAY, XHR] in that order
+; [STREAM, SSE, DELAY, XHR] in that order
+; STREAM selects a streaming server implementation
 ; SSE selects a persistent server implementation
 ; DELAY forces the server to delay sending the response
 ; XHR is to denote this endpoint as a candidate for partial rendering
@@ -11,41 +12,42 @@
 ; if omitted, defaults to the value of the second column
 ; e.g. "foo" -> "foo-server.html"
 
-001 => event-modifier
-001 => endpoint-override
-001 => expensive
-001 => form-submit
-001 => request-headers
-001 => parent-handler
-001 => once
-001 => result-success
-001 => result-failure
-001 => reference-chart
-001 => position
-001 => key
-001 => polling
-011 => if-loading
-001 => if-error
-100 => sse
+0001 => event-modifier
+0001 => endpoint-override
+0001 => expensive
+0001 => form-submit
+0001 => request-headers
+0001 => parent-handler
+0001 => once
+0001 => result-success
+0001 => result-failure
+0001 => reference-chart
+0001 => position
+0001 => key
+0001 => polling
+0011 => if-loading
+0001 => if-error
+0100 => sse
+1000 => stream
 
-001 => https://www.example.com/nefarious => credentials
+0001 => https://www.example.com/nefarious => credentials
 
-000 => https://www.log-example.com => log
+0000 => https://www.log-example.com => log
 
-000 => https://www.assign-example.com/page-a => location-assign-a
-000 => https://www.assign-example.com/page-b => location-assign-b
-000 => https://www.assign-example.com/page-c => location-assign-c
+0000 => https://www.assign-example.com/page-a => location-assign-a
+0000 => https://www.assign-example.com/page-b => location-assign-b
+0000 => https://www.assign-example.com/page-c => location-assign-c
 
-000 => https://www.replace-example.com/page-a => location-replace-a
-000 => https://www.replace-example.com/page-b => location-replace-b
-000 => https://www.replace-example.com/page-c => location-assign-c
+0000 => https://www.replace-example.com/page-a => location-replace-a
+0000 => https://www.replace-example.com/page-b => location-replace-b
+0000 => https://www.replace-example.com/page-c => location-assign-c
 
-000 => https://www.history-example.com/page-a => history-home
-001 => https://www.history-example.com/page-a => history-a
-001 => https://www.history-example.com/page-b => history-b
-001 => https://www.history-example.com/page-c => history-c
+0000 => https://www.history-example.com/page-a => history-home
+0001 => https://www.history-example.com/page-a => history-a
+0001 => https://www.history-example.com/page-b => history-b
+0001 => https://www.history-example.com/page-c => history-c
 
-000 => https://www.transition-example.com/page-a => transition-home
-001 => https://www.transition-example.com/page-a => transition-a
-001 => https://www.transition-example.com/page-b => transition-b
-001 => https://www.transition-example.com/page-c => transition-c
+0000 => https://www.transition-example.com/page-a => transition-home
+0001 => https://www.transition-example.com/page-a => transition-a
+0001 => https://www.transition-example.com/page-b => transition-b
+0001 => https://www.transition-example.com/page-c => transition-c

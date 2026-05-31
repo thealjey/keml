@@ -1,3 +1,4 @@
+import { parseHTML } from "../util/parseHTML.mts";
 import { bridge } from "./bridge.e.mts";
 
 type SseEventListener = EventListener | ((event: MessageEvent) => void);
@@ -20,7 +21,6 @@ type SseEventListener = EventListener | ((event: MessageEvent) => void);
  * - Keeps subscriptions in sync when reconciled with another set
  */
 export class SseSource extends Set<string> {
-  static parser = new DOMParser();
   private source: InstanceType<(typeof bridge)["EventSource"]> | undefined;
 
   constructor(
@@ -80,11 +80,7 @@ export class SseSource extends Set<string> {
    * @param message - The received SSE message event.
    */
   private handleMessage = ({ type, data }: MessageEvent) =>
-    this.onMessage(
-      this,
-      type,
-      SseSource.parser.parseFromString(data, "text/html"),
-    );
+    this.onMessage(this, type, parseHTML(data));
 
   /**
    * Opens an SSE connection and attaches core listeners.
