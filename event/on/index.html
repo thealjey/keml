@@ -547,6 +547,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      stream
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#redirect" class="md-nav__link">
     <span class="md-ellipsis">
       redirect
@@ -1134,6 +1143,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      stream
+    </span>
+  </a>
   
 </li>
       
@@ -2080,6 +2098,153 @@ determines whether or not the credentials are enabled.</p>
 </div>
 
 <hr />
+<h2 id="stream"><code>stream</code><a class="headerlink" href="#stream" title="Permanent link">&para;</a></h2>
+<p>This attribute allows the server to stream multiple responses after a single
+request. Responses do not need to arrive at the same time, and their number does
+not have to be finite.</p>
+<p>Think of this as a middle ground between a normal XHR request and an
+<a href="../../sse/">SSE</a> connection.</p>
+<p>It behaves like an XHR request in most respects, but can remain persistent like
+<a href="../../sse/">SSE</a>. It is also simpler on the backend, since you can send as much
+data as you like, as often as you like, and it will continue streaming until you
+finalize the response.</p>
+<p>Use <a href="../../sse/">SSE</a> when you want to send results to all subscribed clients,
+and use streaming when you want to send the same kind of results in response to
+a single request from a specific client.</p>
+<p>This is made possible by a special delimiting HTML comment convention:
+<code>&lt;!-- KEML --&gt;</code>. Each distinct portion of HTML you send must be separated by
+this delimiter. You must ensure that the text between two delimiting comments is
+a valid, complete, and parsable HTML fragment. The comment is case- and
+whitespace-insensitive.</p>
+<div class="tabs">
+  <label><input type="radio" name="tabs-10" checked>HTML</label>
+  <label><input type="radio" name="tabs-10">Server</label>
+  <label><input type="radio" name="tabs-10">Result</label>
+  <section>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
+  <span class="na">type</span><span class="o">=</span><span class="s">&quot;button&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn&quot;</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;requestStream&quot;</span>
+<span class="p">&gt;</span>
+  Get Streamed Results
+<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">dl</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;dl&quot;</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">&quot;requestStream&quot;</span>
+  <span class="na">once</span>
+  <span class="na">href</span><span class="o">=</span><span class="s">&quot;/stream&quot;</span>
+  <span class="na">stream</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">&quot;streamResult&quot;</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">&quot;streamResult&quot;</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">&quot;append&quot;</span>
+<span class="p">&gt;&lt;/</span><span class="nt">dl</span><span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
+  </section>
+  <section>
+    <p class="mh3">
+      Since the last message is not delimited by a
+      <code>&lt;!-- KEML --&gt;</code> comment, it will not be received until
+      <code>server.end()</code> is called.
+    </p>
+    <p class="mh3">
+      Because there is a <code>server.end()</code> call, this stream is finite.
+    </p>
+    <p class="mh3">
+      After receiving a single request, this endpoint will return four separate
+      responses: the first immediately, and the next three spaced two seconds
+      apart.
+    </p>
+    <p class="mh3">
+      In this example server, the timing is a bit contrived for simplicity.
+      In the real world, these streamed fragments may be delayed by database
+      latency, a microservice response, a chatbot generating messages, or any
+      other timing-dependent behavior.
+    </p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span></pre></div></td><td class="code"><div><pre><span></span><code>{{
+
+  const msg4 = () =&gt; setTimeout(() =&gt; (
+    server.write(&quot;<span class="p">&lt;</span><span class="nt">dt</span><span class="p">&gt;</span>And so are<span class="p">&lt;/</span><span class="nt">dt</span><span class="p">&gt;&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>you<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>&quot;),
+    server.end()
+  ), 2000);
+
+  const msg3 = () =&gt; setTimeout(() =&gt; (
+    server.write(&quot;<span class="p">&lt;</span><span class="nt">dt</span><span class="p">&gt;</span>KEML is<span class="p">&lt;/</span><span class="nt">dt</span><span class="p">&gt;&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>awesome<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span><span class="cm">&lt;!-- KEML --&gt;</span>&quot;),
+    msg4()
+  ), 2000);
+
+  setTimeout(() =&gt; (
+    server.write(&quot;<span class="p">&lt;</span><span class="nt">dt</span><span class="p">&gt;</span>Violets are<span class="p">&lt;/</span><span class="nt">dt</span><span class="p">&gt;&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>blue<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span><span class="cm">&lt;!-- KEML --&gt;</span>&quot;),
+    msg3()
+  ), 2000);
+
+}}
+
+<span class="p">&lt;</span><span class="nt">dt</span><span class="p">&gt;</span>Roses are<span class="p">&lt;/</span><span class="nt">dt</span><span class="p">&gt;&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>red<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>
+<span class="cm">&lt;!-- KEML --&gt;</span>
+</code></pre></div></td></tr></table></div>
+  </section>
+  <section class="ma3">
+<button
+  type="button"
+  class="btn"
+  on:click="requestStream"
+>
+  Get Streamed Results
+</button>
+
+<dl
+  class="dl"
+  on="requestStream"
+  once
+  href="/stream"
+  stream
+  result="streamResult"
+  render="streamResult"
+  position="append"
+></dl>
+
+  </section>
+</div>
+
+<hr />
 <h2 id="redirect"><code>redirect</code><a class="headerlink" href="#redirect" title="Permanent link">&para;</a></h2>
 <p>This attribute switches the operational mode of <code>on</code> from sending requests to
 performing redirects.</p>
@@ -2089,10 +2254,10 @@ ignored. Form data (excluding file uploads) is applied to the query string.</p>
 <h3 id="assign"><code>assign</code><a class="headerlink" href="#assign" title="Permanent link">&para;</a></h3>
 <p>This option performs a full page navigation.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-10" checked>Page A</label>
-  <label><input type="radio" name="tabs-10">Page B</label>
-  <label><input type="radio" name="tabs-10">Page C</label>
-  <label><input type="radio" name="tabs-10">Result</label>
+  <label><input type="radio" name="tabs-11" checked>Page A</label>
+  <label><input type="radio" name="tabs-11">Page B</label>
+  <label><input type="radio" name="tabs-11">Page C</label>
+  <label><input type="radio" name="tabs-11">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
@@ -2152,10 +2317,10 @@ ignored. Form data (excluding file uploads) is applied to the query string.</p>
 <p>This option performs a full page navigation, but replaces the current history
 entry instead of adding a new one.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-11" checked>Page A</label>
-  <label><input type="radio" name="tabs-11">Page B</label>
-  <label><input type="radio" name="tabs-11">Page C</label>
-  <label><input type="radio" name="tabs-11">Result</label>
+  <label><input type="radio" name="tabs-12" checked>Page A</label>
+  <label><input type="radio" name="tabs-12">Page B</label>
+  <label><input type="radio" name="tabs-12">Page C</label>
+  <label><input type="radio" name="tabs-12">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
@@ -2218,11 +2383,11 @@ full page navigation.</p>
 separate thing you have to implement, and it does not impose restrictions on
 your server infrastructure 🤯.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-12" checked>HTML</label>
-  <label><input type="radio" name="tabs-12">Page A</label>
-  <label><input type="radio" name="tabs-12">Page B</label>
-  <label><input type="radio" name="tabs-12">Page C</label>
-  <label><input type="radio" name="tabs-12">Result</label>
+  <label><input type="radio" name="tabs-13" checked>HTML</label>
+  <label><input type="radio" name="tabs-13">Page A</label>
+  <label><input type="radio" name="tabs-13">Page B</label>
+  <label><input type="radio" name="tabs-13">Page C</label>
+  <label><input type="radio" name="tabs-13">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -2386,9 +2551,9 @@ your server infrastructure 🤯.</p>
 <p>This is a self-destruct instruction for the <code>on</code> attribute. It is removed after
 the first invocation.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-13" checked>HTML</label>
-  <label><input type="radio" name="tabs-13">Server</label>
-  <label><input type="radio" name="tabs-13">Result</label>
+  <label><input type="radio" name="tabs-14" checked>HTML</label>
+  <label><input type="radio" name="tabs-14">Server</label>
+  <label><input type="radio" name="tabs-14">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -2470,8 +2635,8 @@ Use <a href="../../sse/">SSE</a> if possible.</p>
 <p>KEML does not implement polling as a dedicated feature, but it can still be
 assembled from the basic building blocks shown above.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-14" checked>Server</label>
-  <label><input type="radio" name="tabs-14">Result</label>
+  <label><input type="radio" name="tabs-15" checked>Server</label>
+  <label><input type="radio" name="tabs-15">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
