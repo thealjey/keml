@@ -910,30 +910,20 @@ method.</p>
 <span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">h4</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">h4</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>
   Change the value of the input and click the button to restore it.
 <span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
 
-<span class="p">&lt;</span><span class="nt">form</span> <span class="na">reset</span><span class="o">=</span><span class="s">&quot;doReset&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">form</span> <span class="na">on:submit</span><span class="o">=</span><span class="s">&quot;doReset&quot;</span> <span class="na">reset</span><span class="o">=</span><span class="s">&quot;doReset&quot;</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">input</span>
     <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span>
     <span class="na">value</span><span class="o">=</span><span class="s">&quot;edit me&quot;</span>
     <span class="na">class</span><span class="o">=</span><span class="s">&quot;input&quot;</span>
   <span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn mt2&quot;</span><span class="p">&gt;</span>
+    click me
+  <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
-
-<span class="p">&lt;</span><span class="nt">button</span>
-  <span class="na">type</span><span class="o">=</span><span class="s">&quot;button&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn mt2&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;doReset&quot;</span>
-<span class="p">&gt;</span>
-  click me
-<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>
   <section class="pa3">
@@ -941,21 +931,16 @@ method.</p>
   Change the value of the input and click the button to restore it.
 </h4>
 
-<form reset="doReset">
+<form on:submit="doReset" reset="doReset">
   <input
     type="text"
     value="edit me"
     class="input"
   >
+  <button class="btn mt2">
+    click me
+  </button>
 </form>
-
-<button
-  type="button"
-  class="btn mt2"
-  on:click="doReset"
->
-  click me
-</button>
 
   </section>
 </div>
