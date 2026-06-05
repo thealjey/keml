@@ -452,7 +452,9 @@ if (process.env["NODE_ENV"] === "test") {
     }
 
     addEventListener(type: string, listener: (...args: any[]) => any) {
-      this.listeners.getOrInsert(type, new Set()).add(listener);
+      let bag = this.listeners.get(type);
+      bag || this.listeners.set(type, (bag = new Set()));
+      bag.add(listener);
     }
 
     removeEventListener(type: string, listener: (...args: any[]) => any) {

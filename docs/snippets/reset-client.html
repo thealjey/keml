@@ -2,18 +2,13 @@
   Change the value of the input and click the button to restore it.
 </h4>
 
-<form reset="doReset">
+<form on:submit="doReset" reset="doReset">
   <input
     type="text"
     value="edit me"
     class="input"
   >
+  <button class="btn mt2">
+    click me
+  </button>
 </form>
-
-<button
-  type="button"
-  class="btn mt2"
-  on:click="doReset"
->
-  click me
-</button>
