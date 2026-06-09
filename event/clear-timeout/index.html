@@ -12,13 +12,13 @@
         <meta name="author" content="Eugene Kuzmenko">
       
       
-        <link rel="canonical" href="https://thealjey.github.io/keml/event/reset/">
+        <link rel="canonical" href="https://thealjey.github.io/keml/event/clear-timeout/">
       
       
-        <link rel="prev" href="../on/">
+        <link rel="prev" href="../scroll/">
       
       
-        <link rel="next" href="../scroll/">
+        <link rel="next" href="../../result/result/">
       
       
       <link rel="icon" href="../../assets/favicon.ico">
@@ -26,7 +26,7 @@
     
     
       
-        <title>reset - keml</title>
+        <title>clear-timeout - keml</title>
       
     
     
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              reset
+              clear-timeout
             
           </span>
         </div>
@@ -432,17 +432,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../reset/" class="md-nav__link">
         
   
   
@@ -453,7 +446,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -486,10 +478,17 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../clear-timeout/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -500,6 +499,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -908,16 +908,16 @@
   
 
 
-  <h1>reset</h1>
+  <h1>clear-timeout</h1>
 
-<p>Like <a href="../on/">on</a>, <code>reset</code> also accepts a single event action as input.</p>
-<p>The only job of this feature is to restore the element's default value.</p>
-<p>Custom elements (e.g. Web Components) can also be made resettable; all they
-must do is implement the standard
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/reset">reset</a>
-method.</p>
+<p>Like <a href="../on/">on</a>, <code>clear-timeout</code> also accepts a single event action as input.</p>
+<p>This feature cancels a delayed request that was previously scheduled by either
+<a href="../on/#debounce-and-throttle"><code>debounce</code> or <code>throttle</code></a>.</p>
+<p>If an element instance has a <code>timeoutId</code> property, it will be passed to the
+global <code>clearTimeout</code> function and then set to <code>undefined</code>.</p>
 <div class="tabs">
   <label><input type="radio" name="tabs-1" checked>HTML</label>
+  <label><input type="radio" name="tabs-1">Server</label>
   <label><input type="radio" name="tabs-1">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
@@ -933,37 +933,124 @@ method.</p>
 <span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
-<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">h4</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>
-  Change the value of the input and click the button to restore it.
-<span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>
+  If you click the &quot;Cancel&quot; button within one second after clicking &quot;Increment&quot;,
+  no request will be sent.
+<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 
-<span class="p">&lt;</span><span class="nt">form</span> <span class="na">on:submit</span><span class="o">=</span><span class="s">&quot;doReset&quot;</span> <span class="na">reset</span><span class="o">=</span><span class="s">&quot;doReset&quot;</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">input</span>
-    <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span>
-    <span class="na">value</span><span class="o">=</span><span class="s">&quot;edit me&quot;</span>
-    <span class="na">class</span><span class="o">=</span><span class="s">&quot;input&quot;</span>
-  <span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn mt2&quot;</span><span class="p">&gt;</span>
-    click me
-  <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">button</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn&quot;</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;increment&quot;</span>
+<span class="p">&gt;</span>
+  Increment
+<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">button</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn&quot;</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;cancelIncrement&quot;</span>
+<span class="p">&gt;</span>
+  Cancel
+<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">input</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;input mt3&quot;</span>
+  <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span>
+  <span class="na">readonly</span>
+  <span class="na">name</span><span class="o">=</span><span class="s">&quot;count&quot;</span>
+  <span class="na">value</span><span class="o">=</span><span class="s">&quot;0&quot;</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">&quot;increment&quot;</span>
+  <span class="na">debounce</span><span class="o">=</span><span class="s">&quot;1000&quot;</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">&quot;/increment&quot;</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">&quot;incResult&quot;</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">&quot;incResult&quot;</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
+  <span class="na">clear-timeout</span><span class="o">=</span><span class="s">&quot;cancelIncrement&quot;</span>
+<span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
+  </section>
+  <section>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;input mt3&quot;</span>
+  <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span>
+  <span class="na">readonly</span>
+  <span class="na">name</span><span class="o">=</span><span class="s">&quot;count&quot;</span>
+  <span class="na">value</span><span class="o">=</span><span class="s">&quot;{ +server.getParam(&#39;count&#39;) + 1 }&quot;</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">&quot;increment&quot;</span>
+  <span class="na">debounce</span><span class="o">=</span><span class="s">&quot;1000&quot;</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">&quot;/increment&quot;</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">&quot;incResult&quot;</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">&quot;incResult&quot;</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
+  <span class="na">clear-timeout</span><span class="o">=</span><span class="s">&quot;cancelIncrement&quot;</span>
+<span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>
   <section class="pa3">
-<h4 class="mt0">
-  Change the value of the input and click the button to restore it.
-</h4>
+<p class="mt0">
+  If you click the "Cancel" button within one second after clicking "Increment",
+  no request will be sent.
+</p>
 
-<form on:submit="doReset" reset="doReset">
-  <input
-    type="text"
-    value="edit me"
-    class="input"
-  >
-  <button class="btn mt2">
-    click me
-  </button>
-</form>
+<button
+  class="btn"
+  on:click="increment"
+>
+  Increment
+</button>
+
+<button
+  class="btn"
+  on:click="cancelIncrement"
+>
+  Cancel
+</button>
+
+<input
+  class="input mt3"
+  type="text"
+  readonly
+  name="count"
+  value="0"
+  on="increment"
+  debounce="1000"
+  src="/increment"
+  result="incResult"
+  render="incResult"
+  position="replaceWith"
+  clear-timeout="cancelIncrement"
+>
 
   </section>
 </div>
