@@ -123,6 +123,28 @@ The method they set is the same as the attribute name.
 
 ---
 
+### `about:blank`
+
+You can "send a request" to the `about:blank` endpoint when no work is needed
+and an empty response should be produced.
+
+This does not trigger any network request.
+
+<div class="tabs">
+  <label><input type="radio" name="tabs-3" checked>HTML</label>
+  <label><input type="radio" name="tabs-3">Result</label>
+  <section>
+```html
+--8<-- "snippets/about-blank-client.html"
+```
+  </section>
+  <section class="ma3">
+--8<-- "snippets/about-blank-client.html"
+  </section>
+</div>
+
+---
+
 ### `method`
 
 This attribute overrides just the default HTTP method. The provided value will
@@ -134,9 +156,9 @@ server understands the verb.
 It has higher precedence than the attributes shown above.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-3" checked>HTML</label>
-  <label><input type="radio" name="tabs-3">Server</label>
-  <label><input type="radio" name="tabs-3">Result</label>
+  <label><input type="radio" name="tabs-4" checked>HTML</label>
+  <label><input type="radio" name="tabs-4">Server</label>
+  <label><input type="radio" name="tabs-4">Result</label>
   <section>
 ```html
 --8<-- "snippets/method-override-client.html"
@@ -159,9 +181,9 @@ It has higher precedence than the attributes shown above.
 These attributes can be used to rate limit the `on` feature.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-4" checked>HTML</label>
-  <label><input type="radio" name="tabs-4">Server</label>
-  <label><input type="radio" name="tabs-4">Result</label>
+  <label><input type="radio" name="tabs-5" checked>HTML</label>
+  <label><input type="radio" name="tabs-5">Server</label>
+  <label><input type="radio" name="tabs-5">Result</label>
   <section>
 ```html
 --8<-- "snippets/expensive-client.html"
@@ -194,9 +216,9 @@ element itself, can contribute values to the request data by specifying a `name`
 and a `value` attribute. For non-form fields, both attributes must be provided.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-5" checked>HTML</label>
-  <label><input type="radio" name="tabs-5">Server</label>
-  <label><input type="radio" name="tabs-5">Result</label>
+  <label><input type="radio" name="tabs-6" checked>HTML</label>
+  <label><input type="radio" name="tabs-6">Server</label>
+  <label><input type="radio" name="tabs-6">Result</label>
   <section>
 ```html
 --8<-- "snippets/form-submit-client.html"
@@ -219,9 +241,9 @@ Form fields can even submit themselves without a form at all.
 This example works exactly the same.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-6" checked>HTML</label>
-  <label><input type="radio" name="tabs-6">Server</label>
-  <label><input type="radio" name="tabs-6">Result</label>
+  <label><input type="radio" name="tabs-7" checked>HTML</label>
+  <label><input type="radio" name="tabs-7">Server</label>
+  <label><input type="radio" name="tabs-7">Result</label>
   <section>
 ```html
 --8<-- "snippets/field-submit-client.html"
@@ -242,9 +264,9 @@ This example works exactly the same.
 It does not even have to be a form field.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-7" checked>HTML</label>
-  <label><input type="radio" name="tabs-7">Server</label>
-  <label><input type="radio" name="tabs-7">Result</label>
+  <label><input type="radio" name="tabs-8" checked>HTML</label>
+  <label><input type="radio" name="tabs-8">Server</label>
+  <label><input type="radio" name="tabs-8">Result</label>
   <section>
 ```html
 --8<-- "snippets/div-submit-client.html"
@@ -269,9 +291,9 @@ Request headers can be set using:
 `h-<header name>="header value"`
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-8" checked>HTML</label>
-  <label><input type="radio" name="tabs-8">Server</label>
-  <label><input type="radio" name="tabs-8">Result</label>
+  <label><input type="radio" name="tabs-9" checked>HTML</label>
+  <label><input type="radio" name="tabs-9">Server</label>
+  <label><input type="radio" name="tabs-9">Result</label>
   <section>
 ```html
 --8<-- "snippets/request-headers-client.html"
@@ -303,9 +325,9 @@ This is a boolean attribute, so its value is ignored and only the presence
 determines whether or not the credentials are enabled.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-9" checked>HTML</label>
-  <label><input type="radio" name="tabs-9">Server</label>
-  <label><input type="radio" name="tabs-9">Result</label>
+  <label><input type="radio" name="tabs-10" checked>HTML</label>
+  <label><input type="radio" name="tabs-10">Server</label>
+  <label><input type="radio" name="tabs-10">Result</label>
   <section>
 ```html
 --8<-- "snippets/credentials-client.html"
@@ -348,9 +370,9 @@ a valid, complete, and parsable HTML fragment. The comment is case- and
 whitespace-insensitive.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-10" checked>HTML</label>
-  <label><input type="radio" name="tabs-10">Server</label>
-  <label><input type="radio" name="tabs-10">Result</label>
+  <label><input type="radio" name="tabs-11" checked>HTML</label>
+  <label><input type="radio" name="tabs-11">Server</label>
+  <label><input type="radio" name="tabs-11">Result</label>
   <section>
 ```html
 --8<-- "snippets/stream-client.html"
@@ -402,10 +424,10 @@ ignored. Form data (excluding file uploads) is applied to the query string.
 This option performs a full page navigation.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-11" checked>Page A</label>
-  <label><input type="radio" name="tabs-11">Page B</label>
-  <label><input type="radio" name="tabs-11">Page C</label>
-  <label><input type="radio" name="tabs-11">Result</label>
+  <label><input type="radio" name="tabs-12" checked>Page A</label>
+  <label><input type="radio" name="tabs-12">Page B</label>
+  <label><input type="radio" name="tabs-12">Page C</label>
+  <label><input type="radio" name="tabs-12">Result</label>
   <section>
 ```html
 --8<-- "snippets/location-assign-a-server.html"
@@ -439,10 +461,10 @@ This option performs a full page navigation, but replaces the current history
 entry instead of adding a new one.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-12" checked>Page A</label>
-  <label><input type="radio" name="tabs-12">Page B</label>
-  <label><input type="radio" name="tabs-12">Page C</label>
-  <label><input type="radio" name="tabs-12">Result</label>
+  <label><input type="radio" name="tabs-13" checked>Page A</label>
+  <label><input type="radio" name="tabs-13">Page B</label>
+  <label><input type="radio" name="tabs-13">Page C</label>
+  <label><input type="radio" name="tabs-13">Result</label>
   <section>
 ```html
 --8<-- "snippets/location-replace-a-server.html"
@@ -480,11 +502,11 @@ separate thing you have to implement, and it does not impose restrictions on
 your server infrastructure 🤯.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-13" checked>HTML</label>
-  <label><input type="radio" name="tabs-13">Page A</label>
-  <label><input type="radio" name="tabs-13">Page B</label>
-  <label><input type="radio" name="tabs-13">Page C</label>
-  <label><input type="radio" name="tabs-13">Result</label>
+  <label><input type="radio" name="tabs-14" checked>HTML</label>
+  <label><input type="radio" name="tabs-14">Page A</label>
+  <label><input type="radio" name="tabs-14">Page B</label>
+  <label><input type="radio" name="tabs-14">Page C</label>
+  <label><input type="radio" name="tabs-14">Result</label>
   <section>
 ```html
 --8<-- "snippets/history-home-server.html"
@@ -523,9 +545,9 @@ This is a self-destruct instruction for the `on` attribute. It is removed after
 the first invocation.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-14" checked>HTML</label>
-  <label><input type="radio" name="tabs-14">Server</label>
-  <label><input type="radio" name="tabs-14">Result</label>
+  <label><input type="radio" name="tabs-15" checked>HTML</label>
+  <label><input type="radio" name="tabs-15">Server</label>
+  <label><input type="radio" name="tabs-15">Result</label>
   <section>
 ```html
 --8<-- "snippets/once-client.html"
@@ -555,8 +577,8 @@ KEML does not implement polling as a dedicated feature, but it can still be
 assembled from the basic building blocks shown above.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-15" checked>Server</label>
-  <label><input type="radio" name="tabs-15">Result</label>
+  <label><input type="radio" name="tabs-16" checked>Server</label>
+  <label><input type="radio" name="tabs-16">Result</label>
   <section>
 ```html
 --8<-- "snippets/polling-server.html"
@@ -564,5 +586,50 @@ assembled from the basic building blocks shown above.
   </section>
   <section class="ma3">
 --8<-- "snippets/polling-client.html"
+  </section>
+</div>
+
+---
+
+## Virtualization
+
+KEML does not implement virtualization as a dedicated feature, but it can still
+be assembled from the basic building blocks shown above.
+
+<div class="tabs">
+  <label><input type="radio" name="tabs-17" checked>HTML</label>
+  <label><input type="radio" name="tabs-17">Server</label>
+  <label><input type="radio" name="tabs-17">Result</label>
+  <section>
+```html
+--8<-- "snippets/virtualization-client.html"
+```
+  </section>
+  <section>
+```js
+const tempLabels = [
+  "Deep Freezing",
+  "Freezing",
+  "Cold",
+  "Cool",
+  "Mild Moderate",
+  "Moderate",
+  "Warm",
+  "Hot",
+  "Very Hot",
+  "Scorching",
+];
+// Create a dataset with 350,000 rows
+server.table = Array.from({ length: 350_000 }, (_, i) => ({
+  temperature: (i = Math.random() * 100).toFixed(2),
+  label: tempLabels[Math.max(0, ((i - 1) / 10) | 0)],
+}));
+```
+```html
+--8<-- "snippets/virtualization-server.html"
+```
+  </section>
+  <section class="ma3">
+--8<-- "snippets/virtualization-client.html"
   </section>
 </div>

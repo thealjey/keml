@@ -114,10 +114,7 @@ if (process.env["NODE_ENV"] === "test") {
   };
 
   const generateSeries = (n: number): number[] => {
-    const p = Array.from(
-      { length: 10 },
-      () => (Math.random() * (90 - 10 + 1) + 10) | 0,
-    );
+    const p = Array.from({ length: 10 }, () => (Math.random() * 100) | 0);
     const result = new Array<number>(n);
 
     const get = (i: number) => {
@@ -262,11 +259,28 @@ if (process.env["NODE_ENV"] === "test") {
     ([mode, key, value]) => [mode, new RegExp(key), templates[value]] as const,
   );
 
+  const tempLabels = [
+    "Deep Freezing",
+    "Freezing",
+    "Cold",
+    "Cool",
+    "Mild Moderate",
+    "Moderate",
+    "Warm",
+    "Hot",
+    "Very Hot",
+    "Scorching",
+  ];
+
   const XHR = 0b1;
   const DELAY = 0b10;
   const SSE = 0b100;
   const STREAM = 0b1000;
   const ser = generateSeries(10_000_000);
+  const tab = Array.from({ length: 350_000 }, (_, i) => ({
+    temperature: (i = Math.random() * 100).toFixed(2),
+    label: tempLabels[Math.max(0, ((i - 1) / 10) | 0)],
+  }));
 
   class XMLHttpRequest {
     responseType: XMLHttpRequestResponseType = "";
@@ -279,6 +293,7 @@ if (process.env["NODE_ENV"] === "test") {
     headers = new Map<string, string>();
     status = 200;
     series = ser;
+    table = tab;
     sampleSeries = sampleSeries;
     generateChart = generateChart;
 

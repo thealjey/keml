@@ -1,0 +1,26 @@
+<p class="mt0">
+  The point is not the grid, but the fact that it is a completely normal
+  <code>div</code> element, with no grid libraries or any kind of special
+  rendering needed.
+</p>
+
+<p>
+  This approach does come with certain limitations, however, since browsers do
+  have a hard limit on the total scrollable layout height beyond which layout
+  calculations and scroll positioning start to break down
+  (e.g. <code>17895697px</code> in Firefox). That means this example supports
+  only around 350,000 rows as a practical maximum at typical row heights.
+</p>
+
+<p>
+  Which just happens to be exactly the number of rows we are displaying here 😜
+</p>
+
+<div
+  class="h5 overflow-y-auto"
+  on:discover="loadGrid_0"
+  on="loadGrid_0"
+  src="/virtualization?path=0"
+  result="virtualizationResult_0"
+  render="virtualizationResult_0"
+></div>

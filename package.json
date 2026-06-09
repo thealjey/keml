@@ -1,15 +1,18 @@
 {
+  "allowScripts": {
+    "esbuild": true
+  },
   "author": "Eugene Kuzmenko",
   "bugs": {
     "url": "https://github.com/thealjey/keml/issues"
   },
   "description": "Enhance HTML with custom attributes for clean, server-driven interactivity.",
   "devDependencies": {
-    "@types/node": "^25.9.1",
+    "@types/node": "^25.9.2",
     "@vitest/coverage-v8": "^4.1.8",
     "dependency-cruiser": "^17.4.3",
     "esbuild": "^0.28.0",
-    "happy-dom": "^20.10.1",
+    "happy-dom": "^20.10.2",
     "vitest": "^4.1.8"
   },
   "files": [
@@ -66,5 +69,5 @@
     "test": "NODE_ENV=test vitest run -c bin/test.mts",
     "test:watch": "NODE_ENV=test vitest watch -c bin/test.mts"
   },
-  "version": "3.7.0"
+  "version": "3.8.0"
 }

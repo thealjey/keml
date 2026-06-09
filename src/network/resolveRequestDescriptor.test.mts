@@ -1,90 +1,108 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("./bridge.e.mts", () => ({
+  bridge: { location: { href: "foo" } },
+}));
+
+import { bridge } from "./bridge.e.mts";
 import { resolveRequestDescriptor } from "./resolveRequestDescriptor.mts";
 
 describe("resolveRequestDescriptor", () => {
-  it("resolves GET request from method attribute", () => {
-    const el = {
-      baseURI: "https://example.com",
-      hasAttribute: (name: string) => name === "href",
-      getAttribute: () => "/api/test",
-      getAttributeNode: () => null,
-    } as any;
+  const originalEnv = process.env["NODE_ENV"];
+  const consoleErrorSpy = vi
+    .spyOn(console, "error")
+    .mockImplementation(() => {});
+
+  beforeEach(() => {
+    consoleErrorSpy.mockClear();
+  });
+
+  afterEach(() => {
+    process.env["NODE_ENV"] = originalEnv;
+    vi.clearAllMocks();
+  });
+
+  it("resolves URL, method from attribute map, and credentials flag", () => {
+    const el = document.createElement("div");
+
+    el.setAttribute("get", "/api/test");
+    el.setAttribute("credentials", "");
 
     const [url, method, credentials] = resolveRequestDescriptor(el);
 
-    expect(url.toString()).toBe("https://example.com/api/test/");
+    expect(url.pathname).toContain("/api/test");
     expect(method).toBe("GET");
-    expect(credentials).toBe(false);
-  });
-
-  it("uses method attribute when present", () => {
-    const el = {
-      baseURI: "https://example.com",
-      hasAttribute: (name: string) => name === "href",
-      getAttribute: () => "/api/test",
-      getAttributeNode: () => ({ value: "post" }),
-    } as any;
-
-    const [, method] = resolveRequestDescriptor(el);
-
-    expect(method).toBe("POST");
-  });
-
-  it("uses mapped method attribute name (post)", () => {
-    const el = {
-      baseURI: "https://example.com",
-      hasAttribute: (name: string) => name === "post",
-      getAttribute: () => "/api/test",
-      getAttributeNode: () => null,
-    } as any;
-
-    const [, method] = resolveRequestDescriptor(el);
-
-    expect(method).toBe("POST");
-  });
-
-  it("sets credentials flag when attribute exists", () => {
-    const el = {
-      baseURI: "https://example.com",
-      hasAttribute: (name: string) => name === "credentials",
-      getAttribute: () => "/api/test",
-      getAttributeNode: () => null,
-    } as any;
-
-    const [, , credentials] = resolveRequestDescriptor(el);
-
     expect(credentials).toBe(true);
   });
 
-  it("normalizes trailing slashes and ensures single slash", () => {
-    const el = {
-      baseURI: "https://example.com",
-      hasAttribute: (name: string) => name === "href",
-      getAttribute: () => "/api/test///",
-      getAttributeNode: () => null,
-    } as any;
+  it("uses explicit method attribute over inferred method", () => {
+    const el = document.createElement("div");
+
+    el.setAttribute("post", "/api/test");
+    el.setAttribute("method", "put");
+
+    const [, method] = resolveRequestDescriptor(el);
+
+    expect(method).toBe("PUT");
+  });
+
+  it("normalizes trailing slash in pathname", () => {
+    const el = document.createElement("div");
+
+    el.setAttribute("get", "/api/test/");
 
     const [url] = resolveRequestDescriptor(el);
 
     expect(url.pathname).toBe("/api/test/");
   });
 
-  it("docs path", () => {
-    const originalEnv = process.env["NODE_ENV"];
+  it("adds trailing slash for extension-less path", () => {
+    const el = document.createElement("div");
 
-    const el = {
-      baseURI: "https://foo.com",
-      hasAttribute: (name: string) => name === "href",
-      getAttribute: () => "/api/test",
-      getAttributeNode: () => null,
-    } as any;
-
-    process.env["NODE_ENV"] = "docs";
+    el.setAttribute("get", "/api/test/path");
 
     const [url] = resolveRequestDescriptor(el);
 
-    expect(url.toString()).toBe("http://localhost:3000/api/test/");
+    expect(url.pathname.endsWith("/")).toBe(true);
+  });
 
-    process.env["NODE_ENV"] = originalEnv;
+  it("removes slash for file path", () => {
+    const el = document.createElement("div");
+
+    el.setAttribute("get", "/api/test/file.txt/");
+
+    const [url] = resolveRequestDescriptor(el);
+
+    expect(url.pathname.endsWith("/")).toBe(false);
+  });
+
+  it("falls back to empty endpoint when no method attribute exists", () => {
+    const el = document.createElement("div");
+
+    const [url, method] = resolveRequestDescriptor(el);
+
+    expect(method).toBe("GET");
+    expect(url.href).toBeDefined();
+  });
+
+  it("handles missing baseURI safely", () => {
+    const el = document.createElement("div");
+
+    Object.defineProperty(el, "baseURI", {
+      value: undefined,
+    });
+
+    el.setAttribute("get", "/api/test");
+    el.setAttribute("log", "");
+
+    expect(() => resolveRequestDescriptor(el)).not.toThrow();
+    expect(console.error).toHaveBeenCalled();
+  });
+
+  it("sets ownerElement on location", () => {
+    process.env["NODE_ENV"] = "docs";
+    const el = document.createElement("div");
+    resolveRequestDescriptor(el);
+    expect(bridge.location.ownerElement).toBe(el);
   });
 });

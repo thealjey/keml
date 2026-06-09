@@ -504,3 +504,19 @@ svg.chart {
     }
   }
 }
+
+.grid-row {
+  display: flex;
+  height: 50px;
+  border-bottom: 0.05rem solid var(--md-typeset-table-color);
+  &:hover {
+    background-color: var(--md-typeset-table-color--light);
+  }
+  > div {
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 1.25em;
+  }
+}

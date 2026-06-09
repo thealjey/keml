@@ -11,6 +11,7 @@ import { appendFormDataToUrl } from "./appendFormDataToUrl.mts";
 import { bridge } from "./bridge.e.mts";
 import { resolveRequestDescriptor } from "./resolveRequestDescriptor.mts";
 import { StreamingXMLHttpRequest } from "./StreamingXMLHttpRequest.mts";
+import { unschedule } from "./unschedule.mts";
 
 const internalForm = document.createElement("form");
 const emptyObj: {} = Object.create(null);
@@ -28,7 +29,7 @@ const emptyObj: {} = Object.create(null);
  * @param el - The DOM element that initiated the request.
  */
 export const executeRequest = (el: Element) => {
-  el.timeoutId = clearTimeout(el.timeoutId) as undefined;
+  unschedule(el);
 
   if (el.checkValidity?.() ?? true) {
     el.hasAttribute("once") && pushOneTimeElement(el);
@@ -54,6 +55,10 @@ export const executeRequest = (el: Element) => {
     } else if (redirect === "assign" || redirect === "replace") {
       appendFormDataToUrl(url, formData);
       bridge.location[redirect](url);
+    } else if (url.protocol === "about:" && url.pathname === "blank/") {
+      pushRenderPayload({
+        target: { ownerElement: el, status: 200, responseXML: null },
+      });
     } else {
       method === "GET" && (formData = appendFormDataToUrl(url, formData));
 

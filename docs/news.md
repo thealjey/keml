@@ -1,3 +1,19 @@
+## v3.8
+
+Added:
+
+- [clear-timeout](./event/clear-timeout.md)
+- [about:blank](./event/on.md#aboutblank)
+- [Virtualization Demo](./event/on.md#virtualization)
+
+Fixed:
+
+- URL resolution error handling
+- URL trailing slash consistency
+- Form URL serialization overwrites instead of appending
+
+---
+
 ## v3.7
 
 Added:

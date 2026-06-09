@@ -28,29 +28,37 @@ const trailing = /\/+$/;
  *  - A boolean indicating whether credentials should be included
  */
 export const resolveRequestDescriptor = (el: Element) => {
-  const name = methodAttrs.find(el.hasAttribute, el);
-  const attr = el.getAttributeNode("method");
-  let endpoint = name ? el.getAttribute(name)! : "";
-  let method = methods[name as keyof typeof methods] ?? "GET";
-
-  attr && (method = attr.value.toUpperCase());
-
-  if (endpoint) {
-    endpoint = endpoint.replace(trailing, "");
-    (!endpoint || endpoint.lastIndexOf(".") <= endpoint.lastIndexOf("/")) &&
-      (endpoint += "/");
-  }
-
   if (process.env["NODE_ENV"] === "docs") {
     bridge.location.ownerElement = el;
   }
 
-  return [
-    new URL(
-      endpoint,
-      process.env["NODE_ENV"] === "docs" ? bridge.location.href : el.baseURI,
-    ),
-    method,
-    !!el.hasAttribute("credentials"),
-  ] as const;
+  const name = methodAttrs.find(el.hasAttribute, el);
+  const endpoint = name ? el.getAttribute(name)! : "";
+  const base =
+    process.env["NODE_ENV"] === "docs" ? bridge.location.href : el.baseURI;
+
+  let url: URL;
+  try {
+    url = new URL(endpoint, base);
+  } catch (error) {
+    el.hasAttribute("log") && console.error(error);
+    try {
+      url = new URL("", base);
+    } catch (error) {
+      el.hasAttribute("log") && console.error(error);
+      url = new URL("about:blank");
+    }
+  }
+
+  const pathname = url.pathname.replace(trailing, "");
+  url.pathname =
+    !pathname || pathname.lastIndexOf(".") <= pathname.lastIndexOf("/") ?
+      pathname + "/"
+    : pathname;
+
+  let method = methods[name as keyof typeof methods] ?? "GET";
+  const attr = el.getAttributeNode("method");
+  attr && (method = attr.value.toUpperCase());
+
+  return [url, method, el.hasAttribute("credentials")] as const;
 };

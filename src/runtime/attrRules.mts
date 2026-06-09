@@ -1,5 +1,6 @@
 import { concealObserver } from "../event/concealObserver.mts";
 import {
+  clearTimeoutElements,
   navigateElements,
   onElements,
   resetElements,
@@ -153,6 +154,11 @@ export const attrRules: AttrRule[] = [
     added: setFocusElement,
   },
   {
+    match: "clear-timeout",
+    added: el => clearTimeoutElements.add(el),
+    removed: el => clearTimeoutElements.delete(el),
+  },
+  {
     match: "if",
     added: el => ifElements.add(el),
     removed: el => ifElements.delete(el),
@@ -257,7 +263,7 @@ export const attrRules: AttrRule[] = [
     match: "value",
     gate: el => !formField.includes(el.tagName) && el.hasAttribute("name"),
     serialize: (el, _name, context) =>
-      context?.formData?.set(
+      context?.formData?.append(
         el.getAttribute("name")!,
         el.getAttribute("value")!,
       ),

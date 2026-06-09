@@ -1,0 +1,14 @@
+<input
+  class="input mt3"
+  type="text"
+  readonly
+  name="count"
+  value="{ +server.getParam('count') + 1 }"
+  on="increment"
+  debounce="1000"
+  src="/increment"
+  result="incResult"
+  render="incResult"
+  position="replaceWith"
+  clear-timeout="cancelIncrement"
+>

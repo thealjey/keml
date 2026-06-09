@@ -5,6 +5,7 @@ vi.mock("../event/data.e.mts", () => ({
   onElements: new Set(),
   resetElements: new Set(),
   scrollElements: new Set(),
+  clearTimeoutElements: new Set(),
 }));
 
 const onEvent = () => {};
@@ -57,6 +58,7 @@ vi.mock("../render/data.mts", () => ({
 
 import { concealObserver } from "../event/concealObserver.mts";
 import {
+  clearTimeoutElements,
   navigateElements,
   onElements,
   resetElements,
@@ -95,16 +97,27 @@ describe("attrRules", () => {
   });
 
   it("if rule adds and removes elements", () => {
-    const add = attrRules.find(r => r.match === "if" && r.added)!;
-    const remove = attrRules.find(r => r.match === "if" && r.removed)!;
+    const rule = attrRules.find(r => r.match === "if" && r.added)!;
 
     const el = document.createElement("div");
 
-    add.added?.(el, "if");
+    rule.added?.(el, "if");
     expect(ifElements.has(el)).toBe(true);
 
-    remove.removed?.(el, "if");
+    rule.removed?.(el, "if");
     expect(ifElements.has(el)).toBe(false);
+  });
+
+  it("clear-timeout rule adds and removes elements", () => {
+    const rule = attrRules.find(r => r.match === "clear-timeout" && r.added)!;
+
+    const el = document.createElement("div");
+
+    rule.added?.(el, "clear-timeout");
+    expect(clearTimeoutElements.has(el)).toBe(true);
+
+    rule.removed?.(el, "clear-timeout");
+    expect(clearTimeoutElements.has(el)).toBe(false);
   });
 
   it("if rule triggers markStateDirty", () => {
@@ -119,17 +132,14 @@ describe("attrRules", () => {
   });
 
   it("if:intersects attaches and detaches observer", () => {
-    const add = attrRules.find(r => r.match === "if:intersects" && r.added)!;
-    const remove = attrRules.find(
-      r => r.match === "if:intersects" && r.removed,
-    )!;
+    const rule = attrRules.find(r => r.match === "if:intersects" && r.added)!;
 
     const el = document.createElement("div");
 
-    add.added?.(el, "if:intersects");
+    rule.added?.(el, "if:intersects");
     expect(intersectsObserver.observe).toHaveBeenCalledWith(el);
 
-    remove.removed?.(el, "if:intersects");
+    rule.removed?.(el, "if:intersects");
     expect(intersectsObserver.unobserve).toHaveBeenCalledWith(el);
   });
 
@@ -467,14 +477,14 @@ describe("attrRules", () => {
     el.setAttribute("value", "bar");
 
     const formData = {
-      set: vi.fn(),
+      append: vi.fn(),
     };
 
     const context = { formData } as any;
 
     rule.serialize?.(el, "value", context);
 
-    expect(formData.set).toHaveBeenCalledWith("foo", "bar");
+    expect(formData.append).toHaveBeenCalledWith("foo", "bar");
   });
 
   it("value rule serialize is safe when context or data is missing", () => {

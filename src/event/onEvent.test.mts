@@ -31,6 +31,7 @@ vi.mock("./data.e.mts", () => {
     onElements: new Set([el]),
     resetElements: new Set([el]),
     scrollElements: new Set([el]),
+    clearTimeoutElements: new Set([el]),
   };
 });
 

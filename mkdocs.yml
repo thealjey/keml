@@ -39,6 +39,7 @@ nav:
       - "on": event/on.md
       - reset: event/reset.md
       - scroll: event/scroll.md
+      - clear-timeout: event/clear-timeout.md
   - Result:
       - "result / error": result/result.md
       - render: result/render.md

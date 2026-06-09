@@ -47,7 +47,7 @@ vi.mock("../render/data.mts", async importOriginal => {
 ----------------------- */
 
 import { dispatchNavigate } from "../event/dispatchNavigate.mts";
-import { pushOneTimeElement } from "../render/data.mts";
+import { pushOneTimeElement, pushRenderPayload } from "../render/data.mts";
 import { traverseAttributes } from "../runtime/traverseAttributes.mts";
 import { bridge } from "./bridge.e.mts";
 import { executeRequest } from "./executeRequest.mts";
@@ -221,6 +221,27 @@ describe("executeRequest", () => {
     expect(bridge.location.ownerElement).toBe(el);
 
     process.env["NODE_ENV"] = originalEnv;
+  });
+
+  it("request to about:blank", () => {
+    const el = document.createElement("form");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
+    mockedResolveRequestDescriptor.mockReturnValue([
+      { protocol: "about:", pathname: "blank/" },
+      "GET",
+      false,
+    ]);
+    executeRequest(el);
+
+    expect(pushRenderPayload).toHaveBeenCalledWith(
+      expect.objectContaining({
+        target: { ownerElement: el, status: 200, responseXML: null },
+      }),
+    );
   });
 
   it("GET request appends form data to URL before XHR send", () => {

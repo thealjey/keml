@@ -1,18 +1,25 @@
 import { bridge } from "../network/bridge.e.mts";
 import { scheduleRequest } from "../network/scheduleRequest.mts";
+import { unschedule } from "../network/unschedule.mts";
 import {
   pushResettableElement,
   pushScrollableElement,
 } from "../render/data.mts";
 import { hasToken } from "../util/hasToken.mts";
 import { isElement } from "../util/isElement.mts";
-import { onElements, resetElements, scrollElements } from "./data.e.mts";
+import {
+  clearTimeoutElements,
+  onElements,
+  resetElements,
+  scrollElements,
+} from "./data.e.mts";
 import { rejectsEventConstraint } from "./rejectsEventConstraint.mts";
 
 const tokenBehavior = [
   [onElements, "on", scheduleRequest],
   [resetElements, "reset", pushResettableElement],
   [scrollElements, "scroll", pushScrollableElement],
+  [clearTimeoutElements, "clear-timeout", unschedule],
 ] as const;
 
 /**

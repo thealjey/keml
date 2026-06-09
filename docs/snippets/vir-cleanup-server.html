@@ -1,0 +1,17 @@
+{{
+  const path = server.getParam("path");
+  const height = server.getParam("height");
+}}
+
+<div
+  { 'style="height: ' + height + 'px;"' }
+  on:reveal="loadGrid_{ path } cancelClearGrid_{ path }"
+  on:conceal="cancelLoadGrid_{ path }"
+  on="loadGrid_{ path }"
+  debounce="200"
+  clear-timeout="cancelLoadGrid_{ path }"
+  src="/virtualization?path={ path }&height={ height }"
+  result="virtualizationResult_{ path }"
+  render="virtualizationResult_{ path }"
+  position="replaceWith"
+></div>

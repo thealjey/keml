@@ -25,6 +25,9 @@
 0001 => position
 0001 => key
 0001 => polling
+0001 => increment
+0001 => vir-cleanup
+0001 => virtualization
 0011 => if-loading
 0001 => if-error
 0100 => sse

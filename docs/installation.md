@@ -49,6 +49,12 @@ Each demo is split into three tabs:
 The HTML and Server tabs contain the actual programs used to produce the Result
 tab.
 
+The server code shown in demos is not part of KEML. It is an in-memory example
+execution environment used only to run and illustrate the client behavior.
+
+KEML is server agnostic. Any system capable of sending text over HTTP is
+compatible with KEML.
+
 You can also explore the
 [examples](https://github.com/thealjey/keml/tree/main/examples)
 folder on GitHub.

@@ -1,0 +1,33 @@
+<p class="mt0">
+  If you click the "Cancel" button within one second after clicking "Increment",
+  no request will be sent.
+</p>
+
+<button
+  class="btn"
+  on:click="increment"
+>
+  Increment
+</button>
+
+<button
+  class="btn"
+  on:click="cancelIncrement"
+>
+  Cancel
+</button>
+
+<input
+  class="input mt3"
+  type="text"
+  readonly
+  name="count"
+  value="0"
+  on="increment"
+  debounce="1000"
+  src="/increment"
+  result="incResult"
+  render="incResult"
+  position="replaceWith"
+  clear-timeout="cancelIncrement"
+>

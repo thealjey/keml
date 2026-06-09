@@ -1,4 +1,5 @@
 import { executeRequest } from "./executeRequest.mts";
+import { unschedule } from "./unschedule.mts";
 
 /**
  * Schedules or immediately executes a request triggered by a DOM element.
@@ -15,7 +16,7 @@ export const scheduleRequest = (el: Element) => {
   if ((attr = el.getAttributeNode("throttle"))) {
     el.timeoutId ??= setTimeout(executeRequest, +attr.value, el);
   } else if ((attr = el.getAttributeNode("debounce"))) {
-    clearTimeout(el.timeoutId);
+    unschedule(el);
     el.timeoutId = setTimeout(executeRequest, +attr.value, el);
   } else {
     executeRequest(el);
