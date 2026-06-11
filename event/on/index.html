@@ -2822,7 +2822,8 @@ assembled from the basic building blocks shown above.</p>
 be assembled from the basic building blocks shown above.</p>
 <div class="tabs">
   <label><input type="radio" name="tabs-17" checked>HTML</label>
-  <label><input type="radio" name="tabs-17">Server</label>
+  <label><input type="radio" name="tabs-17">Server 1</label>
+  <label><input type="radio" name="tabs-17">Server 2</label>
   <label><input type="radio" name="tabs-17">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
@@ -2850,22 +2851,32 @@ be assembled from the basic building blocks shown above.</p>
 <span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
-<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>
   The point is not the grid, but the fact that it is a completely normal
   <span class="p">&lt;</span><span class="nt">code</span><span class="p">&gt;</span>div<span class="p">&lt;/</span><span class="nt">code</span><span class="p">&gt;</span> element, with no grid libraries or any kind of special
   rendering needed.
 <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
-  This approach does come with certain limitations, however, since browsers do
-  have a hard limit on the total scrollable layout height beyond which layout
-  calculations and scroll positioning start to break down
-  (e.g. <span class="p">&lt;</span><span class="nt">code</span><span class="p">&gt;</span>17895697px<span class="p">&lt;/</span><span class="nt">code</span><span class="p">&gt;</span> in Firefox). That means this example supports
-  only around 350,000 rows as a practical maximum at typical row heights.
+  This approach does come with certain limitations, however. Browsers have a
+  hard limit on total scrollable layout height, beyond which layout calculations
+  and scroll positioning may start to break down
+  (e.g. <span class="p">&lt;</span><span class="nt">code</span><span class="p">&gt;</span>17895697px<span class="p">&lt;/</span><span class="nt">code</span><span class="p">&gt;</span> in Firefox).
 <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
-  Which just happens to be exactly the number of rows we are displaying here 😜
+  That means this example supports only around 350,000 rows as a practical
+  maximum at typical row heights.
+<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+  This example shows 300,000 rows (only 😅), so we are comfortably within the
+  safe range.
 <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">div</span>
@@ -2895,7 +2906,8 @@ be assembled from the basic building blocks shown above.</p>
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">tempLabels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">tempLabels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">  </span><span class="s2">&quot;Deep Freezing&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="s2">&quot;Freezing&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="s2">&quot;Cold&quot;</span><span class="p">,</span>
@@ -2907,8 +2919,9 @@ be assembled from the basic building blocks shown above.</p>
 <span class="w">  </span><span class="s2">&quot;Very Hot&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="s2">&quot;Scorching&quot;</span><span class="p">,</span>
 <span class="p">];</span>
-<span class="c1">// Create a dataset with 350,000 rows</span>
-<span class="nx">server</span><span class="p">.</span><span class="nx">table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Array</span><span class="p">.</span><span class="kr">from</span><span class="p">({</span><span class="w"> </span><span class="nx">length</span><span class="o">:</span><span class="w"> </span><span class="mf">350</span><span class="nx">_000</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">(</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<span class="c1">// Create a dataset with 300,000 rows</span>
+<span class="nx">server</span><span class="p">.</span><span class="nx">table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Array</span><span class="p">.</span><span class="kr">from</span><span class="p">({</span><span class="w"> </span><span class="nx">length</span><span class="o">:</span><span class="w"> </span><span class="mf">300</span><span class="nx">_000</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">(</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<span class="w">  </span><span class="nx">num</span><span class="o">:</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">temperature</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">100</span><span class="p">).</span><span class="nx">toFixed</span><span class="p">(</span><span class="mf">2</span><span class="p">),</span>
 <span class="w">  </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="nx">tempLabels</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="p">((</span><span class="nx">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">10</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mf">0</span><span class="p">)],</span>
 <span class="p">}));</span>
@@ -2969,106 +2982,54 @@ be assembled from the basic building blocks shown above.</p>
 <span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code>{{
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code>{{
 
-  const size = server.table.length;
   const path = server.getParam(&quot;path&quot;);
-  const height = server.getParam(&quot;height&quot;);
-  const chunk = 10 ** (String(size).length - 1);
-  const limits = [];
   const steps = path.split(&quot;-&quot;).map(value =&gt; value | 0);
-  let c = size === chunk ? size : chunk * 10;
 
-  size &gt; 100_000 <span class="err">&amp;&amp;</span> limits.push([(c = 100_000), Math.ceil(size / c)]);
-  while (c &gt; 1) limits.push([(c /= 10), 10]);
-
-  const [offset, limit] = steps.reduce(
-    (acc, value, i) =&gt; (
-      (acc[1] = limits[i][0]),
-      (acc[0] += value * acc[1]),
-      acc
-    ),
-    [0, 0],
-  );
+  // server.tree represents the same data as server.table,
+  // but partitioned in a way that makes it more convenient to query
+  // using a path
+  const node = steps.reduce((acc, i) =&gt; acc.children[i], server.tree);
 
 }}
 
 {{ if (steps.length &gt; 1) { }}
   <span class="p">&lt;</span><span class="nt">div</span>
-    <span class="err">{</span> <span class="err">&#39;</span><span class="na">style</span><span class="o">=</span><span class="s">&quot;height: &#39; + height + &#39;px;&quot;</span><span class="err">&#39;</span> <span class="err">}</span>
+    <span class="err">{</span> <span class="err">&#39;</span><span class="na">style</span><span class="o">=</span><span class="s">&quot;height: &#39; + node.size * 50 + &#39;px;&quot;</span><span class="err">&#39;</span> <span class="err">}</span>
     <span class="na">on:reveal</span><span class="o">=</span><span class="s">&quot;cancelClearGrid_{ path }&quot;</span>
     <span class="na">on:conceal</span><span class="o">=</span><span class="s">&quot;clearGrid_{ path } cancelLoadGrid_{ path }&quot;</span>
     <span class="na">on</span><span class="o">=</span><span class="s">&quot;clearGrid_{ path }&quot;</span>
     <span class="na">debounce</span><span class="o">=</span><span class="s">&quot;1000&quot;</span>
     <span class="na">clear-timeout</span><span class="o">=</span><span class="s">&quot;cancelClearGrid_{ path }&quot;</span>
-    <span class="na">src</span><span class="o">=</span><span class="s">&quot;/vir-cleanup?path={ path }&amp;height={ height }&quot;</span>
+    <span class="na">src</span><span class="o">=</span><span class="s">&quot;/vir-cleanup?path={ path }&quot;</span>
     <span class="na">result</span><span class="o">=</span><span class="s">&quot;virtualizationResult_{ path }&quot;</span>
     <span class="na">render</span><span class="o">=</span><span class="s">&quot;virtualizationResult_{ path }&quot;</span>
     <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
   <span class="p">&gt;</span>
 {{ } }}
 
-{{ if (limit &gt; 1) { }}
-  {{
-    for (
-      let i = 0, l = limits[steps.length - 1], o = offset, s, p, h, e = 0;
-      i <span class="p">&lt;</span> <span class="nt">l</span><span class="err">[</span><span class="na">1</span><span class="err">]</span> <span class="err">&amp;&amp;</span> <span class="na">e</span> <span class="err">&lt;</span> <span class="na">size</span><span class="err">;</span>
-      <span class="err">++</span><span class="na">i</span>
-    <span class="err">)</span> <span class="err">{</span>
-  <span class="err">}}</span>
-    <span class="err">{{</span> <span class="na">p </span><span class="o">=</span> <span class="s">path</span> <span class="err">+</span> <span class="err">&quot;</span><span class="na">-</span><span class="err">&quot;</span> <span class="err">+</span> <span class="na">i</span><span class="err">;</span> <span class="err">}}</span>
-    <span class="err">{{</span> <span class="na">o </span><span class="o">=</span> <span class="s">offset</span> <span class="err">+</span> <span class="na">i</span> <span class="err">*</span> <span class="na">l</span><span class="err">[</span><span class="na">0</span><span class="err">];</span> <span class="err">}}</span>
-    <span class="err">{{</span> <span class="na">s </span><span class="o">=</span> <span class="s">size</span> <span class="na">-</span> <span class="na">o</span> <span class="na">-</span> <span class="na">l</span><span class="err">[</span><span class="na">0</span><span class="err">];</span> <span class="err">}}</span>
-    <span class="err">{{</span> <span class="na">h </span><span class="o">=</span> <span class="s">(s</span> <span class="err">&lt;</span> <span class="na">0</span> <span class="err">?</span> <span class="na">l</span><span class="err">[</span><span class="na">0</span><span class="err">]</span> <span class="err">+</span> <span class="na">s</span> <span class="na">:</span> <span class="na">l</span><span class="err">[</span><span class="na">0</span><span class="err">])</span> <span class="err">*</span> <span class="na">50</span><span class="err">;</span> <span class="err">}}</span>
-    <span class="err">{{</span> <span class="na">e </span><span class="o">=</span> <span class="s">offset</span> <span class="err">*</span> <span class="na">l</span><span class="err">[</span><span class="na">1</span><span class="err">]</span> <span class="err">+</span> <span class="na">limit</span> <span class="err">*</span> <span class="err">(</span><span class="na">i</span> <span class="err">+</span> <span class="na">1</span><span class="err">);</span> <span class="err">}}</span>
-    <span class="err">&lt;</span><span class="na">div</span>
-      <span class="err">{</span> <span class="err">&#39;</span><span class="na">style</span><span class="o">=</span><span class="s">&quot;height: &#39; + h + &#39;px;&quot;</span><span class="err">&#39;</span> <span class="err">}</span>
+{{ if (node.children) { }}
+  {{ let i = 0; }}
+  {{ for (const { size } of node.children) { }}
+    {{ const p = path + &quot;-&quot; + i++; }}
+    <span class="p">&lt;</span><span class="nt">div</span>
+      <span class="err">{</span> <span class="err">&#39;</span><span class="na">style</span><span class="o">=</span><span class="s">&quot;height: &#39; + size * 50 + &#39;px;&quot;</span><span class="err">&#39;</span> <span class="err">}</span>
       <span class="na">on:reveal</span><span class="o">=</span><span class="s">&quot;loadGrid_{ p } cancelClearGrid_{ p }&quot;</span>
       <span class="na">on:conceal</span><span class="o">=</span><span class="s">&quot;cancelLoadGrid_{ p }&quot;</span>
       <span class="na">on</span><span class="o">=</span><span class="s">&quot;loadGrid_{ p }&quot;</span>
       <span class="na">debounce</span><span class="o">=</span><span class="s">&quot;200&quot;</span>
       <span class="na">clear-timeout</span><span class="o">=</span><span class="s">&quot;cancelLoadGrid_{ p }&quot;</span>
-      <span class="na">src</span><span class="o">=</span><span class="s">&quot;/virtualization?path={ p }&amp;height={ h }&quot;</span>
+      <span class="na">src</span><span class="o">=</span><span class="s">&quot;/virtualization?path={ p }&quot;</span>
       <span class="na">result</span><span class="o">=</span><span class="s">&quot;virtualizationResult_{ p }&quot;</span>
       <span class="na">render</span><span class="o">=</span><span class="s">&quot;virtualizationResult_{ p }&quot;</span>
       <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
     <span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
   {{ } }}
 {{ } else { }}
-  {{
-    for (
-      let i = offset, l = Math.min(offset + limit * 10, size);
-      i <span class="p">&lt;</span> <span class="nt">l</span><span class="err">;</span>
-      <span class="err">++</span><span class="na">i</span>
-    <span class="err">)</span> <span class="err">{</span>
-  <span class="err">}}</span>
+  {{ for (let i = node.start, l = node.end; i <span class="p">&lt;</span> <span class="nt">l</span><span class="err">;</span> <span class="err">++</span><span class="na">i</span><span class="err">)</span> <span class="err">{</span> <span class="err">}}</span>
     <span class="err">&lt;</span><span class="na">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;grid-row&quot;</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>{ server.table[i].num }<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
       <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>{ server.table[i].label }<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
       <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>{ server.table[i].temperature }<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
     <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
@@ -3080,6 +3041,49 @@ be assembled from the basic building blocks shown above.</p>
 {{ } }}
 </code></pre></div></td></tr></table></div>
   </section>
+  <section>
+    <p class="mh3">This route cleans up the invisible slices.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><code>{{
+
+  const path = server.getParam(&quot;path&quot;);
+  const steps = path.split(&quot;-&quot;).map(value =&gt; value | 0);
+  const node = steps.reduce((acc, i) =&gt; acc.children[i], server.tree);
+
+}}
+
+<span class="p">&lt;</span><span class="nt">div</span>
+  <span class="err">{</span> <span class="err">&#39;</span><span class="na">style</span><span class="o">=</span><span class="s">&quot;height: &#39; + node.size * 50 + &#39;px;&quot;</span><span class="err">&#39;</span> <span class="err">}</span>
+  <span class="na">on:reveal</span><span class="o">=</span><span class="s">&quot;loadGrid_{ path } cancelClearGrid_{ path }&quot;</span>
+  <span class="na">on:conceal</span><span class="o">=</span><span class="s">&quot;cancelLoadGrid_{ path }&quot;</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">&quot;loadGrid_{ path }&quot;</span>
+  <span class="na">debounce</span><span class="o">=</span><span class="s">&quot;200&quot;</span>
+  <span class="na">clear-timeout</span><span class="o">=</span><span class="s">&quot;cancelLoadGrid_{ path }&quot;</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">&quot;/virtualization?path={ path }&quot;</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">&quot;virtualizationResult_{ path }&quot;</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">&quot;virtualizationResult_{ path }&quot;</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
+<span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
+  </section>
   <section class="ma3">
 <p class="mt0">
   The point is not the grid, but the fact that it is a completely normal
@@ -3088,15 +3092,20 @@ be assembled from the basic building blocks shown above.</p>
 </p>
 
 <p>
-  This approach does come with certain limitations, however, since browsers do
-  have a hard limit on the total scrollable layout height beyond which layout
-  calculations and scroll positioning start to break down
-  (e.g. <code>17895697px</code> in Firefox). That means this example supports
-  only around 350,000 rows as a practical maximum at typical row heights.
+  This approach does come with certain limitations, however. Browsers have a
+  hard limit on total scrollable layout height, beyond which layout calculations
+  and scroll positioning may start to break down
+  (e.g. <code>17895697px</code> in Firefox).
 </p>
 
 <p>
-  Which just happens to be exactly the number of rows we are displaying here 😜
+  That means this example supports only around 350,000 rows as a practical
+  maximum at typical row heights.
+</p>
+
+<p>
+  This example shows 300,000 rows (only 😅), so we are comfortably within the
+  safe range.
 </p>
 
 <div
