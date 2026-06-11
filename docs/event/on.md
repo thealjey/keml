@@ -598,7 +598,8 @@ be assembled from the basic building blocks shown above.
 
 <div class="tabs">
   <label><input type="radio" name="tabs-17" checked>HTML</label>
-  <label><input type="radio" name="tabs-17">Server</label>
+  <label><input type="radio" name="tabs-17">Server 1</label>
+  <label><input type="radio" name="tabs-17">Server 2</label>
   <label><input type="radio" name="tabs-17">Result</label>
   <section>
 ```html
@@ -619,14 +620,21 @@ const tempLabels = [
   "Very Hot",
   "Scorching",
 ];
-// Create a dataset with 350,000 rows
-server.table = Array.from({ length: 350_000 }, (_, i) => ({
+// Create a dataset with 300,000 rows
+server.table = Array.from({ length: 300_000 }, (_, i) => ({
+  num: i + 1,
   temperature: (i = Math.random() * 100).toFixed(2),
   label: tempLabels[Math.max(0, ((i - 1) / 10) | 0)],
 }));
 ```
 ```html
 --8<-- "snippets/virtualization-server.html"
+```
+  </section>
+  <section>
+    <p class="mh3">This route cleans up the invisible slices.</p>
+```html
+--8<-- "snippets/vir-cleanup-server.html"
 ```
   </section>
   <section class="ma3">

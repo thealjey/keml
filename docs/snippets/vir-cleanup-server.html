@@ -1,16 +1,19 @@
 {{
+
   const path = server.getParam("path");
-  const height = server.getParam("height");
+  const steps = path.split("-").map(value => value | 0);
+  const node = steps.reduce((acc, i) => acc.children[i], server.tree);
+
 }}
 
 <div
-  { 'style="height: ' + height + 'px;"' }
+  { 'style="height: ' + node.size * 50 + 'px;"' }
   on:reveal="loadGrid_{ path } cancelClearGrid_{ path }"
   on:conceal="cancelLoadGrid_{ path }"
   on="loadGrid_{ path }"
   debounce="200"
   clear-timeout="cancelLoadGrid_{ path }"
-  src="/virtualization?path={ path }&height={ height }"
+  src="/virtualization?path={ path }"
   result="virtualizationResult_{ path }"
   render="virtualizationResult_{ path }"
   position="replaceWith"

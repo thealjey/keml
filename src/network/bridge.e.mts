@@ -277,10 +277,40 @@ if (process.env["NODE_ENV"] === "test") {
   const SSE = 0b100;
   const STREAM = 0b1000;
   const ser = generateSeries(10_000_000);
-  const tab = Array.from({ length: 350_000 }, (_, i) => ({
+  const tab = Array.from({ length: 300_000 }, (_, i) => ({
+    num: i + 1,
     temperature: (i = Math.random() * 100).toFixed(2),
     label: tempLabels[Math.max(0, ((i - 1) / 10) | 0)],
   }));
+  const size = tab.length;
+  const chunk = 10 ** (String(size).length - 1);
+  let c = size === chunk ? size : chunk * 10;
+  const limits: number[] = [];
+
+  size > 100_000 && limits.push((c = 100_000));
+  while (c > 19) limits.push((c /= 10));
+
+  type TreeNode =
+    | { size: number; start: number; end: number }
+    | { size: number; children: TreeNode[] };
+  const buildTree = (start: number, end: number, level = 0): TreeNode => {
+    const size = end - start;
+
+    if (level >= limits.length || size < 11) {
+      return { size, start, end };
+    }
+
+    const capacity = limits[level]!;
+    const children = [];
+
+    for (let i = start; i < end; i += capacity) {
+      children.push(buildTree(i, Math.min(i + capacity, end), level + 1));
+    }
+
+    return { size, children };
+  };
+
+  const virTree = { children: [buildTree(0, size)] };
 
   class XMLHttpRequest {
     responseType: XMLHttpRequestResponseType = "";
@@ -294,6 +324,7 @@ if (process.env["NODE_ENV"] === "test") {
     status = 200;
     series = ser;
     table = tab;
+    tree = virTree;
     sampleSeries = sampleSeries;
     generateChart = generateChart;
 

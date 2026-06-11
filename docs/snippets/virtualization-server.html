@@ -1,77 +1,51 @@
 {{
 
-  const size = server.table.length;
   const path = server.getParam("path");
-  const height = server.getParam("height");
-  const chunk = 10 ** (String(size).length - 1);
-  const limits = [];
   const steps = path.split("-").map(value => value | 0);
-  let c = size === chunk ? size : chunk * 10;
 
-  size > 100_000 && limits.push([(c = 100_000), Math.ceil(size / c)]);
-  while (c > 1) limits.push([(c /= 10), 10]);
-
-  const [offset, limit] = steps.reduce(
-    (acc, value, i) => (
-      (acc[1] = limits[i][0]),
-      (acc[0] += value * acc[1]),
-      acc
-    ),
-    [0, 0],
-  );
+  // server.tree represents the same data as server.table,
+  // but partitioned in a way that makes it more convenient to query
+  // using a path
+  const node = steps.reduce((acc, i) => acc.children[i], server.tree);
 
 }}
 
 {{ if (steps.length > 1) { }}
   <div
-    { 'style="height: ' + height + 'px;"' }
+    { 'style="height: ' + node.size * 50 + 'px;"' }
     on:reveal="cancelClearGrid_{ path }"
     on:conceal="clearGrid_{ path } cancelLoadGrid_{ path }"
     on="clearGrid_{ path }"
     debounce="1000"
     clear-timeout="cancelClearGrid_{ path }"
-    src="/vir-cleanup?path={ path }&height={ height }"
+    src="/vir-cleanup?path={ path }"
     result="virtualizationResult_{ path }"
     render="virtualizationResult_{ path }"
     position="replaceWith"
   >
 {{ } }}
 
-{{ if (limit > 1) { }}
-  {{
-    for (
-      let i = 0, l = limits[steps.length - 1], o = offset, s, p, h, e = 0;
-      i < l[1] && e < size;
-      ++i
-    ) {
-  }}
-    {{ p = path + "-" + i; }}
-    {{ o = offset + i * l[0]; }}
-    {{ s = size - o - l[0]; }}
-    {{ h = (s < 0 ? l[0] + s : l[0]) * 50; }}
-    {{ e = offset * l[1] + limit * (i + 1); }}
+{{ if (node.children) { }}
+  {{ let i = 0; }}
+  {{ for (const { size } of node.children) { }}
+    {{ const p = path + "-" + i++; }}
     <div
-      { 'style="height: ' + h + 'px;"' }
+      { 'style="height: ' + size * 50 + 'px;"' }
       on:reveal="loadGrid_{ p } cancelClearGrid_{ p }"
       on:conceal="cancelLoadGrid_{ p }"
       on="loadGrid_{ p }"
       debounce="200"
       clear-timeout="cancelLoadGrid_{ p }"
-      src="/virtualization?path={ p }&height={ h }"
+      src="/virtualization?path={ p }"
       result="virtualizationResult_{ p }"
       render="virtualizationResult_{ p }"
       position="replaceWith"
     ></div>
   {{ } }}
 {{ } else { }}
-  {{
-    for (
-      let i = offset, l = Math.min(offset + limit * 10, size);
-      i < l;
-      ++i
-    ) {
-  }}
+  {{ for (let i = node.start, l = node.end; i < l; ++i) { }}
     <div class="grid-row">
+      <div>{ server.table[i].num }</div>
       <div>{ server.table[i].label }</div>
       <div>{ server.table[i].temperature }</div>
     </div>
