@@ -2994,7 +2994,8 @@ be assembled from the basic building blocks shown above.</p>
 <span class="normal">79</span>
 <span class="normal">80</span>
 <span class="normal">81</span>
-<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code>{{
+<span class="normal">82</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code>{{
 
   const size = server.table.length;
   const path = server.getParam(&quot;path&quot;);
@@ -3036,8 +3037,8 @@ be assembled from the basic building blocks shown above.</p>
 {{ if (limit &gt; 1) { }}
   {{
     for (
-      let i = 0, l = limits[steps.length - 1], o = offset, s, p, h;
-      i <span class="p">&lt;</span> <span class="nt">l</span><span class="err">[</span><span class="na">1</span><span class="err">]</span> <span class="err">&amp;&amp;</span> <span class="na">o</span> <span class="err">&lt;</span> <span class="na">size</span><span class="err">;</span>
+      let i = 0, l = limits[steps.length - 1], o = offset, s, p, h, e = 0;
+      i <span class="p">&lt;</span> <span class="nt">l</span><span class="err">[</span><span class="na">1</span><span class="err">]</span> <span class="err">&amp;&amp;</span> <span class="na">e</span> <span class="err">&lt;</span> <span class="na">size</span><span class="err">;</span>
       <span class="err">++</span><span class="na">i</span>
     <span class="err">)</span> <span class="err">{</span>
   <span class="err">}}</span>
@@ -3045,6 +3046,7 @@ be assembled from the basic building blocks shown above.</p>
     <span class="err">{{</span> <span class="na">o </span><span class="o">=</span> <span class="s">offset</span> <span class="err">+</span> <span class="na">i</span> <span class="err">*</span> <span class="na">l</span><span class="err">[</span><span class="na">0</span><span class="err">];</span> <span class="err">}}</span>
     <span class="err">{{</span> <span class="na">s </span><span class="o">=</span> <span class="s">size</span> <span class="na">-</span> <span class="na">o</span> <span class="na">-</span> <span class="na">l</span><span class="err">[</span><span class="na">0</span><span class="err">];</span> <span class="err">}}</span>
     <span class="err">{{</span> <span class="na">h </span><span class="o">=</span> <span class="s">(s</span> <span class="err">&lt;</span> <span class="na">0</span> <span class="err">?</span> <span class="na">l</span><span class="err">[</span><span class="na">0</span><span class="err">]</span> <span class="err">+</span> <span class="na">s</span> <span class="na">:</span> <span class="na">l</span><span class="err">[</span><span class="na">0</span><span class="err">])</span> <span class="err">*</span> <span class="na">50</span><span class="err">;</span> <span class="err">}}</span>
+    <span class="err">{{</span> <span class="na">e </span><span class="o">=</span> <span class="s">offset</span> <span class="err">*</span> <span class="na">l</span><span class="err">[</span><span class="na">1</span><span class="err">]</span> <span class="err">+</span> <span class="na">limit</span> <span class="err">*</span> <span class="err">(</span><span class="na">i</span> <span class="err">+</span> <span class="na">1</span><span class="err">);</span> <span class="err">}}</span>
     <span class="err">&lt;</span><span class="na">div</span>
       <span class="err">{</span> <span class="err">&#39;</span><span class="na">style</span><span class="o">=</span><span class="s">&quot;height: &#39; + h + &#39;px;&quot;</span><span class="err">&#39;</span> <span class="err">}</span>
       <span class="na">on:reveal</span><span class="o">=</span><span class="s">&quot;loadGrid_{ p } cancelClearGrid_{ p }&quot;</span>

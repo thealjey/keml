@@ -448,8 +448,8 @@
 {{ if (limit > 1) { }}
   {{
     for (
-      let i = 0, l = limits[steps.length - 1], o = offset, s, p, h;
-      i < l[1] && o < size;
+      let i = 0, l = limits[steps.length - 1], o = offset, s, p, h, e = 0;
+      i < l[1] && e < size;
       ++i
     ) {
   }}
@@ -457,6 +457,7 @@
     {{ o = offset + i * l[0]; }}
     {{ s = size - o - l[0]; }}
     {{ h = (s < 0 ? l[0] + s : l[0]) * 50; }}
+    {{ e = offset * l[1] + limit * (i + 1); }}
     <div
       { 'style="height: ' + h + 'px;"' }
       on:reveal="loadGrid_{ p } cancelClearGrid_{ p }"
