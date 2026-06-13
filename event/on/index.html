@@ -2973,30 +2973,12 @@ be assembled from the basic building blocks shown above.</p>
 <span class="normal">45</span>
 <span class="normal">46</span>
 <span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code>{{
+<span class="normal">48</span></pre></div></td><td class="code"><div><pre><span></span><code>{{ const path = server.getParam(&quot;path&quot;); }}
+{{ const { children, start, end, level, size } = server.getNode(path); }}
 
-  const path = server.getParam(&quot;path&quot;);
-  const steps = path.split(&quot;-&quot;).map(value =&gt; value | 0);
-
-  // server.tree represents the same data as server.table,
-  // but partitioned in a way that makes it more convenient to query
-  // using a path
-  const node = steps.reduce((acc, i) =&gt; acc.children[i], server.tree);
-
-}}
-
-{{ if (steps.length &gt; 1) { }}
+{{ if (level) { }}
   <span class="p">&lt;</span><span class="nt">div</span>
-    <span class="err">{</span> <span class="err">&#39;</span><span class="na">style</span><span class="o">=</span><span class="s">&quot;height: &#39; + node.size * 50 + &#39;px;&quot;</span><span class="err">&#39;</span> <span class="err">}</span>
+    <span class="err">{</span> <span class="err">&#39;</span><span class="na">style</span><span class="o">=</span><span class="s">&quot;height: &#39; + size * 50 + &#39;px;&quot;</span><span class="err">&#39;</span> <span class="err">}</span>
     <span class="na">on:reveal</span><span class="o">=</span><span class="s">&quot;cancelClearGrid_{ path }&quot;</span>
     <span class="na">on:conceal</span><span class="o">=</span><span class="s">&quot;clearGrid_{ path } cancelLoadGrid_{ path }&quot;</span>
     <span class="na">on</span><span class="o">=</span><span class="s">&quot;clearGrid_{ path }&quot;</span>
@@ -3009,9 +2991,9 @@ be assembled from the basic building blocks shown above.</p>
   <span class="p">&gt;</span>
 {{ } }}
 
-{{ if (node.children) { }}
+{{ if (children) { }}
   {{ let i = 0; }}
-  {{ for (const { size } of node.children) { }}
+  {{ for (const { size } of children) { }}
     {{ const p = path + &quot;-&quot; + i++; }}
     <span class="p">&lt;</span><span class="nt">div</span>
       <span class="err">{</span> <span class="err">&#39;</span><span class="na">style</span><span class="o">=</span><span class="s">&quot;height: &#39; + size * 50 + &#39;px;&quot;</span><span class="err">&#39;</span> <span class="err">}</span>
@@ -3027,7 +3009,7 @@ be assembled from the basic building blocks shown above.</p>
     <span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
   {{ } }}
 {{ } else { }}
-  {{ for (let i = node.start, l = node.end; i <span class="p">&lt;</span> <span class="nt">l</span><span class="err">;</span> <span class="err">++</span><span class="na">i</span><span class="err">)</span> <span class="err">{</span> <span class="err">}}</span>
+  {{ for (let i = start, l = end; i <span class="p">&lt;</span> <span class="nt">l</span><span class="err">;</span> <span class="err">++</span><span class="na">i</span><span class="err">)</span> <span class="err">{</span> <span class="err">}}</span>
     <span class="err">&lt;</span><span class="na">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;grid-row&quot;</span><span class="p">&gt;</span>
       <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>{ server.table[i].num }<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
       <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>{ server.table[i].label }<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
@@ -3036,7 +3018,7 @@ be assembled from the basic building blocks shown above.</p>
   {{ } }}
 {{ } }}
 
-{{ if (steps.length &gt; 1) { }}
+{{ if (level) { }}
   <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 {{ } }}
 </code></pre></div></td></tr></table></div>
@@ -3056,22 +3038,10 @@ be assembled from the basic building blocks shown above.</p>
 <span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><code>{{
-
-  const path = server.getParam(&quot;path&quot;);
-  const steps = path.split(&quot;-&quot;).map(value =&gt; value | 0);
-  const node = steps.reduce((acc, i) =&gt; acc.children[i], server.tree);
-
-}}
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code>{{ const path = server.getParam(&quot;path&quot;); }}
 
 <span class="p">&lt;</span><span class="nt">div</span>
-  <span class="err">{</span> <span class="err">&#39;</span><span class="na">style</span><span class="o">=</span><span class="s">&quot;height: &#39; + node.size * 50 + &#39;px;&quot;</span><span class="err">&#39;</span> <span class="err">}</span>
+  <span class="err">{</span> <span class="err">&#39;</span><span class="na">style</span><span class="o">=</span><span class="s">&quot;height: &#39; + server.getNode(path).size * 50 + &#39;px;&quot;</span><span class="err">&#39;</span> <span class="err">}</span>
   <span class="na">on:reveal</span><span class="o">=</span><span class="s">&quot;loadGrid_{ path } cancelClearGrid_{ path }&quot;</span>
   <span class="na">on:conceal</span><span class="o">=</span><span class="s">&quot;cancelLoadGrid_{ path }&quot;</span>
   <span class="na">on</span><span class="o">=</span><span class="s">&quot;loadGrid_{ path }&quot;</span>
