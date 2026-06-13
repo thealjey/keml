@@ -291,13 +291,13 @@ if (process.env["NODE_ENV"] === "test") {
   while (c > 19) limits.push((c /= 10));
 
   type TreeNode =
-    | { size: number; start: number; end: number }
-    | { size: number; children: TreeNode[] };
+    | { size: number; start: number; end: number; level: number }
+    | { size: number; level: number; children: TreeNode[] };
   const buildTree = (start: number, end: number, level = 0): TreeNode => {
     const size = end - start;
 
     if (level >= limits.length || size < 11) {
-      return { size, start, end };
+      return { size, start, end, level };
     }
 
     const capacity = limits[level]!;
@@ -307,7 +307,7 @@ if (process.env["NODE_ENV"] === "test") {
       children.push(buildTree(i, Math.min(i + capacity, end), level + 1));
     }
 
-    return { size, children };
+    return { size, level, children };
   };
 
   const virTree = { children: [buildTree(0, size)] };
@@ -324,7 +324,6 @@ if (process.env["NODE_ENV"] === "test") {
     status = 200;
     series = ser;
     table = tab;
-    tree = virTree;
     sampleSeries = sampleSeries;
     generateChart = generateChart;
 
@@ -334,6 +333,15 @@ if (process.env["NODE_ENV"] === "test") {
 
     get partial() {
       return this.render(XHR)[1];
+    }
+
+    getNode(path: string) {
+      const steps = path.split("-").map(value => (value as any) | 0);
+
+      return steps.reduce(
+        (acc, i) => acc.children[i] as typeof virTree,
+        virTree,
+      );
     }
 
     onloadend(_res: RenderPayload) {}

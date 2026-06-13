@@ -1,13 +1,7 @@
-{{
-
-  const path = server.getParam("path");
-  const steps = path.split("-").map(value => value | 0);
-  const node = steps.reduce((acc, i) => acc.children[i], server.tree);
-
-}}
+{{ const path = server.getParam("path"); }}
 
 <div
-  { 'style="height: ' + node.size * 50 + 'px;"' }
+  { 'style="height: ' + server.getNode(path).size * 50 + 'px;"' }
   on:reveal="loadGrid_{ path } cancelClearGrid_{ path }"
   on:conceal="cancelLoadGrid_{ path }"
   on="loadGrid_{ path }"

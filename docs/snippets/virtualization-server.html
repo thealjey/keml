@@ -1,18 +1,9 @@
-{{
+{{ const path = server.getParam("path"); }}
+{{ const { children, start, end, level, size } = server.getNode(path); }}
 
-  const path = server.getParam("path");
-  const steps = path.split("-").map(value => value | 0);
-
-  // server.tree represents the same data as server.table,
-  // but partitioned in a way that makes it more convenient to query
-  // using a path
-  const node = steps.reduce((acc, i) => acc.children[i], server.tree);
-
-}}
-
-{{ if (steps.length > 1) { }}
+{{ if (level) { }}
   <div
-    { 'style="height: ' + node.size * 50 + 'px;"' }
+    { 'style="height: ' + size * 50 + 'px;"' }
     on:reveal="cancelClearGrid_{ path }"
     on:conceal="clearGrid_{ path } cancelLoadGrid_{ path }"
     on="clearGrid_{ path }"
@@ -25,9 +16,9 @@
   >
 {{ } }}
 
-{{ if (node.children) { }}
+{{ if (children) { }}
   {{ let i = 0; }}
-  {{ for (const { size } of node.children) { }}
+  {{ for (const { size } of children) { }}
     {{ const p = path + "-" + i++; }}
     <div
       { 'style="height: ' + size * 50 + 'px;"' }
@@ -43,7 +34,7 @@
     ></div>
   {{ } }}
 {{ } else { }}
-  {{ for (let i = node.start, l = node.end; i < l; ++i) { }}
+  {{ for (let i = start, l = end; i < l; ++i) { }}
     <div class="grid-row">
       <div>{ server.table[i].num }</div>
       <div>{ server.table[i].label }</div>
@@ -52,6 +43,6 @@
   {{ } }}
 {{ } }}
 
-{{ if (steps.length > 1) { }}
+{{ if (level) { }}
   </div>
 {{ } }}
