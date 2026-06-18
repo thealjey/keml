@@ -37,6 +37,8 @@
 
 0000 => https://www.log-example.com => log
 
+0000 => https://www.url-parse-error-example.com => url-parse-error
+
 0000 => https://www.assign-example.com/page-a => location-assign-a
 0000 => https://www.assign-example.com/page-b => location-assign-b
 0000 => https://www.assign-example.com/page-c => location-assign-c

@@ -30,6 +30,7 @@ const trailing = /\/+$/;
 export const resolveRequestDescriptor = (el: Element) => {
   if (process.env["NODE_ENV"] === "docs") {
     bridge.location.ownerElement = el;
+    bridge.console.ownerElement = el;
   }
 
   const name = methodAttrs.find(el.hasAttribute, el);
@@ -37,15 +38,15 @@ export const resolveRequestDescriptor = (el: Element) => {
   const base =
     process.env["NODE_ENV"] === "docs" ? bridge.location.href : el.baseURI;
 
-  let url: URL;
+  let url: URL, log;
   try {
     url = new URL(endpoint, base);
   } catch (error) {
-    el.hasAttribute("log") && console.error(error);
+    (log = el.hasAttribute("log")) && bridge.console.error(error);
     try {
       url = new URL("", base);
     } catch (error) {
-      el.hasAttribute("log") && console.error(error);
+      log && bridge.console.error(error);
       url = new URL("about:blank");
     }
   }

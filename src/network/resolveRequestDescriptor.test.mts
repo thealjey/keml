@@ -1,7 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("./bridge.e.mts", () => ({
-  bridge: { location: { href: "foo" } },
+  bridge: { location: { href: "foo" }, console: { error: vi.fn() } },
 }));
 
 import { bridge } from "./bridge.e.mts";
@@ -9,13 +9,6 @@ import { resolveRequestDescriptor } from "./resolveRequestDescriptor.mts";
 
 describe("resolveRequestDescriptor", () => {
   const originalEnv = process.env["NODE_ENV"];
-  const consoleErrorSpy = vi
-    .spyOn(console, "error")
-    .mockImplementation(() => {});
-
-  beforeEach(() => {
-    consoleErrorSpy.mockClear();
-  });
 
   afterEach(() => {
     process.env["NODE_ENV"] = originalEnv;
@@ -96,7 +89,7 @@ describe("resolveRequestDescriptor", () => {
     el.setAttribute("log", "");
 
     expect(() => resolveRequestDescriptor(el)).not.toThrow();
-    expect(console.error).toHaveBeenCalled();
+    expect(bridge.console.error).toHaveBeenCalled();
   });
 
   it("sets ownerElement on location", () => {

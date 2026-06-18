@@ -25,7 +25,7 @@ let bridge: {
   location: Pick<Location, "assign" | "replace" | "href" | "ownerElement">;
   history: Pick<History, "pushState" | "replaceState">;
   window: Pick<Window, "addEventListener">;
-  console: Pick<Console, "log" | "ownerElement">;
+  console: Pick<Console, "log" | "error" | "ownerElement">;
   fetch: (
     ...args: Parameters<typeof fetch>
   ) => Promise<Pick<Response, "status" | "body">>;
@@ -730,6 +730,10 @@ if (process.env["NODE_ENV"] === "test") {
     },
 
     log(value: any) {
+      this.browser?.log(value);
+    },
+
+    error(value: any) {
       this.browser?.log(value);
     },
   };
