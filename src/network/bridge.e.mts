@@ -413,7 +413,7 @@ if (process.env["NODE_ENV"] === "test") {
       this.readyState = 3;
       this.delay ?
         (this.timeoutId =
-          this.timeout < this.delay ?
+          this.timeout && this.timeout < this.delay ?
             setTimeout(this.timeFail, this.timeout)
           : setTimeout(this.respond, this.delay))
       : this.respond();
