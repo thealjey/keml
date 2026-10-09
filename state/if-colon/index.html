@@ -709,6 +709,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#iftimeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      if:timeout
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ifinvalid" class="md-nav__link">
     <span class="md-ellipsis">
       if:invalid
@@ -996,6 +1005,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#iftimeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      if:timeout
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ifinvalid" class="md-nav__link">
     <span class="md-ellipsis">
       if:invalid
@@ -1053,6 +1071,7 @@ identical and differ only in how their conditions are calculated.</p>
 one — <code>loading</code> is just another state condition.</p>
 <div class="tabs">
   <label><input type="radio" name="tabs-1" checked>HTML</label>
+  <label><input type="radio" name="tabs-1">Server</label>
   <label><input type="radio" name="tabs-1">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
@@ -1069,11 +1088,7 @@ one — <code>loading</code> is just another state condition.</p>
 <span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">h4</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>This endpoint takes 2 seconds to respond.<span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
-
-<span class="p">&lt;</span><span class="nt">button</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
   <span class="na">type</span><span class="o">=</span><span class="s">&quot;button&quot;</span>
   <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn&quot;</span>
   <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;sendIfLoading&quot;</span>
@@ -1090,9 +1105,12 @@ one — <code>loading</code> is just another state condition.</p>
 <span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>
+  <section>
+    <p class="ph3">This endpoint takes 2 seconds to respond.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">{{</span><span class="w"> </span><span class="nx">server</span><span class="p">.</span><span class="nx">delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2000</span><span class="w"> </span><span class="p">}}</span>
+</code></pre></div></td></tr></table></div>
+  </section>
   <section class="pa3">
-<h4 class="mt0">This endpoint takes 2 seconds to respond.</h4>
-
 <button
   type="button"
   class="btn"
@@ -1257,6 +1275,107 @@ status code.</p>
 </div>
 
 <hr />
+<h2 id="iftimeout"><code>if:timeout</code><a class="headerlink" href="#iftimeout" title="Permanent link">&para;</a></h2>
+<p>The <code>timeout</code> condition becomes <code>true</code> when the server takes longer to respond
+than is allowed by the <a href="../../event/on/#timeout">timeout</a> setting.</p>
+<p>A <code>timeout</code> is also considered an <code>error</code>.</p>
+<div class="tabs">
+  <label><input type="radio" name="tabs-3" checked>HTML</label>
+  <label><input type="radio" name="tabs-3">Server</label>
+  <label><input type="radio" name="tabs-3">Result</label>
+  <section>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn&quot;</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;sendTimeout&quot;</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">&quot;sendTimeout&quot;</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">&quot;/if-timeout&quot;</span>
+  <span class="na">timeout</span><span class="o">=</span><span class="s">&quot;2000&quot;</span>
+  <span class="na">if:timeout</span><span class="o">=</span><span class="s">&quot;ranOutOfTime&quot;</span>
+  <span class="na">if:error</span><span class="o">=</span><span class="s">&quot;timeoutError&quot;</span>
+<span class="p">&gt;</span>
+  send
+<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">small</span>
+  <span class="na">if</span><span class="o">=</span><span class="s">&quot;ranOutOfTime&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;dn&quot;</span>
+  <span class="na">x-class</span><span class="o">=</span><span class="s">&quot;db mt2&quot;</span>
+<span class="p">&gt;</span>
+  Server took too long to respond.
+<span class="p">&lt;/</span><span class="nt">small</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">small</span>
+  <span class="na">if</span><span class="o">=</span><span class="s">&quot;timeoutError&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;dn&quot;</span>
+  <span class="na">x-class</span><span class="o">=</span><span class="s">&quot;db&quot;</span>
+<span class="p">&gt;</span>
+  Something went wrong, might have been a timeout.
+<span class="p">&lt;/</span><span class="nt">small</span><span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
+  </section>
+  <section>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">{{</span><span class="w"> </span><span class="nx">server</span><span class="p">.</span><span class="nx">delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5000</span><span class="w"> </span><span class="p">}}</span>
+</code></pre></div></td></tr></table></div>
+  </section>
+  <section class="pa3">
+<button
+  class="btn"
+  on:click="sendTimeout"
+  on="sendTimeout"
+  src="/if-timeout"
+  timeout="2000"
+  if:timeout="ranOutOfTime"
+  if:error="timeoutError"
+>
+  send
+</button>
+
+<small
+  if="ranOutOfTime"
+  class="dn"
+  x-class="db mt2"
+>
+  Server took too long to respond.
+</small>
+
+<small
+  if="timeoutError"
+  class="dn"
+  x-class="db"
+>
+  Something went wrong, might have been a timeout.
+</small>
+
+  </section>
+</div>
+
+<hr />
 <h2 id="ifinvalid"><code>if:invalid</code><a class="headerlink" href="#ifinvalid" title="Permanent link">&para;</a></h2>
 <p>The <code>invalid</code> condition becomes <code>true</code> when the element's value is invalid.</p>
 <p>For custom elements (e.g. Web Components) to participate, they must implement
@@ -1265,8 +1384,8 @@ the standard
 method and notify the system of their value changes by emitting one or more of
 the following event types: <code>change</code>, <code>input</code>, <code>reset</code>.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-3" checked>HTML</label>
-  <label><input type="radio" name="tabs-3">Result</label>
+  <label><input type="radio" name="tabs-4" checked>HTML</label>
+  <label><input type="radio" name="tabs-4">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -1329,8 +1448,8 @@ input-like behavior as native input elements:</p>
   events: <code>input</code>, <code>change</code>, <code>reset</code>.</li>
 </ul>
 <div class="tabs">
-  <label><input type="radio" name="tabs-4" checked>HTML</label>
-  <label><input type="radio" name="tabs-4">Result</label>
+  <label><input type="radio" name="tabs-5" checked>HTML</label>
+  <label><input type="radio" name="tabs-5">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -1384,8 +1503,8 @@ input-like behavior as native input elements:</p>
 <h2 id="ifintersects"><code>if:intersects</code><a class="headerlink" href="#ifintersects" title="Permanent link">&para;</a></h2>
 <p>The <code>intersects</code> condition becomes <code>true</code> when the element enters the viewport.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-5" checked>HTML</label>
-  <label><input type="radio" name="tabs-5">Result</label>
+  <label><input type="radio" name="tabs-6" checked>HTML</label>
+  <label><input type="radio" name="tabs-6">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>

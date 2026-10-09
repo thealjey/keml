@@ -565,6 +565,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#request-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      request-mode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      timeout
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#redirect" class="md-nav__link">
     <span class="md-ellipsis">
       redirect
@@ -1200,6 +1218,24 @@
   <a href="#stream" class="md-nav__link">
     <span class="md-ellipsis">
       stream
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      request-mode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      timeout
     </span>
   </a>
   
@@ -2376,6 +2412,257 @@ whitespace-insensitive.</p>
 </div>
 
 <hr />
+<h2 id="request-mode"><code>request-mode</code><a class="headerlink" href="#request-mode" title="Permanent link">&para;</a></h2>
+<!-- prettier-ignore-start -->
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Not applicable when streaming is enabled.</p>
+</div>
+<!-- prettier-ignore-end -->
+
+<p>This feature controls how requests and their responses are handled when an
+element sends multiple requests before the previous ones have concluded.</p>
+<p>Supported options:</p>
+<ul>
+<li><code>parallel</code> - (default) all requests are permitted, and responses are processed
+  in the order they are received from the server</li>
+<li><code>replace</code> - when a new request is made, all currently pending requests are
+  cancelled first</li>
+<li><code>ignore</code> - if there are pending requests, skip this one</li>
+<li><code>queue</code> - like with <code>parallel</code>, all requests are sent immediately, but
+  responses are processed in the same order as the requests were sent, rather
+  than in the order the responses arrived</li>
+</ul>
+<div class="tabs">
+  <label><input type="radio" name="tabs-12" checked>HTML</label>
+  <label><input type="radio" name="tabs-12">Server</label>
+  <label><input type="radio" name="tabs-12">Result</label>
+  <section>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>
+  Select the mode you want and then click the send button several times.
+<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">select</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;input&quot;</span>
+  <span class="na">ref:value</span><span class="o">=</span><span class="s">&quot;requestMode&quot;</span>
+  <span class="na">on:input</span><span class="o">=</span><span class="s">&quot;resetDelayedList&quot;</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">&quot;resetDelayedList&quot;</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">&quot;/request-mode-list&quot;</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">&quot;delayedList&quot;</span>
+<span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">option</span> <span class="na">selected</span><span class="p">&gt;</span>parallel<span class="p">&lt;/</span><span class="nt">option</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">option</span><span class="p">&gt;</span>replace<span class="p">&lt;/</span><span class="nt">option</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">option</span><span class="p">&gt;</span>ignore<span class="p">&lt;/</span><span class="nt">option</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">option</span><span class="p">&gt;</span>queue<span class="p">&lt;/</span><span class="nt">option</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">select</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">form</span>
+  <span class="na">method</span><span class="o">=</span><span class="s">&quot;post&quot;</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">&quot;queueResponse&quot;</span>
+  <span class="na">on:submit</span><span class="o">=</span><span class="s">&quot;queueResponse&quot;</span>
+  <span class="na">link:request-mode</span><span class="o">=</span><span class="s">&quot;requestMode&quot;</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">&quot;delayedResponse&quot;</span>
+  <span class="na">action</span><span class="o">=</span><span class="s">&quot;/request-mode&quot;</span>
+  <span class="na">if:loading</span><span class="o">=</span><span class="s">&quot;loadingRequestMode&quot;</span>
+<span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;submit&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn mt2&quot;</span><span class="p">&gt;</span>send<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span>
+    <span class="na">if</span><span class="o">=</span><span class="s">&quot;loadingRequestMode&quot;</span>
+    <span class="na">x-class</span><span class="o">=</span><span class="s">&quot;spinner mt3 ml2 dib v-btm&quot;</span>
+  <span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+
+
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt2&quot;</span> <span class="na">render</span><span class="o">=</span><span class="s">&quot;delayedList&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">dl</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;dl&quot;</span> <span class="na">position</span><span class="o">=</span><span class="s">&quot;append&quot;</span> <span class="na">render</span><span class="o">=</span><span class="s">&quot;delayedResponse&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">dl</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
+  </section>
+  <section>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code>{{ persistent.reqNum ??= 0; }}
+{{ const delay = server.delay = Math.random() * 10000 + 1000 | 0; }}
+
+<span class="p">&lt;</span><span class="nt">dt</span><span class="p">&gt;</span>Request #{ ++persistent.reqNum }<span class="p">&lt;/</span><span class="nt">dt</span><span class="p">&gt;&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>Took { delay }ms<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
+  </section>
+  <section class="ma3">
+<p class="mt0">
+  Select the mode you want and then click the send button several times.
+</p>
+
+<select
+  class="input"
+  ref:value="requestMode"
+  on:input="resetDelayedList"
+  on="resetDelayedList"
+  src="/request-mode-list"
+  result="delayedList"
+>
+  <option selected>parallel</option>
+  <option>replace</option>
+  <option>ignore</option>
+  <option>queue</option>
+</select>
+
+<form
+  method="post"
+  on="queueResponse"
+  on:submit="queueResponse"
+  link:request-mode="requestMode"
+  result="delayedResponse"
+  action="/request-mode"
+  if:loading="loadingRequestMode"
+>
+  <button type="submit" class="btn mt2">send</button>
+  <div
+    if="loadingRequestMode"
+    x-class="spinner mt3 ml2 dib v-btm"
+  ></div>
+</form>
+
+
+<div class="mt2" render="delayedList">
+  <dl class="dl" position="append" render="delayedResponse"></dl>
+</div>
+
+  </section>
+</div>
+
+<hr />
+<h2 id="timeout"><a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/timeout"><code>timeout</code></a><a class="headerlink" href="#timeout" title="Permanent link">&para;</a></h2>
+<!-- prettier-ignore-start -->
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Not applicable when streaming is enabled.</p>
+</div>
+<!-- prettier-ignore-end -->
+
+<p>Number of milliseconds KEML will wait for a response before timing out the
+request.</p>
+<p>When a request times out, a <a href="../on-colon/#keml-defined-events">timeout</a> event
+is fired and a <a href="../../state/if-colon/#iftimeout">timeout</a> state is turned on.</p>
+<div class="tabs">
+  <label><input type="radio" name="tabs-13" checked>HTML</label>
+  <label><input type="radio" name="tabs-13">Server 1</label>
+  <label><input type="radio" name="tabs-13">Server 2</label>
+  <label><input type="radio" name="tabs-13">Result</label>
+  <section>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn&quot;</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;sendTimeout&quot;</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">&quot;sendTimeout&quot;</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">&quot;/timeout&quot;</span>
+  <span class="na">timeout</span><span class="o">=</span><span class="s">&quot;2000&quot;</span>
+  <span class="na">on:timeout</span><span class="o">=</span><span class="s">&quot;sendTimeoutFallback&quot;</span>
+<span class="p">&gt;</span>
+  send
+<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">input</span>
+  <span class="na">type</span><span class="o">=</span><span class="s">&quot;hidden&quot;</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">&quot;sendTimeoutFallback&quot;</span>
+  <span class="na">action</span><span class="o">=</span><span class="s">&quot;/timeout-fallback&quot;</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">&quot;timeoutFallback&quot;</span>
+<span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mb0&quot;</span> <span class="na">render</span><span class="o">=</span><span class="s">&quot;timeoutFallback&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</code></pre></div></td></tr></table></div>
+  </section>
+  <section>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code>{{ server.delay = 5000 }}
+
+We wanted this.
+</code></pre></div></td></tr></table></div>
+  </section>
+  <section>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>But, couldn&#39;t wait for it to load and settled for this instead.
+</code></pre></div></td></tr></table></div>
+  </section>
+  <section class="ma3">
+<button
+  class="btn"
+  on:click="sendTimeout"
+  on="sendTimeout"
+  src="/timeout"
+  timeout="2000"
+  on:timeout="sendTimeoutFallback"
+>
+  send
+</button>
+
+<input
+  type="hidden"
+  on="sendTimeoutFallback"
+  action="/timeout-fallback"
+  result="timeoutFallback"
+>
+
+<p class="mb0" render="timeoutFallback"></p>
+
+  </section>
+</div>
+
+<hr />
 <h2 id="redirect"><code>redirect</code><a class="headerlink" href="#redirect" title="Permanent link">&para;</a></h2>
 <p>This attribute switches the operational mode of <code>on</code> from sending requests to
 performing redirects.</p>
@@ -2385,10 +2672,10 @@ ignored. Form data (excluding file uploads) is applied to the query string.</p>
 <h3 id="assign"><code>assign</code><a class="headerlink" href="#assign" title="Permanent link">&para;</a></h3>
 <p>This option performs a full page navigation.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-12" checked>Page A</label>
-  <label><input type="radio" name="tabs-12">Page B</label>
-  <label><input type="radio" name="tabs-12">Page C</label>
-  <label><input type="radio" name="tabs-12">Result</label>
+  <label><input type="radio" name="tabs-14" checked>Page A</label>
+  <label><input type="radio" name="tabs-14">Page B</label>
+  <label><input type="radio" name="tabs-14">Page C</label>
+  <label><input type="radio" name="tabs-14">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
@@ -2448,10 +2735,10 @@ ignored. Form data (excluding file uploads) is applied to the query string.</p>
 <p>This option performs a full page navigation, but replaces the current history
 entry instead of adding a new one.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-13" checked>Page A</label>
-  <label><input type="radio" name="tabs-13">Page B</label>
-  <label><input type="radio" name="tabs-13">Page C</label>
-  <label><input type="radio" name="tabs-13">Result</label>
+  <label><input type="radio" name="tabs-15" checked>Page A</label>
+  <label><input type="radio" name="tabs-15">Page B</label>
+  <label><input type="radio" name="tabs-15">Page C</label>
+  <label><input type="radio" name="tabs-15">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
@@ -2514,11 +2801,11 @@ full page navigation.</p>
 separate thing you have to implement, and it does not impose restrictions on
 your server infrastructure 🤯.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-14" checked>HTML</label>
-  <label><input type="radio" name="tabs-14">Page A</label>
-  <label><input type="radio" name="tabs-14">Page B</label>
-  <label><input type="radio" name="tabs-14">Page C</label>
-  <label><input type="radio" name="tabs-14">Result</label>
+  <label><input type="radio" name="tabs-16" checked>HTML</label>
+  <label><input type="radio" name="tabs-16">Page A</label>
+  <label><input type="radio" name="tabs-16">Page B</label>
+  <label><input type="radio" name="tabs-16">Page C</label>
+  <label><input type="radio" name="tabs-16">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -2682,9 +2969,9 @@ your server infrastructure 🤯.</p>
 <p>This is a self-destruct instruction for the <code>on</code> attribute. It is removed after
 the first invocation.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-15" checked>HTML</label>
-  <label><input type="radio" name="tabs-15">Server</label>
-  <label><input type="radio" name="tabs-15">Result</label>
+  <label><input type="radio" name="tabs-17" checked>HTML</label>
+  <label><input type="radio" name="tabs-17">Server</label>
+  <label><input type="radio" name="tabs-17">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -2766,8 +3053,8 @@ Use <a href="../../sse/">SSE</a> if possible.</p>
 <p>KEML does not implement polling as a dedicated feature, but it can still be
 assembled from the basic building blocks shown above.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-16" checked>Server</label>
-  <label><input type="radio" name="tabs-16">Result</label>
+  <label><input type="radio" name="tabs-18" checked>Server</label>
+  <label><input type="radio" name="tabs-18">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -2821,10 +3108,10 @@ assembled from the basic building blocks shown above.</p>
 <p>KEML does not implement virtualization as a dedicated feature, but it can still
 be assembled from the basic building blocks shown above.</p>
 <div class="tabs">
-  <label><input type="radio" name="tabs-17" checked>HTML</label>
-  <label><input type="radio" name="tabs-17">Server 1</label>
-  <label><input type="radio" name="tabs-17">Server 2</label>
-  <label><input type="radio" name="tabs-17">Result</label>
+  <label><input type="radio" name="tabs-19" checked>HTML</label>
+  <label><input type="radio" name="tabs-19">Server 1</label>
+  <label><input type="radio" name="tabs-19">Server 2</label>
+  <label><input type="radio" name="tabs-19">Result</label>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
