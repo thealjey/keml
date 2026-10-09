@@ -23,6 +23,7 @@ import {
   pushDiscoverableElement,
   pushOneTimeElement,
   pushRenderPayload,
+  pushRenderPayloadEvent,
   pushResettableElement,
   pushScrollableElement,
   renderElements,
@@ -39,11 +40,14 @@ describe("state module", () => {
   });
 
   it("stack operations work", () => {
-    const payload = {} as any;
+    const payload1 = {} as any;
+    const payload2 = {} as any;
     const el = {} as Element;
 
-    pushRenderPayload(payload);
-    expect(popRenderPayload()).toBe(payload);
+    pushRenderPayload(payload1);
+    pushRenderPayloadEvent({ target: payload2 });
+    expect(popRenderPayload()).toBe(payload2);
+    expect(popRenderPayload()).toBe(payload1);
 
     pushOneTimeElement(el);
     expect(popOneTimeElement()).toBe(el);

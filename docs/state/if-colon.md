@@ -13,10 +13,17 @@ one — `loading` is just another state condition.
 
 <div class="tabs">
   <label><input type="radio" name="tabs-1" checked>HTML</label>
+  <label><input type="radio" name="tabs-1">Server</label>
   <label><input type="radio" name="tabs-1">Result</label>
   <section>
 ```html
 --8<-- "snippets/if-loading-client.html"
+```
+  </section>
+  <section>
+    <p class="ph3">This endpoint takes 2 seconds to respond.</p>
+```js
+--8<-- "snippets/if-loading-server.html"
 ```
   </section>
   <section class="pa3">
@@ -52,6 +59,34 @@ status code.
 
 ---
 
+## `if:timeout`
+
+The `timeout` condition becomes `true` when the server takes longer to respond
+than is allowed by the [timeout](../event/on.md#timeout) setting.
+
+A `timeout` is also considered an `error`.
+
+<div class="tabs">
+  <label><input type="radio" name="tabs-3" checked>HTML</label>
+  <label><input type="radio" name="tabs-3">Server</label>
+  <label><input type="radio" name="tabs-3">Result</label>
+  <section>
+```html
+--8<-- "snippets/if-timeout-client.html"
+```
+  </section>
+  <section>
+```js
+--8<-- "snippets/if-timeout-server.html"
+```
+  </section>
+  <section class="pa3">
+--8<-- "snippets/if-timeout-client.html"
+  </section>
+</div>
+
+---
+
 ## `if:invalid`
 
 The `invalid` condition becomes `true` when the element's value is invalid.
@@ -63,8 +98,8 @@ method and notify the system of their value changes by emitting one or more of
 the following event types: `change`, `input`, `reset`.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-3" checked>HTML</label>
-  <label><input type="radio" name="tabs-3">Result</label>
+  <label><input type="radio" name="tabs-4" checked>HTML</label>
+  <label><input type="radio" name="tabs-4">Result</label>
   <section>
 ```html
 --8<-- "snippets/if-invalid-client.html"
@@ -91,8 +126,8 @@ input-like behavior as native input elements:
   events: `input`, `change`, `reset`.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-4" checked>HTML</label>
-  <label><input type="radio" name="tabs-4">Result</label>
+  <label><input type="radio" name="tabs-5" checked>HTML</label>
+  <label><input type="radio" name="tabs-5">Result</label>
   <section>
 ```html
 --8<-- "snippets/if-value-client.html"
@@ -110,8 +145,8 @@ input-like behavior as native input elements:
 The `intersects` condition becomes `true` when the element enters the viewport.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-5" checked>HTML</label>
-  <label><input type="radio" name="tabs-5">Result</label>
+  <label><input type="radio" name="tabs-6" checked>HTML</label>
+  <label><input type="radio" name="tabs-6">Result</label>
   <section>
 ```html
 --8<-- "snippets/if-intersects-client.html"

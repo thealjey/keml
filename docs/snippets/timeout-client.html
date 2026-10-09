@@ -1,0 +1,19 @@
+<button
+  class="btn"
+  on:click="sendTimeout"
+  on="sendTimeout"
+  src="/timeout"
+  timeout="2000"
+  on:timeout="sendTimeoutFallback"
+>
+  send
+</button>
+
+<input
+  type="hidden"
+  on="sendTimeoutFallback"
+  action="/timeout-fallback"
+  result="timeoutFallback"
+>
+
+<p class="mb0" render="timeoutFallback"></p>

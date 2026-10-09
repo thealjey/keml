@@ -1,9 +1,8 @@
 interface RenderPayload {
-  target: {
-    ownerElement: Element;
-    responseXML: Document | null;
-    status: number;
-  };
+  ownerElement: Element;
+  responseXML: Document | null;
+  status: number;
+  readyState?: number;
 }
 
 interface Node {
@@ -13,17 +12,21 @@ interface Node {
 
 interface Element {
   isError: boolean;
+  isTimeout: boolean;
   isIntersecting: boolean;
   isLoading: boolean;
   timeoutId: ReturnType<typeof setTimeout> | undefined;
   checkValidity: (() => boolean) | undefined;
   reset: (() => void) | undefined;
   sizeEntry: ResizeObserverEntry;
+  xhr?: RenderPayload[] | undefined;
 }
 
 interface XMLHttpRequest {
   ownerElement: Element;
-  onloadend(res: RenderPayload): any;
+  onloadend: ((res: { target: RenderPayload }) => any) | null;
+  onerror: ((res: { target: RenderPayload }) => any) | null;
+  ontimeout: ((res: { target: RenderPayload }) => any) | null;
 }
 
 interface Window {

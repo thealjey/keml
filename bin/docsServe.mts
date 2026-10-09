@@ -23,13 +23,12 @@ async function build() {
 
   try {
     await exec("npm run build");
+  } catch {}
+  building = false;
 
-    if (pending) {
-      pending = false;
-      await build();
-    }
-  } finally {
-    building = false;
+  if (pending) {
+    pending = false;
+    await build();
   }
 }
 

@@ -3,17 +3,19 @@ import {
   markStateDirty,
   pushOneTimeElement,
   pushRenderPayload,
+  pushRenderPayloadEvent,
 } from "../render/data.mts";
-import { SERIALIZE } from "../runtime/executeRules.mts";
-import { traverseAttributes } from "../runtime/traverseAttributes.mts";
-import { isForm } from "../util/isForm.mts";
 import { appendFormDataToUrl } from "./appendFormDataToUrl.mts";
 import { bridge } from "./bridge.e.mts";
+import { clearRequests } from "./clearRequests.mts";
+import { handleError } from "./handleError.mts";
+import { handleResponseQueue } from "./handleResponseQueue.mts";
+import { handleTimeout } from "./handleTimeout.mts";
 import { resolveRequestDescriptor } from "./resolveRequestDescriptor.mts";
+import { serializeForm } from "./serializeForm.mts";
 import { StreamingXMLHttpRequest } from "./StreamingXMLHttpRequest.mts";
 import { unschedule } from "./unschedule.mts";
 
-const internalForm = document.createElement("form");
 const emptyObj: {} = Object.create(null);
 
 /**
@@ -34,13 +36,6 @@ export const executeRequest = (el: Element) => {
   if (el.checkValidity?.() ?? true) {
     el.hasAttribute("once") && pushOneTimeElement(el);
 
-    let formData: FormData | undefined = new FormData(
-      isForm(el) ? el : (
-        (internalForm.replaceChildren(el.cloneNode(true)), internalForm)
-      ),
-    );
-    traverseAttributes(SERIALIZE, [el], { formData });
-
     const redirect = el.getAttribute("redirect");
     const [url, method, withCredentials] = resolveRequestDescriptor(el);
 
@@ -49,28 +44,53 @@ export const executeRequest = (el: Element) => {
     }
 
     if (redirect === "pushState" || redirect === "replaceState") {
-      appendFormDataToUrl(url, formData);
+      appendFormDataToUrl(url, serializeForm(el));
       bridge.history[redirect](emptyObj, "", url);
       dispatchNavigate();
     } else if (redirect === "assign" || redirect === "replace") {
-      appendFormDataToUrl(url, formData);
+      appendFormDataToUrl(url, serializeForm(el));
       bridge.location[redirect](url);
     } else if (url.protocol === "about:" && url.pathname === "blank/") {
-      pushRenderPayload({
-        target: { ownerElement: el, status: 200, responseXML: null },
-      });
+      pushRenderPayload({ ownerElement: el, status: 200, responseXML: null });
     } else {
-      method === "GET" && (formData = appendFormDataToUrl(url, formData));
+      let xhr;
+      if (el.hasAttribute("stream")) {
+        xhr = new StreamingXMLHttpRequest();
+        xhr.onloadend = pushRenderPayloadEvent;
+        clearRequests(el);
+      } else {
+        const mode = el.getAttribute("request-mode") as
+          | "parallel" // default, process each response as soon as it is ready
+          | "replace" // cancel/discard all existing requests before proceeding
+          | "queue" // process responses in the order the requests were sent
+          | "ignore" // do nothing if another request is currently active
+          | null;
 
-      const xhr = new (
-        el.hasAttribute("stream") ?
-          StreamingXMLHttpRequest
-        : bridge.XMLHttpRequest)();
+        if (el.xhr && mode === "ignore") {
+          return;
+        }
+
+        xhr = new bridge.XMLHttpRequest();
+        xhr.onloadend =
+          mode === "queue" ? handleResponseQueue : pushRenderPayloadEvent;
+        xhr.ontimeout = handleTimeout;
+        xhr.timeout = Number(el.getAttribute("timeout"));
+
+        mode === "replace" && clearRequests(el);
+        if (el.xhr) {
+          el.xhr.unshift(xhr);
+        } else {
+          el.xhr = [xhr];
+        }
+      }
+
+      let formData: FormData | undefined = serializeForm(el);
+      method === "GET" && (formData = appendFormDataToUrl(url, formData));
 
       xhr.responseType = "document";
       xhr.withCredentials = withCredentials;
       xhr.ownerElement = el;
-      xhr.onloadend = pushRenderPayload;
+      xhr.onerror = handleError;
       xhr.open(method, url);
 
       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
@@ -79,6 +99,7 @@ export const executeRequest = (el: Element) => {
       }
 
       el.isError = false;
+      el.isTimeout = false;
       el.isLoading = true;
       markStateDirty();
 

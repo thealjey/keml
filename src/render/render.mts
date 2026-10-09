@@ -1,3 +1,4 @@
+import { isElementLoading } from "../network/isElementLoading.mts";
 import { SseManager } from "../network/SseManager.mts";
 import { resolveValue } from "../runtime/resolveValue.mts";
 import { hasToken } from "../util/hasToken.mts";
@@ -7,6 +8,7 @@ import {
   clearNeedsSse,
   clearRefDirty,
   clearStateDirty,
+  failureEvent,
   getFocusElement,
   getNeedsSse,
   ifColonElements,
@@ -34,7 +36,6 @@ import { writeScrollAxis } from "./writeScrollAxis.mts";
 const emptyChildNodes: ChildNode[] = [];
 const validBehaviors = ["auto", "instant", "smooth"];
 const resultEvent = new Event("result");
-const failureEvent = new Event("failure");
 const discoverEvent = new Event("discover");
 const attrEvent = new Map<string, Event>();
 
@@ -78,7 +79,13 @@ export const render = () => {
   }
 
   while ((payload = popRenderPayload())) {
-    ({ ownerElement, status, responseXML } = payload.target);
+    ({ ownerElement, status, responseXML } = payload);
+    (ownerElement.isLoading = isElementLoading(ownerElement)) ||
+      (ownerElement.xhr = undefined);
+    markStateDirty();
+    if (status === 0) {
+      continue;
+    }
     actions = ownerElement.getAttribute(
       (ownerElement.isError = status > 399) ? "error" : "result",
     );
@@ -107,9 +114,6 @@ export const render = () => {
         patchers.replaceChildren;
       addTransition(patcher, el, nodes) || patcher(el, nodes);
     }
-
-    ownerElement.isLoading = false;
-    markStateDirty();
 
     ownerElement.dispatchEvent(
       ownerElement.isError ? failureEvent : resultEvent,
@@ -142,6 +146,10 @@ export const render = () => {
 
       el.isError &&
         (attr = el.getAttributeNode("if:error")) &&
+        actions2d.push(attr.value);
+
+      el.isTimeout &&
+        (attr = el.getAttributeNode("if:timeout")) &&
         actions2d.push(attr.value);
     }
     actions = actions2d.join(" ");

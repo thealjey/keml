@@ -57,6 +57,7 @@ vi.mock("./data.mts", () => ({
   renderElements: [],
   linkElements: new Set(),
   refElements: new Set(),
+  failureEvent: { type: "failure" },
 }));
 
 vi.mock("./patchers.mts", () => ({
@@ -155,13 +156,7 @@ describe("render (baseline)", () => {
   it("processes render payload and marks state dirty", () => {
     const el = document.createElement("div");
 
-    const payload = {
-      target: {
-        ownerElement: el,
-        status: 200,
-        responseXML: null,
-      },
-    };
+    const payload = { ownerElement: el, status: 200, responseXML: null };
 
     (popRenderPayload as any)
       .mockReturnValueOnce(payload)
@@ -202,13 +197,7 @@ describe("render (baseline)", () => {
     const el = document.createElement("div");
     el.dispatchEvent = vi.fn();
 
-    const payload = {
-      target: {
-        ownerElement: el,
-        status: 500,
-        responseXML: null,
-      },
-    };
+    const payload = { ownerElement: el, status: 500, responseXML: null };
 
     (popRenderPayload as any)
       .mockReturnValueOnce(payload)
@@ -236,11 +225,9 @@ describe("render (baseline)", () => {
 
     (popRenderPayload as any)
       .mockReturnValueOnce({
-        target: {
-          ownerElement: el,
-          status: 200,
-          responseXML: response,
-        },
+        ownerElement: el,
+        status: 200,
+        responseXML: response,
       })
       .mockReturnValueOnce(undefined);
 
@@ -249,6 +236,33 @@ describe("render (baseline)", () => {
     render();
 
     expect(patchers.replaceChildren).toHaveBeenCalled();
+  });
+
+  it("skips status 0", () => {
+    const el = document.createElement("div");
+    el.setAttribute("result", "token");
+
+    const targetEl = document.createElement("div");
+    targetEl.setAttribute("render", "token");
+    targetEl.setAttribute("position", "replaceChildren");
+
+    const response = document.implementation.createHTMLDocument("");
+    const child = document.createElement("span");
+    response.body.appendChild(child);
+
+    (popRenderPayload as any)
+      .mockReturnValueOnce({
+        ownerElement: el,
+        status: 0,
+        responseXML: response,
+      })
+      .mockReturnValueOnce(undefined);
+
+    (renderElements as any).push(targetEl);
+
+    render();
+
+    expect(patchers.replaceChildren).not.toHaveBeenCalled();
   });
 
   it("handles multiple entries in batch and applies patchers for each", () => {
@@ -268,11 +282,9 @@ describe("render (baseline)", () => {
 
     (popRenderPayload as any)
       .mockReturnValueOnce({
-        target: {
-          ownerElement: el,
-          status: 200,
-          responseXML: response,
-        },
+        ownerElement: el,
+        status: 200,
+        responseXML: response,
       })
       .mockReturnValueOnce(undefined);
 
@@ -294,11 +306,9 @@ describe("render (baseline)", () => {
 
     (popRenderPayload as any)
       .mockReturnValueOnce({
-        target: {
-          ownerElement: el,
-          status: 200,
-          responseXML: null,
-        },
+        ownerElement: el,
+        status: 200,
+        responseXML: null,
       })
       .mockReturnValueOnce(undefined);
 
@@ -323,13 +333,7 @@ describe("render (baseline)", () => {
     (hasToken as any).mockReturnValue(false);
 
     (popRenderPayload as any)
-      .mockReturnValueOnce({
-        target: {
-          ownerElement: el,
-          status: 200,
-          responseXML: null,
-        },
-      })
+      .mockReturnValueOnce({ ownerElement: el, status: 200, responseXML: null })
       .mockReturnValueOnce(undefined);
 
     render();
@@ -467,6 +471,27 @@ describe("render (baseline)", () => {
     errorEl.setAttribute("if:error", "token");
 
     (errorEl as any).isError = true;
+
+    (ifElements as any).push(el);
+    (ifColonElements as any).push(errorEl);
+
+    (isStateDirty as any).mockReturnValue(true);
+    (hasToken as any).mockReturnValue(true);
+
+    render();
+
+    expect(clearStateDirty).toHaveBeenCalled();
+    expect(enableState).toHaveBeenCalledWith(el);
+  });
+
+  it("pushes if:timeout into actions2d when element is in timeout state", () => {
+    const el = document.createElement("div");
+    el.setAttribute("if", "token");
+
+    const errorEl = document.createElement("div");
+    errorEl.setAttribute("if:timeout", "token");
+
+    (errorEl as any).isTimeout = true;
 
     (ifElements as any).push(el);
     (ifColonElements as any).push(errorEl);

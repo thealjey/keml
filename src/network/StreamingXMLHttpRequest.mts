@@ -39,7 +39,12 @@ export class StreamingXMLHttpRequest {
   /**
    * Finalization callback invoked after each logical response chunk.
    */
-  onloadend!: (res: RenderPayload) => any;
+  onloadend!: (res: { target: RenderPayload }) => any;
+
+  /**
+   * Handles a network error for a render payload.
+   */
+  onerror!: (res: { target: RenderPayload }) => any;
 
   /**
    * Internal RequestInit used for bridge.fetch.
@@ -96,9 +101,24 @@ export class StreamingXMLHttpRequest {
   async send(data: FormData | undefined) {
     data && (this.init.body = data);
 
-    const { status, body } = await bridge.fetch(this.url, this.init);
+    let status, body;
+    try {
+      ({ status, body } = await bridge.fetch(this.url, this.init));
+    } catch (err) {
+      if (process.env["NODE_ENV"] === "docs") {
+        bridge.console.ownerElement = this.ownerElement;
+      }
+      bridge.console.error(err);
+      this.onerror({
+        target: {
+          status: 0,
+          responseXML: null,
+          ownerElement: this.ownerElement,
+        },
+      });
+    }
 
-    if (body) {
+    if (body && status != null) {
       for await (const chunk of body) {
         this.responseText += decoder.decode(chunk, decodeOptions);
 

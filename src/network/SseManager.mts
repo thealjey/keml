@@ -86,11 +86,9 @@ export class SseManager extends Map<string, readonly [SseSource, SseSource]> {
         url.href === source.url.href &&
         withCredentials === source.withCredentials &&
         this.onPayload({
-          target: {
-            ownerElement: el,
-            responseXML: doc ? doc.cloneNode(true) : (doc = data),
-            status: 200,
-          },
+          ownerElement: el,
+          responseXML: doc ? doc.cloneNode(true) : (doc = data),
+          status: 200,
         });
     }
   };

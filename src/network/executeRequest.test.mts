@@ -1,9 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-/* -----------------------
-   SAFE MODULE MOCKS
------------------------ */
-
 vi.mock("../runtime/traverseAttributes.mts", () => ({
   traverseAttributes: vi.fn(),
 }));
@@ -239,7 +235,9 @@ describe("executeRequest", () => {
 
     expect(pushRenderPayload).toHaveBeenCalledWith(
       expect.objectContaining({
-        target: { ownerElement: el, status: 200, responseXML: null },
+        ownerElement: el,
+        status: 200,
+        responseXML: null,
       }),
     );
   });
@@ -327,5 +325,83 @@ describe("executeRequest", () => {
     executeRequest(el);
 
     expect(setRequestHeader).toHaveBeenCalledWith("test", "value");
+  });
+
+  it("ignores the request when another request is active and mode is ignore", () => {
+    const el = document.createElement("form");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
+    el.setAttribute("request-mode", "ignore");
+
+    const existingXhr = {};
+    el.xhr = [existingXhr] as XMLHttpRequest[];
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
+
+    executeRequest(el);
+
+    expect(mockedResolveRequestDescriptor).toHaveBeenCalledWith(el);
+    expect(el.xhr).toEqual([existingXhr]);
+  });
+
+  it("uses handleResponseQueue when request mode is queue", () => {
+    const el = document.createElement("form");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
+    el.setAttribute("request-mode", "queue");
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
+
+    executeRequest(el);
+
+    expect(el.xhr).toHaveLength(1);
+    expect((el.xhr![0] as any).onloadend).toBeDefined();
+  });
+
+  it("clears existing requests when request mode is replace", () => {
+    const el = document.createElement("form");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
+    el.setAttribute("request-mode", "replace");
+
+    const existingXhr = {
+      abort: vi.fn(),
+    } as unknown as XMLHttpRequest;
+
+    el.xhr = [existingXhr];
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
+
+    executeRequest(el);
+
+    expect(existingXhr.abort).toHaveBeenCalled();
+    expect(el.xhr).toHaveLength(1);
+  });
+
+  it("prepends the new XHR when el.xhr already exists", () => {
+    const el = document.createElement("form");
+
+    Object.defineProperty(el, "checkValidity", {
+      value: () => true,
+    });
+
+    const existingXhr = {} as XMLHttpRequest;
+    el.xhr = [existingXhr];
+
+    mockedResolveRequestDescriptor.mockReturnValue(["/url", "POST", false]);
+
+    executeRequest(el);
+
+    expect(el.xhr).toHaveLength(2);
+    expect(el.xhr![1]).toBe(existingXhr);
   });
 });

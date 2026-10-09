@@ -4,6 +4,9 @@ let bridge: {
   ) => Pick<
     InstanceType<typeof XMLHttpRequest>,
     | "onloadend"
+    | "ontimeout"
+    | "onerror"
+    | "timeout"
     | "open"
     | "ownerElement"
     | "responseType"
@@ -12,6 +15,7 @@ let bridge: {
     | "withCredentials"
     | "responseXML"
     | "status"
+    | "readyState"
   >;
   EventSource: {
     new (
@@ -38,8 +42,14 @@ if (process.env["NODE_ENV"] === "test") {
     withCredentials: boolean = false;
     ownerElement!: Element;
     status!: number;
+    readyState!: number;
+    timeout!: number;
 
     onloadend() {}
+
+    ontimeout() {}
+
+    onerror() {}
 
     open() {}
 
@@ -80,7 +90,7 @@ if (process.env["NODE_ENV"] === "test") {
 } else if (process.env["NODE_ENV"] === "docs") {
   const parser = new DOMParser();
 
-  const compileTemplate = (template: string): ((server: any) => string) => {
+  const compileTemplate = (template: string) => {
     const parts: string[] = [];
     let cursor = 0;
 
@@ -110,7 +120,10 @@ if (process.env["NODE_ENV"] === "test") {
     parts.push(`out.push(${JSON.stringify(template.slice(cursor))});`);
     parts.push("return out.join('');");
 
-    return new Function("server", parts.join("\n")) as (server: any) => string;
+    return new Function("server", "persistent", parts.join("\n")) as (
+      server: any,
+      persistent: Record<string, any>,
+    ) => string;
   };
 
   const generateSeries = (n: number): number[] => {
@@ -253,6 +266,8 @@ if (process.env["NODE_ENV"] === "test") {
     ]),
   );
 
+  const persistent = {};
+
   const routes = (
     process.env["ROUTES"] as any as [number, string, string][]
   ).map(
@@ -273,9 +288,8 @@ if (process.env["NODE_ENV"] === "test") {
   ];
 
   const XHR = 0b1;
-  const DELAY = 0b10;
-  const SSE = 0b100;
-  const STREAM = 0b1000;
+  const SSE = 0b10;
+  const STREAM = 0b100;
   const ser = generateSeries(10_000_000);
   const tab = Array.from({ length: 300_000 }, (_, i) => ({
     num: i + 1,
@@ -322,10 +336,14 @@ if (process.env["NODE_ENV"] === "test") {
     data!: FormData | undefined;
     headers = new Map<string, string>();
     status = 200;
+    readyState = 0;
+    timeout = 0;
     series = ser;
     table = tab;
     sampleSeries = sampleSeries;
     generateChart = generateChart;
+    delay = 0;
+    timeoutId?: ReturnType<typeof setTimeout>;
 
     getParam(key: string) {
       return this.data ? this.data.get(key) : this.url.searchParams.get(key);
@@ -344,11 +362,20 @@ if (process.env["NODE_ENV"] === "test") {
       );
     }
 
-    onloadend(_res: RenderPayload) {}
+    onloadend(_res: { target: RenderPayload }) {}
+
+    abort() {
+      clearTimeout(this.timeoutId);
+    }
+
+    ontimeout(_res: { target: RenderPayload }) {}
+
+    onerror() {}
 
     open(method: string, url: URL) {
       this.method = method;
       this.url = url;
+      this.readyState = 1;
     }
 
     setRequestHeader(name: string, value: string) {
@@ -363,19 +390,33 @@ if (process.env["NODE_ENV"] === "test") {
           (mode & XHR) ===
             ((flags ?? +this.headers.has("X-Requested-With")) & XHR)
         ) {
-          return [mode, handler(this)] as const;
+          return [mode, handler(this, persistent)] as const;
         }
       }
       return [0, ""] as const;
     }
 
-    respond = () => this.onloadend({ target: this });
+    respond = () => {
+      this.readyState = 4;
+      this.onloadend?.({ target: this });
+    };
+
+    timeFail = () => {
+      this.readyState = 4;
+      this.ontimeout?.({ target: this });
+    };
 
     send(data: FormData | undefined) {
       this.data = data;
-      const [mode, html] = this.render();
+      const [, html] = this.render();
       this.responseXML = parser.parseFromString(html, "text/html");
-      mode & DELAY ? setTimeout(this.respond, 2000) : this.respond();
+      this.readyState = 3;
+      this.delay ?
+        (this.timeoutId =
+          this.timeout < this.delay ?
+            setTimeout(this.timeFail, this.timeout)
+          : setTimeout(this.respond, this.delay))
+      : this.respond();
     }
   }
 
@@ -431,7 +472,7 @@ if (process.env["NODE_ENV"] === "test") {
             pattern.test(this.url.href) &&
             (flags ?? mode) & STREAM
           ) {
-            return [mode, handler(this)] as const;
+            return [mode, handler(this, persistent)] as const;
           }
         }
         return [0, ""] as const;
@@ -468,7 +509,7 @@ if (process.env["NODE_ENV"] === "test") {
 
       for (const [mode, pattern, handler] of routes) {
         if (handler && pattern.test(this.url.href) && mode & SSE) {
-          handler(this);
+          handler(this, persistent);
           break;
         }
       }
@@ -574,7 +615,11 @@ if (process.env["NODE_ENV"] === "test") {
       return this.index < this.stack.length - 1;
     }
 
-    private onloadend = ({ target: { responseXML } }: RenderPayload) =>
+    private onloadend = ({
+      target: { responseXML },
+    }: {
+      target: RenderPayload;
+    }) =>
       this.viewport.replaceChildren(...(responseXML?.body.childNodes ?? []));
 
     private back = () => this.render(this.stack[--this.index]![1]);

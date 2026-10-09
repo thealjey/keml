@@ -1,3 +1,19 @@
+## v3.9
+
+Added:
+
+- [request-mode](./event/on.md#request-mode)
+- [timeout](./event/on.md#timeout)
+- [timeout event](./event/on-colon.md#keml-defined-events)
+- [if:timeout](./state/if-colon.md#iftimeout)
+
+Fixed:
+
+- Handling of network errors.
+- The renderer not skipping the unresolved results.
+
+---
+
 ## v3.8
 
 Added:

@@ -51,6 +51,7 @@ no distinction between them:
 1. `navigate` - History API transition
 1. `result` - successful server result
 1. `failure` - unsuccessful server result
+1. `timeout` - a request [timed out](./on.md#timeout)
 1. `discover` - the element becomes known to the system (if the `on:discover`
    attribute is removed and then added back, the event will be emitted again)
 1. `attr:<name>` - the attribute named `<name>` is added, removed, or changed

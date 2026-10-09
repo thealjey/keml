@@ -1,0 +1,38 @@
+<p class="mt0">
+  Select the mode you want and then click the send button several times.
+</p>
+
+<select
+  class="input"
+  ref:value="requestMode"
+  on:input="resetDelayedList"
+  on="resetDelayedList"
+  src="/request-mode-list"
+  result="delayedList"
+>
+  <option selected>parallel</option>
+  <option>replace</option>
+  <option>ignore</option>
+  <option>queue</option>
+</select>
+
+<form
+  method="post"
+  on="queueResponse"
+  on:submit="queueResponse"
+  link:request-mode="requestMode"
+  result="delayedResponse"
+  action="/request-mode"
+  if:loading="loadingRequestMode"
+>
+  <button type="submit" class="btn mt2">send</button>
+  <div
+    if="loadingRequestMode"
+    x-class="spinner mt3 ml2 dib v-btm"
+  ></div>
+</form>
+
+
+<div class="mt2" render="delayedList">
+  <dl class="dl" position="append" render="delayedResponse"></dl>
+</div>

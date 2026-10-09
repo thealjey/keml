@@ -1,0 +1,27 @@
+<button
+  class="btn"
+  on:click="sendTimeout"
+  on="sendTimeout"
+  src="/if-timeout"
+  timeout="2000"
+  if:timeout="ranOutOfTime"
+  if:error="timeoutError"
+>
+  send
+</button>
+
+<small
+  if="ranOutOfTime"
+  class="dn"
+  x-class="db mt2"
+>
+  Server took too long to respond.
+</small>
+
+<small
+  if="timeoutError"
+  class="dn"
+  x-class="db"
+>
+  Something went wrong, might have been a timeout.
+</small>

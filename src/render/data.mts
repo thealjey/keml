@@ -14,6 +14,7 @@ export const ifElements = new Set<Element>();
 export const renderElements = new Set<Element>();
 export const refElements = new Set<Element>();
 export const linkElements = new Set<Element>();
+export const failureEvent = new Event("failure");
 
 /**
  * Marks the SSE subsystem as required for the next render cycle.
@@ -43,15 +44,24 @@ export const getNeedsSse = () => needsSse;
 export const clearNeedsSse = () => (needsSse = false);
 
 /**
+ * Adds a render payload to the render payload stack.
+ *
+ * @param event - The event containing the render payload to add.
+ * @returns The new length of the render payload stack.
+ */
+export const pushRenderPayloadEvent = (event: { target: RenderPayload }) =>
+  renderPayloadStack.push(event.target);
+
+/**
  * Pushes a render payload onto the render queue.
  *
  * This function enqueues a payload for later processing by the rendering system.
  *
- * @param payload - The render payload to be added to the queue.
+ * @param items - The render payloads to be added to the queue.
  * @returns The new length of the render payload stack.
  */
-export const pushRenderPayload = (payload: RenderPayload) =>
-  renderPayloadStack.push(payload);
+export const pushRenderPayload = (...items: RenderPayload[]) =>
+  renderPayloadStack.push(...items);
 
 /**
  * Removes and returns the most recent render payload from the render queue.

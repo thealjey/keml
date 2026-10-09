@@ -12,5 +12,8 @@ export default defineConfig({
     },
     environment: "happy-dom",
     includeSource: ["src/**/*.mts"],
+    isolate: false,
+    pool: "threads",
+    fsModuleCache: true,
   },
 });

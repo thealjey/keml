@@ -1,0 +1,4 @@
+{{ persistent.reqNum ??= 0; }}
+{{ const delay = server.delay = Math.random() * 10000 + 1000 | 0; }}
+
+<dt>Request #{ ++persistent.reqNum }</dt><dd>Took { delay }ms</dd>

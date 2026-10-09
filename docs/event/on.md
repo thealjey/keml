@@ -409,6 +409,88 @@ whitespace-insensitive.
 
 ---
 
+## `request-mode`
+
+<!-- prettier-ignore-start -->
+!!! info "Info"
+    Not applicable when streaming is enabled.
+<!-- prettier-ignore-end -->
+
+This feature controls how requests and their responses are handled when an
+element sends multiple requests before the previous ones have concluded.
+
+Supported options:
+
+- `parallel` - (default) all requests are permitted, and responses are processed
+  in the order they are received from the server
+- `replace` - when a new request is made, all currently pending requests are
+  cancelled first
+- `ignore` - if there are pending requests, skip this one
+- `queue` - like with `parallel`, all requests are sent immediately, but
+  responses are processed in the same order as the requests were sent, rather
+  than in the order the responses arrived
+
+<div class="tabs">
+  <label><input type="radio" name="tabs-12" checked>HTML</label>
+  <label><input type="radio" name="tabs-12">Server</label>
+  <label><input type="radio" name="tabs-12">Result</label>
+  <section>
+```html
+--8<-- "snippets/request-mode-client.html"
+```
+  </section>
+  <section>
+```html
+--8<-- "snippets/request-mode-server.html"
+```
+  </section>
+  <section class="ma3">
+--8<-- "snippets/request-mode-client.html"
+  </section>
+</div>
+
+---
+
+## [`timeout`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/timeout)
+
+<!-- prettier-ignore-start -->
+!!! info "Info"
+    Not applicable when streaming is enabled.
+<!-- prettier-ignore-end -->
+
+Number of milliseconds KEML will wait for a response before timing out the
+request.
+
+When a request times out, a [timeout](./on-colon.md#keml-defined-events) event
+is fired and a [timeout](../state/if-colon.md#iftimeout) state is turned on.
+
+<div class="tabs">
+  <label><input type="radio" name="tabs-13" checked>HTML</label>
+  <label><input type="radio" name="tabs-13">Server 1</label>
+  <label><input type="radio" name="tabs-13">Server 2</label>
+  <label><input type="radio" name="tabs-13">Result</label>
+  <section>
+```html
+--8<-- "snippets/timeout-client.html"
+```
+  </section>
+  <section>
+```html
+--8<-- "snippets/timeout-server.html"
+```
+  </section>
+  <section>
+```html
+--8<-- "snippets/timeout-fallback-server.html"
+```
+  </section>
+  <section class="ma3">
+--8<-- "snippets/timeout-client.html"
+  </section>
+</div>
+
+---
+
 ## `redirect`
 
 This attribute switches the operational mode of `on` from sending requests to
@@ -424,10 +506,10 @@ ignored. Form data (excluding file uploads) is applied to the query string.
 This option performs a full page navigation.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-12" checked>Page A</label>
-  <label><input type="radio" name="tabs-12">Page B</label>
-  <label><input type="radio" name="tabs-12">Page C</label>
-  <label><input type="radio" name="tabs-12">Result</label>
+  <label><input type="radio" name="tabs-14" checked>Page A</label>
+  <label><input type="radio" name="tabs-14">Page B</label>
+  <label><input type="radio" name="tabs-14">Page C</label>
+  <label><input type="radio" name="tabs-14">Result</label>
   <section>
 ```html
 --8<-- "snippets/location-assign-a-server.html"
@@ -461,10 +543,10 @@ This option performs a full page navigation, but replaces the current history
 entry instead of adding a new one.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-13" checked>Page A</label>
-  <label><input type="radio" name="tabs-13">Page B</label>
-  <label><input type="radio" name="tabs-13">Page C</label>
-  <label><input type="radio" name="tabs-13">Result</label>
+  <label><input type="radio" name="tabs-15" checked>Page A</label>
+  <label><input type="radio" name="tabs-15">Page B</label>
+  <label><input type="radio" name="tabs-15">Page C</label>
+  <label><input type="radio" name="tabs-15">Result</label>
   <section>
 ```html
 --8<-- "snippets/location-replace-a-server.html"
@@ -502,11 +584,11 @@ separate thing you have to implement, and it does not impose restrictions on
 your server infrastructure 🤯.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-14" checked>HTML</label>
-  <label><input type="radio" name="tabs-14">Page A</label>
-  <label><input type="radio" name="tabs-14">Page B</label>
-  <label><input type="radio" name="tabs-14">Page C</label>
-  <label><input type="radio" name="tabs-14">Result</label>
+  <label><input type="radio" name="tabs-16" checked>HTML</label>
+  <label><input type="radio" name="tabs-16">Page A</label>
+  <label><input type="radio" name="tabs-16">Page B</label>
+  <label><input type="radio" name="tabs-16">Page C</label>
+  <label><input type="radio" name="tabs-16">Result</label>
   <section>
 ```html
 --8<-- "snippets/history-home-server.html"
@@ -545,9 +627,9 @@ This is a self-destruct instruction for the `on` attribute. It is removed after
 the first invocation.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-15" checked>HTML</label>
-  <label><input type="radio" name="tabs-15">Server</label>
-  <label><input type="radio" name="tabs-15">Result</label>
+  <label><input type="radio" name="tabs-17" checked>HTML</label>
+  <label><input type="radio" name="tabs-17">Server</label>
+  <label><input type="radio" name="tabs-17">Result</label>
   <section>
 ```html
 --8<-- "snippets/once-client.html"
@@ -577,8 +659,8 @@ KEML does not implement polling as a dedicated feature, but it can still be
 assembled from the basic building blocks shown above.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-16" checked>Server</label>
-  <label><input type="radio" name="tabs-16">Result</label>
+  <label><input type="radio" name="tabs-18" checked>Server</label>
+  <label><input type="radio" name="tabs-18">Result</label>
   <section>
 ```html
 --8<-- "snippets/polling-server.html"
@@ -597,10 +679,10 @@ KEML does not implement virtualization as a dedicated feature, but it can still
 be assembled from the basic building blocks shown above.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-17" checked>HTML</label>
-  <label><input type="radio" name="tabs-17">Server 1</label>
-  <label><input type="radio" name="tabs-17">Server 2</label>
-  <label><input type="radio" name="tabs-17">Result</label>
+  <label><input type="radio" name="tabs-19" checked>HTML</label>
+  <label><input type="radio" name="tabs-19">Server 1</label>
+  <label><input type="radio" name="tabs-19">Server 2</label>
+  <label><input type="radio" name="tabs-19">Result</label>
   <section>
 ```html
 --8<-- "snippets/virtualization-client.html"

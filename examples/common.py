@@ -587,6 +587,8 @@ clients_lock = Lock()
 
 class BaseHandler(BaseHTTPRequestHandler):
 
+    protocol_version = "HTTP/1.0"
+
     SECRET = ""
 
     DATETIME_FORMAT = "%c"

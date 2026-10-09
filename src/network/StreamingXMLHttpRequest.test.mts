@@ -6,6 +6,7 @@ vi.mock("./bridge.e.mts", () => {
   return {
     bridge: {
       fetch: vi.fn(),
+      console: { error: vi.fn() },
     },
   };
 });
@@ -22,6 +23,7 @@ describe("StreamingXMLHttpRequest", () => {
     xhr = new StreamingXMLHttpRequest();
     xhr.ownerElement = document.createElement("div");
     xhr.onloadend = vi.fn();
+    xhr.onerror = vi.fn();
     xhr.responseText = "";
   });
 
@@ -166,5 +168,51 @@ describe("StreamingXMLHttpRequest", () => {
 
     expect(xhr.onloadend).not.toHaveBeenCalled();
     expect(xhr.responseText).toBe("");
+  });
+
+  it("calls onerror when bridge.fetch rejects", async () => {
+    const url = new URL("https://example.com");
+    const error = new Error("Network error");
+
+    (bridge.fetch as any).mockRejectedValue(error);
+
+    xhr.open("GET", url);
+
+    expect(await xhr.send(undefined)).toBeUndefined();
+
+    expect(bridge.console.ownerElement).toBeUndefined();
+
+    expect(xhr.onerror).toHaveBeenCalledWith({
+      target: {
+        status: 0,
+        responseXML: null,
+        ownerElement: xhr.ownerElement,
+      },
+    });
+
+    expect(xhr.onloadend).not.toHaveBeenCalled();
+  });
+
+  it("sets bridge.console.ownerElement when bridge.fetch rejects in docs mode", async () => {
+    const url = new URL("https://example.com");
+    const error = new Error("Network error");
+
+    process.env["NODE_ENV"] = "docs";
+
+    (bridge.fetch as any).mockRejectedValue(error);
+
+    xhr.open("GET", url);
+
+    await xhr.send(undefined);
+
+    expect(bridge.console.ownerElement).toBe(xhr.ownerElement);
+    expect(bridge.console.error).toHaveBeenCalledWith(error);
+    expect(xhr.onerror).toHaveBeenCalledWith({
+      target: {
+        status: 0,
+        responseXML: null,
+        ownerElement: xhr.ownerElement,
+      },
+    });
   });
 });
