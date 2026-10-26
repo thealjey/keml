@@ -963,7 +963,7 @@
 <td>request header</td>
 </tr>
 <tr>
-<td><code>if:error</code>, <code>if:loading</code></td>
+<td><code>if:error</code>, <code>if:loading</code>, <code>if:timeout</code></td>
 <td><code>on</code></td>
 <td>state action output channel</td>
 </tr>
@@ -1048,6 +1048,11 @@
 <td>result action input channel</td>
 </tr>
 <tr>
+<td><code>request-mode</code></td>
+<td><code>on</code></td>
+<td>controls multiple parallel requests</td>
+</tr>
+<tr>
 <td><code>reset</code></td>
 <td>*</td>
 <td>event action input channel for resetting elements</td>
@@ -1076,6 +1081,11 @@
 <td><code>throttle</code></td>
 <td><code>on</code></td>
 <td>throttle the <code>on</code> feature</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>on</code></td>
+<td>request timeout</td>
 </tr>
 <tr>
 <td><code>top</code></td>
