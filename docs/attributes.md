@@ -9,7 +9,7 @@
 | `error`                                   | `on`                       | result action output channel                      |
 | `event:<event>`                           | `on:<event>`               | block an event action output channel              |
 | `h-<header>`                              | `on`                       | request header                                    |
-| `if:error`, `if:loading`                  | `on`                       | state action output channel                       |
+| `if:error`, `if:loading`, `if:timeout`    | `on`                       | state action output channel                       |
 | `if:intersects`, `if:invalid`, `if:value` | \*                         | state action output channel                       |
 | `if`                                      | \*                         | state action input channel                        |
 | `key`                                     | \*                         | element identification for the DOM patcher        |
@@ -26,12 +26,14 @@
 | `ref:<attribute>`                         | \*                         | reference action output channel                   |
 | `relative`                                | `scroll`                   | use relative scroll offsets                       |
 | `render`                                  | \*                         | result action input channel                       |
+| `request-mode`                            | `on`                       | controls multiple parallel requests               |
 | `reset`                                   | \*                         | event action input channel for resetting elements |
 | `result`                                  | `on` / `sse`               | result action output channel                      |
 | `scroll`                                  | \*                         | event action input channel for scrolling elements |
 | `sse`                                     | \*                         | SSE event type                                    |
 | `stream`                                  | `on`                       | enables streaming responses                       |
 | `throttle`                                | `on`                       | throttle the `on` feature                         |
+| `timeout`                                 | `on`                       | request timeout                                   |
 | `top`                                     | `scroll`                   | scroll vertical offset                            |
 | `transition`                              | `render`                   | enables view transitions                          |
 | `x-<attribute>`                           | `if`                       | state condition reactive switch                   |
