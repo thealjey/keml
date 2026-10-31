@@ -42,6 +42,23 @@ describe("writeAttribute", () => {
     writeAttribute(el, "value", "new");
 
     expect(attr.value).toBe("new");
+    expect(el.value).toBe("new");
+  });
+
+  it("updates without a behavior", () => {
+    const attr = { name: "something", value: "old" };
+
+    const el = {
+      getAttributeNode: () => attr,
+      removeAttributeNode: vi.fn(),
+      setAttribute: vi.fn(),
+      value: "old",
+    } as any;
+
+    writeAttribute(el, "something", "new");
+
+    expect(attr.value).toBe("new");
+    expect(el.value).toBe("old");
   });
 
   it("does not update attribute when value is the same", () => {

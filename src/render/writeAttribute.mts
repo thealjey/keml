@@ -1,10 +1,10 @@
 import { notNil } from "../util/notNil.mts";
 
-const attrBehavior = [
-  ["value", (value: string | null | undefined) => value ?? ""],
-  ["checked", notNil],
-  ["selected", notNil],
-] as const;
+const attrBehavior = {
+  value: (value: string | null | undefined) => value ?? "",
+  checked: notNil,
+  selected: notNil,
+};
 
 /**
  * Writes, updates, or removes a DOM attribute while keeping property bindings
@@ -29,7 +29,8 @@ export const writeAttribute = (
   what: string | Attr,
   value?: string | null | undefined,
 ) => {
-  let name, attr;
+  let name, attr, resolve;
+
   if (typeof what === "string") {
     attr = el.getAttributeNode((name = what));
   } else {
@@ -45,10 +46,11 @@ export const writeAttribute = (
     attr.value = value;
   }
 
-  for (const [attrName, resolve] of attrBehavior) {
-    if (name === attrName && name in el) {
-      const newValue = resolve(value);
-      (el as any)[name] == newValue || ((el as any)[name] = newValue);
-    }
+  if (
+    (resolve = attrBehavior[name as keyof typeof attrBehavior]) &&
+    name in el
+  ) {
+    const newValue = resolve(value);
+    (el as any)[name] == newValue || ((el as any)[name] = newValue);
   }
 };
