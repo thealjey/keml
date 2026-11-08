@@ -36,6 +36,32 @@ JavaScript code, without any extra setup.
 
 ---
 
+## Extensibility
+
+There is deliberately no extension mechanism.
+
+The focus is on providing general-purpose building blocks rather than dedicated
+solutions for individual use cases.
+
+Following the HATEOAS philosophy, application state and logic belong on the
+server, while the client is responsible for presenting the application and
+handling interactions.
+
+Ideally, you shouldn't have to write any client-side JavaScript at all. If you
+find yourself needing it to implement application behavior, that may indicate a
+missing feature rather than an inherent limitation of the platform.
+
+It's just HTML. Nothing changes about how you use HTML or JavaScript, with or
+without KEML. You can still listen to the same events, write your own
+JavaScript, or integrate other libraries to supplement the existing behavior.
+
+However, if you find yourself needing functionality that you believe could be
+useful to others as well, consider requesting it on
+[GitHub](https://github.com/thealjey/keml/issues/). If it makes sense as a
+general-purpose feature, it can be added to the library itself.
+
+---
+
 ## Demos
 
 All interactive demos in this documentation run on the real KEML runtime.
@@ -49,8 +75,8 @@ Each demo is split into three tabs:
 The HTML and Server tabs contain the actual programs used to produce the Result
 tab.
 
-The server code shown in demos is not part of KEML. It is an in-memory example
-execution environment used only to run and illustrate the client behavior.
+The server code shown in demos is not part of KEML. It runs in an in-memory
+execution environment provided solely to demonstrate the client behavior.
 
 KEML is server agnostic. Any system capable of sending text over HTTP is
 compatible with KEML.

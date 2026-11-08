@@ -1,3 +1,16 @@
+## v3.10
+
+Added:
+
+- The [event:](./event/on-colon.md#event-modifier) modifier now supports nested
+  value matching.
+
+Docs:
+
+- Added a [confirmation](./event/on.md#confirmation) example.
+
+---
+
 ## v3.9
 
 Added:

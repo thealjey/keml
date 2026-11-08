@@ -723,3 +723,31 @@ server.table = Array.from({ length: 300_000 }, (_, i) => ({
 --8<-- "snippets/virtualization-client.html"
   </section>
 </div>
+
+## Confirmation
+
+KEML does not provide a dedicated confirmation feature. A global `confirm`
+function is an anti-pattern, and reinforcing its use would go against KEML's
+philosophy.
+
+Besides, implementing confirmation properly does not require any special support
+from KEML itself.
+
+<div class="tabs">
+  <label><input type="radio" name="tabs-20" checked>HTML</label>
+  <label><input type="radio" name="tabs-20">Server</label>
+  <label><input type="radio" name="tabs-20">Result</label>
+  <section>
+```html
+--8<-- "snippets/confirm-client.html"
+```
+  </section>
+  <section>
+```html
+--8<-- "snippets/confirm-server.html"
+```
+  </section>
+  <section class="ma3">
+--8<-- "snippets/confirm-client.html"
+  </section>
+</div>

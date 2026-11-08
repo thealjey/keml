@@ -1,0 +1,22 @@
+{{
+  persistent.timesSaved ??= 0;
+
+  const times = ++persistent.timesSaved;
+
+  const suffix = () => {
+    const str = times + "";
+    let len = str.length;
+    const last = str[--len];
+    const teen = str[--len] !== '1';
+
+    return last === '1' && teen ?
+      "st"
+      : (last === '2' || last === '3') && teen
+        ? "nd"
+        : "th";
+  };
+}}
+
+Saved for the
+<pre class="dib mb0">{times}</pre>{suffix()} time
+on <pre class="dib mb0">{new Date().toLocaleString()}</pre>.

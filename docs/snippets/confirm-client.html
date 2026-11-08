@@ -1,0 +1,27 @@
+<button
+  commandfor="confirm-dialog"
+  command="show-modal"
+  class="btn"
+>
+  Save
+</button>
+
+<dialog
+  id="confirm-dialog"
+  class="br3 pa3 shadow-2 w-100 mw5 ba"
+  on:close="confirmSave"
+  event:close="target = { returnValue = yes }"
+  on="confirmSave"
+  src="/confirm"
+  result="confirmSaveResult"
+>
+  <form method="dialog">
+    <h3 class="mt0">Are you sure?</h3>
+    <div class="flex justify-end">
+      <button value="no" class="btn mr2">No</button>
+      <button value="yes" class="btn">Yes</button>
+    </div>
+  </form>
+</dialog>
+
+<div render="confirmSaveResult"></div>

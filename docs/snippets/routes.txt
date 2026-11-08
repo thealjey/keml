@@ -36,6 +36,7 @@
 100 => stream
 001 => request-mode-list
 001 => request-mode
+001 => confirm
 
 001 => https://www.example.com/nefarious => credentials
 

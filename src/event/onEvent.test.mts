@@ -19,8 +19,8 @@ vi.mock("../util/hasToken.mts", () => ({
   hasToken: vi.fn(() => true),
 }));
 
-vi.mock("./rejectsEventConstraint.mts", () => ({
-  rejectsEventConstraint: vi.fn(() => false),
+vi.mock("../util/config.mts", () => ({
+  matchObject: vi.fn(() => false),
 }));
 
 vi.mock("./data.e.mts", () => {
@@ -41,8 +41,8 @@ import {
   pushResettableElement,
   pushScrollableElement,
 } from "../render/data.mts";
+import { matchObject } from "../util/config.mts";
 import { onEvent } from "./onEvent.mts";
-import { rejectsEventConstraint } from "./rejectsEventConstraint.mts";
 
 /* helper */
 const makeEvent = () => {
@@ -116,7 +116,7 @@ describe("onEvent", () => {
 
     target.setAttribute("event:click", "a,b,c");
 
-    (rejectsEventConstraint as any).mockReturnValue(true);
+    (matchObject as any).mockReturnValue(false);
 
     onEvent(event as any);
 
@@ -132,7 +132,7 @@ describe("onEvent", () => {
 
     target.setAttribute("event:click", "a,b,c");
 
-    (rejectsEventConstraint as any).mockReturnValue(true);
+    (matchObject as any).mockReturnValue(false);
 
     onEvent(event as any);
 
@@ -146,7 +146,7 @@ describe("onEvent", () => {
 
     target.setAttribute("event:click", "a,b,c");
 
-    (rejectsEventConstraint as any).mockReturnValue(false);
+    (matchObject as any).mockReturnValue(true);
 
     onEvent(event as any);
 
@@ -159,7 +159,7 @@ describe("onEvent", () => {
     target.setAttribute("event:click", "a,b,c");
     target.setAttribute("log", "true");
 
-    (rejectsEventConstraint as any).mockReturnValue(false);
+    (matchObject as any).mockReturnValue(true);
 
     onEvent(event as any);
 

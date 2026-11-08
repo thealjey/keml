@@ -63,9 +63,9 @@ no distinction between them:
 The output channel of event actions can be conditionally blocked by an `event:`
 modifier:
 
-`event:<event>="key = value, otherKey = otherValue, truthyCheck"`
+`event:<event>="key = value, otherKey = otherValue, truthyCheck, obj = { nestedKey = foo, list = [42] }"`
 
-This performs a shallow comparison between an event object and a specification
+This performs a deep comparison between an event object and a specification
 provided in quotes.
 
 <div class="tabs">

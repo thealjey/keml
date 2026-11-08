@@ -5,6 +5,7 @@ import {
   pushResettableElement,
   pushScrollableElement,
 } from "../render/data.mts";
+import { matchObject } from "../util/config.mts";
 import { hasToken } from "../util/hasToken.mts";
 import { isElement } from "../util/isElement.mts";
 import {
@@ -13,7 +14,6 @@ import {
   resetElements,
   scrollElements,
 } from "./data.e.mts";
-import { rejectsEventConstraint } from "./rejectsEventConstraint.mts";
 
 const tokenBehavior = [
   [onElements, "on", scheduleRequest],
@@ -57,7 +57,7 @@ export const onEvent: EventListener = event => {
         }
         el.hasAttribute("log") && bridge.console.log(event);
 
-        if (attr.value.split(",").some(rejectsEventConstraint, event)) {
+        if (!matchObject(attr.value, event)) {
           return;
         }
       }
