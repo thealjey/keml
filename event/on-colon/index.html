@@ -1078,8 +1078,8 @@ no distinction between them:</p>
 <h2 id="event-modifier"><code>event:</code> modifier<a class="headerlink" href="#event-modifier" title="Permanent link">&para;</a></h2>
 <p>The output channel of event actions can be conditionally blocked by an <code>event:</code>
 modifier:</p>
-<p><code>event:&lt;event&gt;="key = value, otherKey = otherValue, truthyCheck"</code></p>
-<p>This performs a shallow comparison between an event object and a specification
+<p><code>event:&lt;event&gt;="key = value, otherKey = otherValue, truthyCheck, obj = { nestedKey = foo, list = [42] }"</code></p>
+<p>This performs a deep comparison between an event object and a specification
 provided in quotes.</p>
 <div class="tabs">
   <label><input type="radio" name="tabs-1" checked>HTML</label>
