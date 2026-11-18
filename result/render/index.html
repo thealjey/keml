@@ -1050,18 +1050,18 @@ even if mechanically not identical.</p>
 <span class="normal">15</span>
 <span class="normal">16</span>
 <span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span>
-  <span class="na">render</span><span class="o">=</span><span class="s">&quot;positionResult&quot;</span>
-  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">"positionResult"</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">"replaceWith"</span>
 <span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">h4</span><span class="p">&gt;</span>Click the button to replace it with a cat picture.<span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
 
   <span class="p">&lt;</span><span class="nt">button</span>
-    <span class="na">type</span><span class="o">=</span><span class="s">&quot;button&quot;</span>
-    <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn&quot;</span>
-    <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;sendPosition&quot;</span>
-    <span class="na">on</span><span class="o">=</span><span class="s">&quot;sendPosition&quot;</span>
-    <span class="na">href</span><span class="o">=</span><span class="s">&quot;/position&quot;</span>
-    <span class="na">result</span><span class="o">=</span><span class="s">&quot;positionResult&quot;</span>
+    <span class="na">type</span><span class="o">=</span><span class="s">"button"</span>
+    <span class="na">class</span><span class="o">=</span><span class="s">"btn"</span>
+    <span class="na">on:click</span><span class="o">=</span><span class="s">"sendPosition"</span>
+    <span class="na">on</span><span class="o">=</span><span class="s">"sendPosition"</span>
+    <span class="na">href</span><span class="o">=</span><span class="s">"/position"</span>
+    <span class="na">result</span><span class="o">=</span><span class="s">"positionResult"</span>
   <span class="p">&gt;</span>
     hey kitty kitty
   <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
@@ -1071,9 +1071,9 @@ even if mechanically not identical.</p>
   <section>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;../../assets/cat.jpg&quot;</span> <span class="na">alt</span><span class="o">=</span><span class="s">&quot;cat&quot;</span><span class="p">&gt;</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">"../../assets/cat.jpg"</span> <span class="na">alt</span><span class="o">=</span><span class="s">"cat"</span><span class="p">&gt;</span>
 
-<span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mb0&quot;</span><span class="p">&gt;</span>Bazinga 😅<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">"mb0"</span><span class="p">&gt;</span>Bazinga 😅<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>
   <section class="ma3">
@@ -1157,32 +1157,32 @@ applicable in every situation.</p>
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span>
-  <span class="na">render</span><span class="o">=</span><span class="s">&quot;keyResult&quot;</span>
-  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">"keyResult"</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">"replaceWith"</span>
 <span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">button</span>
-    <span class="na">type</span><span class="o">=</span><span class="s">&quot;button&quot;</span>
-    <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn mb3&quot;</span>
-    <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;toggleKey&quot;</span>
-    <span class="na">on</span><span class="o">=</span><span class="s">&quot;toggleKey&quot;</span>
-    <span class="na">href</span><span class="o">=</span><span class="s">&quot;/key&quot;</span>
-    <span class="na">name</span><span class="o">=</span><span class="s">&quot;switch&quot;</span>
-    <span class="na">value</span><span class="o">=</span><span class="s">&quot;{ server.getParam(&#39;switch&#39;) === &#39;hide&#39; ? &#39;show&#39; : &#39;hide&#39; }&quot;</span>
-    <span class="na">result</span><span class="o">=</span><span class="s">&quot;keyResult&quot;</span>
+    <span class="na">type</span><span class="o">=</span><span class="s">"button"</span>
+    <span class="na">class</span><span class="o">=</span><span class="s">"btn mb3"</span>
+    <span class="na">on:click</span><span class="o">=</span><span class="s">"toggleKey"</span>
+    <span class="na">on</span><span class="o">=</span><span class="s">"toggleKey"</span>
+    <span class="na">href</span><span class="o">=</span><span class="s">"/key"</span>
+    <span class="na">name</span><span class="o">=</span><span class="s">"switch"</span>
+    <span class="na">value</span><span class="o">=</span><span class="s">"{ server.getParam('switch') === 'hide' ? 'show' : 'hide' }"</span>
+    <span class="na">result</span><span class="o">=</span><span class="s">"keyResult"</span>
   <span class="p">&gt;</span>
-    { server.getParam(&quot;switch&quot;) } notification
+    { server.getParam("switch") } notification
   <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 
   <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
-    {{ if (server.getParam(&quot;switch&quot;) === &quot;hide&quot;) { }}
-      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">key</span><span class="o">=</span><span class="s">&quot;notification&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;admonition info mt0&quot;</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;admonition-title&quot;</span><span class="p">&gt;</span>Info<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    {{ if (server.getParam("switch") === "hide") { }}
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">key</span><span class="o">=</span><span class="s">"notification"</span> <span class="na">class</span><span class="o">=</span><span class="s">"admonition info mt0"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">"admonition-title"</span><span class="p">&gt;</span>Info<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
         <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Just passing by...<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
       <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
     {{ } }}
 
     <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="nt">dl</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;dl&quot;</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">dl</span> <span class="na">class</span><span class="o">=</span><span class="s">"dl"</span><span class="p">&gt;</span>
         <span class="p">&lt;</span><span class="nt">dt</span><span class="p">&gt;</span>Roses are<span class="p">&lt;/</span><span class="nt">dt</span><span class="p">&gt;</span>
         <span class="p">&lt;</span><span class="nt">dd</span><span class="p">&gt;</span>red<span class="p">&lt;/</span><span class="nt">dd</span><span class="p">&gt;</span>
         <span class="p">&lt;</span><span class="nt">dt</span><span class="p">&gt;</span>Violets are<span class="p">&lt;/</span><span class="nt">dt</span><span class="p">&gt;</span>
@@ -1301,48 +1301,48 @@ applicable in every situation.</p>
 <span class="normal">43</span>
 <span class="normal">44</span>
 <span class="normal">45</span>
-<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">"mt0"</span><span class="p">&gt;</span>
   This example uses
-  <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;https://animate.style/&quot;</span> <span class="na">target</span><span class="o">=</span><span class="s">&quot;_blank&quot;</span><span class="p">&gt;</span>Animate.css<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">"https://animate.style/"</span> <span class="na">target</span><span class="o">=</span><span class="s">"_blank"</span><span class="p">&gt;</span>Animate.css<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
   for the transition animations.
 <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">a</span>
-  <span class="na">href</span><span class="o">=</span><span class="s">&quot;/page-a&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;mr3&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;transitionA&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;transitionA&quot;</span>
-  <span class="na">redirect</span><span class="o">=</span><span class="s">&quot;pushState&quot;</span>
+  <span class="na">href</span><span class="o">=</span><span class="s">"/page-a"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"mr3"</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">"transitionA"</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">"transitionA"</span>
+  <span class="na">redirect</span><span class="o">=</span><span class="s">"pushState"</span>
 <span class="p">&gt;</span>
   Page A
 <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">a</span>
-  <span class="na">href</span><span class="o">=</span><span class="s">&quot;/page-b&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;mr3&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;transitionB&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;transitionB&quot;</span>
-  <span class="na">redirect</span><span class="o">=</span><span class="s">&quot;pushState&quot;</span>
+  <span class="na">href</span><span class="o">=</span><span class="s">"/page-b"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"mr3"</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">"transitionB"</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">"transitionB"</span>
+  <span class="na">redirect</span><span class="o">=</span><span class="s">"pushState"</span>
 <span class="p">&gt;</span>
   Page B
 <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">a</span>
-  <span class="na">href</span><span class="o">=</span><span class="s">&quot;/page-c&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;mr3&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;transitionC&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;transitionC&quot;</span>
-  <span class="na">redirect</span><span class="o">=</span><span class="s">&quot;pushState&quot;</span>
+  <span class="na">href</span><span class="o">=</span><span class="s">"/page-c"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"mr3"</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">"transitionC"</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">"transitionC"</span>
+  <span class="na">redirect</span><span class="o">=</span><span class="s">"pushState"</span>
 <span class="p">&gt;</span>
   Page C
 <span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">div</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;h4 transition-example&quot;</span>
-  <span class="na">on:navigate</span><span class="o">=</span><span class="s">&quot;showTransitionPage&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;showTransitionPage&quot;</span>
-  <span class="na">result</span><span class="o">=</span><span class="s">&quot;transitionResult&quot;</span>
-  <span class="na">render</span><span class="o">=</span><span class="s">&quot;transitionResult&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"h4 transition-example"</span>
+  <span class="na">on:navigate</span><span class="o">=</span><span class="s">"showTransitionPage"</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">"showTransitionPage"</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">"transitionResult"</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">"transitionResult"</span>
   <span class="na">transition</span>
 <span class="p">&gt;</span>
   { server.partial }
@@ -1378,15 +1378,15 @@ applicable in every situation.</p>
 </code></pre></div></td></tr></table></div>
   </section>
   <section>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;h-100 bg-purple&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"h-100 bg-purple"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>
   <section>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;h-100 bg-navy&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"h-100 bg-navy"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>
   <section>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;h-100 bg-blue&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"h-100 bg-blue"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>
   <section class="browser">

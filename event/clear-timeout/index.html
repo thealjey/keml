@@ -952,38 +952,38 @@ global <code>clearTimeout</code> function and then set to <code>undefined</code>
 <span class="normal">30</span>
 <span class="normal">31</span>
 <span class="normal">32</span>
-<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>
-  If you click the &quot;Cancel&quot; button within one second after clicking &quot;Increment&quot;,
+<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">p</span> <span class="na">class</span><span class="o">=</span><span class="s">"mt0"</span><span class="p">&gt;</span>
+  If you click the "Cancel" button within one second after clicking "Increment",
   no request will be sent.
 <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">button</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;increment&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"btn"</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">"increment"</span>
 <span class="p">&gt;</span>
   Increment
 <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">button</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;cancelIncrement&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"btn"</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">"cancelIncrement"</span>
 <span class="p">&gt;</span>
   Cancel
 <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">input</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;input mt3&quot;</span>
-  <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"input mt3"</span>
+  <span class="na">type</span><span class="o">=</span><span class="s">"text"</span>
   <span class="na">readonly</span>
-  <span class="na">name</span><span class="o">=</span><span class="s">&quot;count&quot;</span>
-  <span class="na">value</span><span class="o">=</span><span class="s">&quot;0&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;increment&quot;</span>
-  <span class="na">debounce</span><span class="o">=</span><span class="s">&quot;1000&quot;</span>
-  <span class="na">src</span><span class="o">=</span><span class="s">&quot;/increment&quot;</span>
-  <span class="na">result</span><span class="o">=</span><span class="s">&quot;incResult&quot;</span>
-  <span class="na">render</span><span class="o">=</span><span class="s">&quot;incResult&quot;</span>
-  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
-  <span class="na">clear-timeout</span><span class="o">=</span><span class="s">&quot;cancelIncrement&quot;</span>
+  <span class="na">name</span><span class="o">=</span><span class="s">"count"</span>
+  <span class="na">value</span><span class="o">=</span><span class="s">"0"</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">"increment"</span>
+  <span class="na">debounce</span><span class="o">=</span><span class="s">"1000"</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">"/increment"</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">"incResult"</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">"incResult"</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">"replaceWith"</span>
+  <span class="na">clear-timeout</span><span class="o">=</span><span class="s">"cancelIncrement"</span>
 <span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>
@@ -1002,18 +1002,18 @@ global <code>clearTimeout</code> function and then set to <code>undefined</code>
 <span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;input mt3&quot;</span>
-  <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"input mt3"</span>
+  <span class="na">type</span><span class="o">=</span><span class="s">"text"</span>
   <span class="na">readonly</span>
-  <span class="na">name</span><span class="o">=</span><span class="s">&quot;count&quot;</span>
-  <span class="na">value</span><span class="o">=</span><span class="s">&quot;{ +server.getParam(&#39;count&#39;) + 1 }&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;increment&quot;</span>
-  <span class="na">debounce</span><span class="o">=</span><span class="s">&quot;1000&quot;</span>
-  <span class="na">src</span><span class="o">=</span><span class="s">&quot;/increment&quot;</span>
-  <span class="na">result</span><span class="o">=</span><span class="s">&quot;incResult&quot;</span>
-  <span class="na">render</span><span class="o">=</span><span class="s">&quot;incResult&quot;</span>
-  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
-  <span class="na">clear-timeout</span><span class="o">=</span><span class="s">&quot;cancelIncrement&quot;</span>
+  <span class="na">name</span><span class="o">=</span><span class="s">"count"</span>
+  <span class="na">value</span><span class="o">=</span><span class="s">"{ +server.getParam('count') + 1 }"</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">"increment"</span>
+  <span class="na">debounce</span><span class="o">=</span><span class="s">"1000"</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">"/increment"</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">"incResult"</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">"incResult"</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">"replaceWith"</span>
+  <span class="na">clear-timeout</span><span class="o">=</span><span class="s">"cancelIncrement"</span>
 <span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>

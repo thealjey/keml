@@ -1089,19 +1089,19 @@ one — <code>loading</code> is just another state condition.</p>
 <span class="normal">13</span>
 <span class="normal">14</span>
 <span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
-  <span class="na">type</span><span class="o">=</span><span class="s">&quot;button&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;sendIfLoading&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;sendIfLoading&quot;</span>
-  <span class="na">href</span><span class="o">=</span><span class="s">&quot;/if-loading&quot;</span>
-  <span class="na">if:loading</span><span class="o">=</span><span class="s">&quot;isLoading&quot;</span>
+  <span class="na">type</span><span class="o">=</span><span class="s">"button"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"btn"</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">"sendIfLoading"</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">"sendIfLoading"</span>
+  <span class="na">href</span><span class="o">=</span><span class="s">"/if-loading"</span>
+  <span class="na">if:loading</span><span class="o">=</span><span class="s">"isLoading"</span>
 <span class="p">&gt;</span>
   click me
 <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">div</span>
-  <span class="na">if</span><span class="o">=</span><span class="s">&quot;isLoading&quot;</span>
-  <span class="na">x-class</span><span class="o">=</span><span class="s">&quot;spinner mt3&quot;</span>
+  <span class="na">if</span><span class="o">=</span><span class="s">"isLoading"</span>
+  <span class="na">x-class</span><span class="o">=</span><span class="s">"spinner mt3"</span>
 <span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>
@@ -1170,33 +1170,33 @@ status code.</p>
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn mr3&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;sendIfError&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;sendIfError&quot;</span>
-  <span class="na">href</span><span class="o">=</span><span class="s">&quot;/if-error&quot;</span>
-  <span class="na">name</span><span class="o">=</span><span class="s">&quot;switch&quot;</span>
-  <span class="na">value</span><span class="o">=</span><span class="s">&quot;success&quot;</span>
-  <span class="na">result</span><span class="o">=</span><span class="s">&quot;ifErrorResult&quot;</span>
-  <span class="na">error</span><span class="o">=</span><span class="s">&quot;ifErrorResult&quot;</span>
-  <span class="na">render</span><span class="o">=</span><span class="s">&quot;ifErrorResult&quot;</span>
-  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
-  <span class="na">if:error</span><span class="o">=</span><span class="s">&quot;isError&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"btn mr3"</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">"sendIfError"</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">"sendIfError"</span>
+  <span class="na">href</span><span class="o">=</span><span class="s">"/if-error"</span>
+  <span class="na">name</span><span class="o">=</span><span class="s">"switch"</span>
+  <span class="na">value</span><span class="o">=</span><span class="s">"success"</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">"ifErrorResult"</span>
+  <span class="na">error</span><span class="o">=</span><span class="s">"ifErrorResult"</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">"ifErrorResult"</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">"replaceWith"</span>
+  <span class="na">if:error</span><span class="o">=</span><span class="s">"isError"</span>
 <span class="p">&gt;</span>
   Get error code
 <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">small</span>
-  <span class="na">if</span><span class="o">=</span><span class="s">&quot;isError&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;dn&quot;</span>
-  <span class="na">x-class</span><span class="o">=</span><span class="s">&quot;chip error&quot;</span>
+  <span class="na">if</span><span class="o">=</span><span class="s">"isError"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"dn"</span>
+  <span class="na">x-class</span><span class="o">=</span><span class="s">"chip error"</span>
 <span class="p">&gt;</span>
   Error
 <span class="p">&lt;/</span><span class="nt">small</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">small</span>
-  <span class="na">if</span><span class="o">=</span><span class="s">&quot;isError&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;chip success&quot;</span>
-  <span class="na">x-class</span><span class="o">=</span><span class="s">&quot;dn&quot;</span>
+  <span class="na">if</span><span class="o">=</span><span class="s">"isError"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"chip success"</span>
+  <span class="na">x-class</span><span class="o">=</span><span class="s">"dn"</span>
 <span class="p">&gt;</span>
   No errors
 <span class="p">&lt;/</span><span class="nt">small</span><span class="p">&gt;</span>
@@ -1219,22 +1219,22 @@ status code.</p>
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code>{{ server.status = server.getParam(&#39;switch&#39;) === &#39;error&#39; ? 200 : 500 }}
+<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code>{{ server.status = server.getParam('switch') === 'error' ? 200 : 500 }}
 
 <span class="p">&lt;</span><span class="nt">button</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn mr3&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;sendIfError&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;sendIfError&quot;</span>
-  <span class="na">href</span><span class="o">=</span><span class="s">&quot;/if-error&quot;</span>
-  <span class="na">name</span><span class="o">=</span><span class="s">&quot;switch&quot;</span>
-  <span class="na">value</span><span class="o">=</span><span class="s">&quot;{ server.getParam(&#39;switch&#39;) === &#39;error&#39; ? &#39;success&#39; : &#39;error&#39; }&quot;</span>
-  <span class="na">result</span><span class="o">=</span><span class="s">&quot;ifErrorResult&quot;</span>
-  <span class="na">error</span><span class="o">=</span><span class="s">&quot;ifErrorResult&quot;</span>
-  <span class="na">render</span><span class="o">=</span><span class="s">&quot;ifErrorResult&quot;</span>
-  <span class="na">position</span><span class="o">=</span><span class="s">&quot;replaceWith&quot;</span>
-  <span class="na">if:error</span><span class="o">=</span><span class="s">&quot;isError&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"btn mr3"</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">"sendIfError"</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">"sendIfError"</span>
+  <span class="na">href</span><span class="o">=</span><span class="s">"/if-error"</span>
+  <span class="na">name</span><span class="o">=</span><span class="s">"switch"</span>
+  <span class="na">value</span><span class="o">=</span><span class="s">"{ server.getParam('switch') === 'error' ? 'success' : 'error' }"</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">"ifErrorResult"</span>
+  <span class="na">error</span><span class="o">=</span><span class="s">"ifErrorResult"</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">"ifErrorResult"</span>
+  <span class="na">position</span><span class="o">=</span><span class="s">"replaceWith"</span>
+  <span class="na">if:error</span><span class="o">=</span><span class="s">"isError"</span>
 <span class="p">&gt;</span>
-  Get { server.getParam(&quot;switch&quot;) } code
+  Get { server.getParam("switch") } code
 <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>
@@ -1311,29 +1311,29 @@ than is allowed by the <a href="../../event/on/#timeout">timeout</a> setting.</p
 <span class="normal">25</span>
 <span class="normal">26</span>
 <span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn&quot;</span>
-  <span class="na">on:click</span><span class="o">=</span><span class="s">&quot;sendTimeout&quot;</span>
-  <span class="na">on</span><span class="o">=</span><span class="s">&quot;sendTimeout&quot;</span>
-  <span class="na">src</span><span class="o">=</span><span class="s">&quot;/if-timeout&quot;</span>
-  <span class="na">timeout</span><span class="o">=</span><span class="s">&quot;2000&quot;</span>
-  <span class="na">if:timeout</span><span class="o">=</span><span class="s">&quot;ranOutOfTime&quot;</span>
-  <span class="na">if:error</span><span class="o">=</span><span class="s">&quot;timeoutError&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"btn"</span>
+  <span class="na">on:click</span><span class="o">=</span><span class="s">"sendTimeout"</span>
+  <span class="na">on</span><span class="o">=</span><span class="s">"sendTimeout"</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">"/if-timeout"</span>
+  <span class="na">timeout</span><span class="o">=</span><span class="s">"2000"</span>
+  <span class="na">if:timeout</span><span class="o">=</span><span class="s">"ranOutOfTime"</span>
+  <span class="na">if:error</span><span class="o">=</span><span class="s">"timeoutError"</span>
 <span class="p">&gt;</span>
   send
 <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">small</span>
-  <span class="na">if</span><span class="o">=</span><span class="s">&quot;ranOutOfTime&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;dn&quot;</span>
-  <span class="na">x-class</span><span class="o">=</span><span class="s">&quot;db mt2&quot;</span>
+  <span class="na">if</span><span class="o">=</span><span class="s">"ranOutOfTime"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"dn"</span>
+  <span class="na">x-class</span><span class="o">=</span><span class="s">"db mt2"</span>
 <span class="p">&gt;</span>
   Server took too long to respond.
 <span class="p">&lt;/</span><span class="nt">small</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">small</span>
-  <span class="na">if</span><span class="o">=</span><span class="s">&quot;timeoutError&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;dn&quot;</span>
-  <span class="na">x-class</span><span class="o">=</span><span class="s">&quot;db&quot;</span>
+  <span class="na">if</span><span class="o">=</span><span class="s">"timeoutError"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"dn"</span>
+  <span class="na">x-class</span><span class="o">=</span><span class="s">"db"</span>
 <span class="p">&gt;</span>
   Something went wrong, might have been a timeout.
 <span class="p">&lt;/</span><span class="nt">small</span><span class="p">&gt;</span>
@@ -1401,15 +1401,15 @@ the following event types: <code>change</code>, <code>input</code>, <code>reset<
 <span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span>
-  <span class="na">type</span><span class="o">=</span><span class="s">&quot;email&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;input&quot;</span>
-  <span class="na">placeholder</span><span class="o">=</span><span class="s">&quot;Email address&quot;</span>
-  <span class="na">if:invalid</span><span class="o">=</span><span class="s">&quot;isInvalidEmail&quot;</span>
+  <span class="na">type</span><span class="o">=</span><span class="s">"email"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"input"</span>
+  <span class="na">placeholder</span><span class="o">=</span><span class="s">"Email address"</span>
+  <span class="na">if:invalid</span><span class="o">=</span><span class="s">"isInvalidEmail"</span>
 <span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">small</span>
-  <span class="na">if</span><span class="o">=</span><span class="s">&quot;isInvalidEmail&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;dn&quot;</span>
+  <span class="na">if</span><span class="o">=</span><span class="s">"isInvalidEmail"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"dn"</span>
   <span class="na">x-class</span>
 <span class="p">&gt;</span>
   Please enter a valid email address.
@@ -1465,15 +1465,15 @@ input-like behavior as native input elements:</p>
 <span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">input</span>
-  <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;input&quot;</span>
-  <span class="na">placeholder</span><span class="o">=</span><span class="s">&quot;Say something...&quot;</span>
-  <span class="na">if:value</span><span class="o">=</span><span class="s">&quot;isValue&quot;</span>
+  <span class="na">type</span><span class="o">=</span><span class="s">"text"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"input"</span>
+  <span class="na">placeholder</span><span class="o">=</span><span class="s">"Say something..."</span>
+  <span class="na">if:value</span><span class="o">=</span><span class="s">"isValue"</span>
 <span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">small</span>
-  <span class="na">if</span><span class="o">=</span><span class="s">&quot;isValue&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;dn&quot;</span>
+  <span class="na">if</span><span class="o">=</span><span class="s">"isValue"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"dn"</span>
   <span class="na">x-class</span>
 <span class="p">&gt;</span>
   The input is not empty.
@@ -1523,20 +1523,20 @@ input-like behavior as native input elements:</p>
 <span class="normal">15</span>
 <span class="normal">16</span>
 <span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">p</span>
-  <span class="na">if</span><span class="o">=</span><span class="s">&quot;isIntersecting&quot;</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span>
-  <span class="na">x-class</span><span class="o">=</span><span class="s">&quot;mt0 green&quot;</span>
+  <span class="na">if</span><span class="o">=</span><span class="s">"isIntersecting"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"mt0"</span>
+  <span class="na">x-class</span><span class="o">=</span><span class="s">"mt0 green"</span>
 <span class="p">&gt;</span>
   Scroll the container down to reveal the green <span class="p">&lt;</span><span class="nt">code</span><span class="p">&gt;</span>div<span class="p">&lt;/</span><span class="nt">code</span><span class="p">&gt;</span>, and watch this
   paragraph turn green as well.
 <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 
-<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;overflow-y-auto h4&quot;</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;h5&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"overflow-y-auto h4"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"h5"</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 
   <span class="p">&lt;</span><span class="nt">div</span>
-    <span class="na">class</span><span class="o">=</span><span class="s">&quot;h5 bg-green&quot;</span>
-    <span class="na">if:intersects</span><span class="o">=</span><span class="s">&quot;isIntersecting&quot;</span>
+    <span class="na">class</span><span class="o">=</span><span class="s">"h5 bg-green"</span>
+    <span class="na">if:intersects</span><span class="o">=</span><span class="s">"isIntersecting"</span>
   <span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>

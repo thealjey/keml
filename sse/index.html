@@ -959,18 +959,18 @@ and accepting that you might be displaying stale data sometimes.</p>
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">h4</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;mt0&quot;</span><span class="p">&gt;</span>Inception clock<span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">&lt;</span><span class="nt">h4</span> <span class="na">class</span><span class="o">=</span><span class="s">"mt0"</span><span class="p">&gt;</span>Inception clock<span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Counting time elapsed since the initial KEML release.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Fully controlled and updated by the server. No polling.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
 
 <span class="p">&lt;</span><span class="nt">div</span>
-  <span class="na">class</span><span class="o">=</span><span class="s">&quot;clock&quot;</span>
-  <span class="na">sse</span><span class="o">=</span><span class="s">&quot;inception-clock&quot;</span>
-  <span class="na">src</span><span class="o">=</span><span class="s">&quot;/sse&quot;</span>
-  <span class="na">result</span><span class="o">=</span><span class="s">&quot;sseResult&quot;</span>
-  <span class="na">render</span><span class="o">=</span><span class="s">&quot;sseResult&quot;</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"clock"</span>
+  <span class="na">sse</span><span class="o">=</span><span class="s">"inception-clock"</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">"/sse"</span>
+  <span class="na">result</span><span class="o">=</span><span class="s">"sseResult"</span>
+  <span class="na">render</span><span class="o">=</span><span class="s">"sseResult"</span>
 <span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div></td></tr></table></div>
   </section>
@@ -986,11 +986,11 @@ and accepting that you might be displaying stale data sometimes.</p>
 <span class="normal"> 9</span>
 <span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="p">{{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">segment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">([</span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="nx">label</span><span class="p">])</span><span class="w"> </span><span class="p">=&gt;</span>
-<span class="w">    </span><span class="s2">&quot;&lt;span&gt;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;&lt;/span&gt;&lt;span&gt;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">label</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;&lt;/span&gt;&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="s2">"&lt;span&gt;"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"&lt;/span&gt;&lt;span&gt;"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">label</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"&lt;/span&gt;"</span><span class="p">;</span>
 
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">clock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">server</span><span class="p">.</span><span class="nx">timeSince</span><span class="p">(</span><span class="mf">1716062717000</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">segment</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">clock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">server</span><span class="p">.</span><span class="nx">timeSince</span><span class="p">(</span><span class="mf">1716062717000</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">segment</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s2">""</span><span class="p">);</span>
 
-<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">tick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">server</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="s2">&quot;inception-clock&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">clock</span><span class="p">());</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">tick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">server</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="s2">"inception-clock"</span><span class="p">,</span><span class="w"> </span><span class="nx">clock</span><span class="p">());</span>
 
 <span class="w">  </span><span class="nx">server</span><span class="p">.</span><span class="nx">addIntervalId</span><span class="p">(</span><span class="nx">setInterval</span><span class="p">(</span><span class="nx">tick</span><span class="p">,</span><span class="w"> </span><span class="mf">1000</span><span class="p">));</span>
 <span class="p">}}</span>
