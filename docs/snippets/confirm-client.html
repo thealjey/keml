@@ -2,6 +2,9 @@
   commandfor="confirm-dialog"
   command="show-modal"
   class="btn"
+  on="confirmSave"
+  src="/confirm"
+  result="confirmSaveResult"
 >
   Save
 </button>
@@ -9,11 +12,9 @@
 <dialog
   id="confirm-dialog"
   class="br3 pa3 shadow-2 w-100 mw5 ba"
-  on:close="confirmSave"
-  event:close="target = { returnValue = yes }"
-  on="confirmSave"
-  src="/confirm"
-  result="confirmSaveResult"
+  on:submit="confirmSave"
+  event:submit="submitter = { value = yes }"
+  allow:submit
 >
   <form method="dialog">
     <h3 class="mt0">Are you sure?</h3>

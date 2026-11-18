@@ -62,7 +62,7 @@ export const onEvent: EventListener = event => {
         }
       }
 
-      event.preventDefault();
+      el.hasAttribute(`allow:${type}`) || event.preventDefault();
 
       for (const [elements, name, action] of tokenBehavior) {
         for (el of elements) {

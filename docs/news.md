@@ -1,3 +1,11 @@
+## v3.11
+
+Added:
+
+- [allow:](./event/on-colon.md#allow-modifier) modifier
+
+---
+
 ## v3.10
 
 Added:

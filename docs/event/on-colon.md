@@ -89,6 +89,33 @@ provided in quotes.
 
 ---
 
+## `allow:` modifier
+
+The browser's native `Event` class provides a `preventDefault()` method, which
+can be called to prevent the browser's default handling of an event.
+
+KEML calls this method by default before outputting an event action, since the
+action is intended to take the place of the browser's normal event processing.
+
+You can allow the browser's default handling to take place alongside the event
+action by using an `allow:*` attribute.
+
+This is an uncommon use case, which is why preventing the default behavior is
+the default.
+
+<div class="tabs">
+  <label><input type="radio" name="tabs-2" checked>HTML</label>
+  <label><input type="radio" name="tabs-2">Result</label>
+  <section>
+```html
+--8<-- "snippets/allow-default-client.html"
+```
+  </section>
+  <section class="pa3">
+--8<-- "snippets/allow-default-client.html"
+  </section>
+</div>
+
 ## Parent handler
 
 KEML does not interfere with normal browser event bubbling. This is not
@@ -98,9 +125,9 @@ bubbling, but simple parent lookup.
 also be on any of its parents.
 
 <div class="tabs">
-  <label><input type="radio" name="tabs-2" checked>HTML</label>
-  <label><input type="radio" name="tabs-2">Server</label>
-  <label><input type="radio" name="tabs-2">Result</label>
+  <label><input type="radio" name="tabs-3" checked>HTML</label>
+  <label><input type="radio" name="tabs-3">Server</label>
+  <label><input type="radio" name="tabs-3">Result</label>
   <section>
 ```html
 --8<-- "snippets/parent-handler-client.html"

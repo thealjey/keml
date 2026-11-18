@@ -1,0 +1,18 @@
+<p class="mt0">
+  This is a deliberately contrived example, but it demonstrates the difference
+  clearly.
+</p>
+<p>
+  Normally, you would use the <code>input</code> event to react to changes in an
+  input's value.
+</p>
+
+<label>
+  Default behavior prevented:
+  <input class="input" on:keydown="">
+</label>
+
+<label>
+  Default behavior allowed:
+  <input class="input" on:keydown="" allow:keydown>
+</label>
