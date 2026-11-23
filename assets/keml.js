@@ -7,18 +7,13 @@
 "use strict";(()=>{var p=[[1,"event-modifier","event-modifier"],[1,"endpoint-override","endpoint-override"],[1,"expensive","expensive"],[1,"form-submit","form-submit"],[1,"request-headers","request-headers"],[1,"parent-handler","parent-handler"],[1,"once","once"],[1,"result-success","result-success"],[1,"result-failure","result-failure"],[1,"reference-chart","reference-chart"],[1,"position","position"],[1,"key","key"],[1,"polling","polling"],[1,"increment","increment"],[1,"vir-cleanup","vir-cleanup"],[1,"virtualization","virtualization"],[1,"if-loading","if-loading"],[1,"if-error","if-error"],[1,"if-timeout","if-timeout"],[1,"timeout-fallback","timeout-fallback"],[1,"timeout","timeout"],[2,"sse","sse"],[4,"stream","stream"],[1,"request-mode-list","request-mode-list"],[1,"request-mode","request-mode"],[1,"confirm","confirm"],[1,"https://www.example.com/nefarious","credentials"],[0,"https://www.log-example.com","log"],[0,"https://www.url-parse-error-example.com","url-parse-error"],[0,"https://www.assign-example.com/page-a","location-assign-a"],[0,"https://www.assign-example.com/page-b","location-assign-b"],[0,"https://www.assign-example.com/page-c","location-assign-c"],[0,"https://www.replace-example.com/page-a","location-replace-a"],[0,"https://www.replace-example.com/page-b","location-replace-b"],[0,"https://www.replace-example.com/page-c","location-assign-c"],[0,"https://www.history-example.com/page-a","history-home"],[1,"https://www.history-example.com/page-a","history-a"],[1,"https://www.history-example.com/page-b","history-b"],[1,"https://www.history-example.com/page-c","history-c"],[0,"https://www.transition-example.com/page-a","transition-home"],[1,"https://www.transition-example.com/page-a","transition-a"],[1,"https://www.transition-example.com/page-b","transition-b"],[1,"https://www.transition-example.com/page-c","transition-c"]];var u={confirm:`{{
   persistent.timesSaved ??= 0;
 
-  const times = ++persistent.timesSaved;
+  const times = ++persistent.timesSaved + "";
 
   const suffix = () => {
-    const str = times + "";
-    let len = str.length;
-    const last = str[--len];
+    let len = times.length;
+    const last = times[--len];
 
-    if (str[--len] === '1') {
-      return "th";
-    }
-
-    switch (last) {
+    if (times[--len] !== '1') switch (last) {
       case '1': return "st";
       case '2': return "nd";
       case '3': return "rd";
@@ -29,8 +24,8 @@
 }}
 
 Saved for the
-<pre class="dib mb0">{times}</pre>{suffix()} time
-on <pre class="dib mb0">{new Date().toLocaleString()}</pre>.
+<code class="dib mt2">{times}</code>{suffix()} time
+on <code>{new Date().toLocaleString()}</code>.
 `,credentials:`<small class="chip mt3">Ha!</small>
 
 <p>What?!</p>

@@ -3453,9 +3453,9 @@ from KEML itself.</p>
 <span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">"dialog"</span><span class="p">&gt;</span>
     <span class="p">&lt;</span><span class="nt">h3</span> <span class="na">class</span><span class="o">=</span><span class="s">"mt0"</span><span class="p">&gt;</span>Are you sure?<span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"flex justify-end"</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">value</span><span class="o">=</span><span class="s">"no"</span> <span class="na">class</span><span class="o">=</span><span class="s">"btn mr2"</span><span class="p">&gt;</span>No<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">value</span><span class="o">=</span><span class="s">"yes"</span> <span class="na">class</span><span class="o">=</span><span class="s">"btn"</span><span class="p">&gt;</span>Yes<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"flex justify-start flex-row-reverse"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">value</span><span class="o">=</span><span class="s">"yes"</span> <span class="na">class</span><span class="o">=</span><span class="s">"btn ml2"</span><span class="p">&gt;</span>Yes<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">value</span><span class="o">=</span><span class="s">"no"</span> <span class="na">class</span><span class="o">=</span><span class="s">"btn"</span><span class="p">&gt;</span>No<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
     <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
   <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">dialog</span><span class="p">&gt;</span>
@@ -3485,26 +3485,16 @@ from KEML itself.</p>
 <span class="normal">19</span>
 <span class="normal">20</span>
 <span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code>{{
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code>{{
   persistent.timesSaved ??= 0;
 
-  const times = ++persistent.timesSaved;
+  const times = ++persistent.timesSaved + "";
 
   const suffix = () =&gt; {
-    const str = times + "";
-    let len = str.length;
-    const last = str[--len];
+    let len = times.length;
+    const last = times[--len];
 
-    if (str[--len] === '1') {
-      return "th";
-    }
-
-    switch (last) {
+    if (times[--len] !== '1') switch (last) {
       case '1': return "st";
       case '2': return "nd";
       case '3': return "rd";
@@ -3515,8 +3505,8 @@ from KEML itself.</p>
 }}
 
 Saved for the
-<span class="p">&lt;</span><span class="nt">pre</span> <span class="na">class</span><span class="o">=</span><span class="s">"dib mb0"</span><span class="p">&gt;</span>{times}<span class="p">&lt;/</span><span class="nt">pre</span><span class="p">&gt;</span>{suffix()} time
-on <span class="p">&lt;</span><span class="nt">pre</span> <span class="na">class</span><span class="o">=</span><span class="s">"dib mb0"</span><span class="p">&gt;</span>{new Date().toLocaleString()}<span class="p">&lt;/</span><span class="nt">pre</span><span class="p">&gt;</span>.
+<span class="p">&lt;</span><span class="nt">code</span> <span class="na">class</span><span class="o">=</span><span class="s">"dib mt2"</span><span class="p">&gt;</span>{times}<span class="p">&lt;/</span><span class="nt">code</span><span class="p">&gt;</span>{suffix()} time
+on <span class="p">&lt;</span><span class="nt">code</span><span class="p">&gt;</span>{new Date().toLocaleString()}<span class="p">&lt;/</span><span class="nt">code</span><span class="p">&gt;</span>.
 </code></pre></div></td></tr></table></div>
   </section>
   <section class="ma3">
@@ -3540,9 +3530,9 @@ on <span class="p">&lt;</span><span class="nt">pre</span> <span class="na">class
 >
   <form method="dialog">
     <h3 class="mt0">Are you sure?</h3>
-    <div class="flex justify-end">
-      <button value="no" class="btn mr2">No</button>
-      <button value="yes" class="btn">Yes</button>
+    <div class="flex justify-start flex-row-reverse">
+      <button value="yes" class="btn ml2">Yes</button>
+      <button value="no" class="btn">No</button>
     </div>
   </form>
 </dialog>
