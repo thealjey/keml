@@ -1,18 +1,13 @@
 {{
   persistent.timesSaved ??= 0;
 
-  const times = ++persistent.timesSaved;
+  const times = ++persistent.timesSaved + "";
 
   const suffix = () => {
-    const str = times + "";
-    let len = str.length;
-    const last = str[--len];
+    let len = times.length;
+    const last = times[--len];
 
-    if (str[--len] === '1') {
-      return "th";
-    }
-
-    switch (last) {
+    if (times[--len] !== '1') switch (last) {
       case '1': return "st";
       case '2': return "nd";
       case '3': return "rd";
@@ -23,5 +18,5 @@
 }}
 
 Saved for the
-<pre class="dib mb0">{times}</pre>{suffix()} time
-on <pre class="dib mb0">{new Date().toLocaleString()}</pre>.
+<code class="dib mt2">{times}</code>{suffix()} time
+on <code>{new Date().toLocaleString()}</code>.
