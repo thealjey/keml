@@ -1,6 +1,7 @@
 | Name                                      | Applied With               | Description                                       |
 | ----------------------------------------- | -------------------------- | ------------------------------------------------- |
 | `action`, `get`, `href`, `src`            | `on` / `sse`               | endpoint override                                 |
+| `allow:<event>`                           | `on:<event>`               | do not call preventDefault                        |
 | `behavior`                                | `scroll`                   | scroll animation                                  |
 | `clear-timeout`                           | \*                         | event action input channel for clearing timeouts  |
 | `credentials`                             | `on` / `sse`               | credentials for cross-domain communication        |
