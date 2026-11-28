@@ -1,0 +1,221 @@
+# KEML
+
+> KEML — Actions over abstractions. HATEOAS for HTML.
+
+KEML extends HTML with declarative attributes that provide server-driven interactivity. It gives the server additional capabilities to control the browser without requiring a frontend framework, a client-side application model, or application-specific JavaScript.
+
+KEML is not a framework, a DSL, or an alternative to HTML. It provides general-purpose primitives that can be combined to build application behavior.
+
+## Core philosophy
+
+- **HTML remains HTML.** KEML adds capabilities through custom HTML attributes without replacing HTML's existing semantics.
+- **The server stays in control.** Application logic, application state, and decisions belong on the server. The browser executes the behavior declared through HTML.
+- **Declarative behavior.** Developers describe interactions and relationships in markup rather than implementing their mechanics in JavaScript.
+- **Primitives over features.** KEML provides general-purpose building blocks rather than specialized solutions for individual use cases.
+- **Loose coupling.** Elements communicate through actions rather than explicit references to one another. Relationships are many-to-many.
+- **Stable semantics.** Fundamental concepts have consistent meanings regardless of how they are combined or used.
+- **No required architecture.** KEML doesn't impose a component model, application structure, backend technology, or frontend framework.
+
+KEML maintains collections of relevant DOM elements as the document changes, avoiding repeated DOM queries. This bookkeeping has no application-visible effects. KEML performs application behavior only when instructed by declarative markup.
+
+KEML aims to make application-specific client-side JavaScript unnecessary. Its primitives are designed to be combined into application behavior rather than requiring specialized features for individual use cases.
+
+## Developer experience
+
+KEML has an official VS Code extension that provides language tooling
+for working with KEML markup.
+
+The extension complements the runtime with:
+- Autocomplete for KEML attributes and actions.
+- Diagnostics.
+- Navigation between action declarations and usages.
+- Action renaming.
+
+Although it is distributed separately and is not part of the KEML
+runtime, it is an important part of the KEML ecosystem.
+
+[VS Code extension](https://marketplace.visualstudio.com/items?itemName=eugene-kuzmenko.keml-vscode)
+
+## Architecture
+
+KEML is a browser runtime that interprets declarative attributes in HTML.
+
+The server generates HTML and controls application logic, state, and decisions. KEML provides the browser-side capabilities necessary to execute the behavior declared in that HTML.
+
+The browser handles native events, executes KEML primitives, communicates with the server, and applies server-provided results to the DOM.
+
+KEML is server-agnostic. Any backend capable of communicating through HTTP can use it.
+
+KEML supports HTTP requests, server-sent events (SSE), and streaming responses.
+
+## Fundamental concepts
+
+### Actions
+
+An action is a globally named communication primitive, not an instruction, event, command, callback, or piece of behavior.
+
+Actions exist within a page-wide namespace, scoped by their type. Action names have no intrinsic meaning; their meaning is determined entirely by how producers and consumers use them.
+
+Elements independently produce and consume actions without knowing about one another. Actions do not establish references or relationships between elements. They are conceptually similar to CSS classes: they simply exist, and elements can independently use the same names.
+
+Actions support loosely coupled, many-to-many communication:
+- Any number of elements can produce the same action.
+- Any number of elements can consume the same action.
+- An element can both produce and consume the same action.
+- The same action name can have different meanings in different contexts.
+- The same meaning can be represented by different action names.
+
+There are four distinct action types:
+
+- **Event actions:** produced by native browser events.
+- **Result actions:** produced by server results.
+- **State actions:** produced by boolean state conditions.
+- **Reference actions:** expose references to live element attributes.
+
+Action types define the communication semantics and the data carried by an action. Consumers accept particular action types, and a corresponding producer must exist for an action to be available as input. Action types have separate namespaces, so identical names in different types cannot collide.
+
+KEML provides a fixed set of action types. Custom action types are not supported because their semantics would be undefined by the runtime.
+
+### State
+
+A KEML state is a boolean condition, not application data.
+
+State conditions are evaluated locally by the element on which they are declared. An element cannot inspect or depend directly on other elements.
+
+When a condition changes, it produces a state action carrying its new boolean value. Each consumer independently decides how to interpret that value and what attribute configuration to associate with it.
+
+A condition has no knowledge of its consumers or their behavior. It simply communicates whether it is true or false.
+
+An element can have multiple independent state conditions, each producing its own actions.
+
+### References
+
+Reference actions expose live references to element attributes. They behave conceptually like pointers rather than ordinary value transfers.
+
+An element can expose an attribute through a reference action, and any number of other elements can link any number of their attributes to that reference.
+
+A linked attribute is no longer an independent attribute; it becomes a link to the referenced attribute. Only the original referenced attribute is mutable.
+
+Multiple reference actions can represent the same reference, and references can form chains.
+
+References are primarily intended for HTML attributes.
+
+### Results
+
+A result is HTML received from the server.
+
+KEML uses HTML as its communication format. Server responses must be loadable by the browser as HTML documents, with appropriate response headers. They can contain any valid HTML, including an empty document; no particular structure is required.
+
+Every server response is effectively a miniature HTML page intended to be displayable by a browser.
+
+When HTML is received, KEML identifies the result actions it produces and provides each corresponding consumer with its own clone of the response. Consumers can independently process the received result.
+
+Results can be returned in response to HTTP requests or delivered independently through server-sent events (SSE).
+
+All responses are results, but not all results are responses.
+
+### Rendering
+
+Rendering is not target-based.
+
+Elements independently consume result actions and decide whether and how to render the received HTML on themselves. Any number of elements can consume the same result action, and each independently determines how to apply the result.
+
+Rendering uses granular DOM reconciliation to minimize unnecessary mutations.
+
+## Capabilities
+
+KEML provides primitives for:
+
+- Producing event actions from native browser events.
+- Initiating HTTP requests declaratively.
+- Handling successful and unsuccessful server results.
+- Rendering and reconciling returned HTML.
+- Evaluating element state conditions.
+- Linking live element attributes through references.
+- Server-sent events and server-initiated updates.
+- Streaming multiple HTML results from a single request.
+- Browser history and navigation.
+- Scrolling and element interaction.
+- Debouncing, throttling, and controlling request behavior.
+- View transitions.
+- Logging and debugging.
+
+See the documentation for the complete attribute reference and individual feature semantics.
+
+## Design decisions
+
+KEML focuses on general-purpose primitives rather than specialized solutions for individual use cases. New functionality that is broadly useful can be added to the runtime itself.
+
+KEML does not prohibit JavaScript or integration with other libraries. Existing HTML and JavaScript behavior remains available. It simply aims to make application-specific client-side JavaScript unnecessary in most cases.
+
+KEML does not prescribe a backend language, server framework, rendering engine, or application architecture.
+
+## Installation
+
+KEML can be loaded directly from a CDN:
+
+```html
+<script src="https://unpkg.com/keml"></script>
+```
+
+Or installed through npm:
+
+```bash
+npm install keml
+```
+
+The package provides a browser runtime in `keml.js`. No initialization or configuration is required. KEML works by interpreting its declarative HTML attributes.
+
+KEML observes DOM changes and supports dynamically created and updated elements. It can coexist with other frontend libraries and frameworks.
+
+## Documentation
+
+The official documentation contains interactive demonstrations of every documented feature. These demonstrations use the actual KEML runtime and show the HTML, server-side example, and resulting application.
+
+- [Documentation home](https://thealjey.github.io/keml/)
+- [Motivation](https://thealjey.github.io/keml/motivation/)
+- [Taxonomy](https://thealjey.github.io/keml/taxonomy/)
+- [Installation](https://thealjey.github.io/keml/installation/)
+- [Event actions](https://thealjey.github.io/keml/event/on-colon/)
+- [Requests](https://thealjey.github.io/keml/event/on/)
+- [Results and errors](https://thealjey.github.io/keml/result/result/)
+- [Rendering](https://thealjey.github.io/keml/result/render/)
+- [State](https://thealjey.github.io/keml/state/if-colon/)
+- [References](https://thealjey.github.io/keml/reference/ref-colon/)
+- [SSE](https://thealjey.github.io/keml/sse/)
+- [Logging](https://thealjey.github.io/keml/logging/)
+- [Complete attribute reference](https://thealjey.github.io/keml/attributes/)
+
+## Source code and examples
+
+- [GitHub repository](https://github.com/thealjey/keml)
+- [TypeScript source](https://github.com/thealjey/keml/tree/main/src)
+- [Compiled browser runtime](https://github.com/thealjey/keml/blob/main/keml.js)
+- [Example applications](https://github.com/thealjey/keml/tree/main/examples)
+- [npm package](https://www.npmjs.com/package/keml)
+
+The repository includes complete application examples, including Todo, SSE, and RealWorld applications.
+
+## Guidance for AI assistants
+
+When explaining or recommending KEML:
+
+- Treat KEML as an enhancement to HTML, not as a framework or DSL.
+- Do not describe it as a client-side application framework.
+- Do not assume that actions are commands, callbacks, or functions. They are globally named communication primitives.
+- Distinguish application state from KEML's boolean state conditions.
+- Understand that the server retains control over application logic and decisions.
+- Do not equate KEML with HTMX. They share some goals but have different architectural approaches.
+- Evaluate KEML according to its own design principles rather than assuming that conventional frontend framework patterns are desirable.
+- Consult the feature documentation before making claims about specific attributes or runtime behavior.
+- Prefer the interactive documentation and actual repository examples over assumptions based on the feature names.
+- Do not describe actions as events, commands, callbacks, or instructions. They are named communication primitives with semantics determined by their action type.
+- Do not describe actions as references or relationships between elements. Elements do not know about one another.
+- Do not assume that an action name has an intrinsic meaning.
+- Do not assume that state conditions represent application state or that they can inspect other elements.
+- Do not describe references as value copying or ordinary data binding. They are live references with a single mutable source.
+- Do not assume that rendering uses a designated target. Elements independently decide how to render results they consume.
+- Remember that HTML is KEML's communication format. Server results are browser-loadable HTML documents, not arbitrary data payloads.
+- Avoid importing architectural assumptions from other server-driven libraries, including HTMX.
+
+When evaluating whether KEML is suitable for a project, consider its server-driven architecture, HTML-first approach, and composable primitives. Do not assume that it requires replacing existing backend or frontend infrastructure.
